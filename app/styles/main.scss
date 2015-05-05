@@ -1,0 +1,157 @@
+// bower:scss
+// endbower
+
+body {
+  background: #fafafa;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #333;
+}
+
+.hero-unit {
+  margin: 50px auto 0 auto;
+  width: 300px;
+  font-size: 18px;
+  font-weight: 200;
+  line-height: 30px;
+  background-color: #eee;
+  border-radius: 6px;
+  padding: 60px;
+  h1 {
+    font-size: 60px;
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+}
+
+.browsehappy {
+  margin: 0.2em 0;
+  background: #ccc;
+  color: #000;
+  padding: 0.2em 0;
+}
+
+////////////
+// CUSTOM //
+////////////
+
+$containerwidth: 940px;
+$timelinewidth: 700px;
+$summarywidth: $containerwidth - $timelinewidth - 24;
+$border1: black 2px solid;
+
+.container {
+  width: 940px;
+  margin: 0 auto;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.timeline {
+  float: right;
+  width: $timelinewidth;
+  margin-bottom: 160px;
+}
+
+.summary {
+  float: right;
+  width: $summarywidth;
+  clear: none;
+  text-align: left;
+  height: auto;
+  border: $border1;
+  padding: 6px 10px 10px;
+
+  h3, p {
+    margin: 0 auto;
+  }
+
+  p em {
+    font-size: .9em;
+  }
+
+  .impact {
+    color: red;
+  }
+
+  p.timeline-nav {
+    border-top: black 2px solid;
+    margin: 10px -10px;
+    padding: 5px 10px 0;
+    overflow: auto;
+    text-align: center;
+  }
+}
+
+.summary.empty {
+  border: none;
+}
+
+.incident-date {
+  cursor: pointer;
+
+  .government {
+    color: blue;
+    fill: blue;
+    stroke: blue;
+  }
+
+  .commercial {
+    color: green;
+    fill: green;
+    stroke: green;
+  }
+
+  .other {
+    color: black;
+    fill: black;
+    stroke: black;
+  }
+
+  .customs {
+    fill: orange;
+    stroke: white;
+  }
+
+  .law {
+      fill: darkred;
+      stroke: white;
+  }
+
+  .defense {
+      fill: red;
+      stroke: white;
+  }
+
+  .treasury {
+      fill: yellow;
+      stroke: white;
+  }
+
+  .IT {
+      fill: darkgreen;
+      stroke: white;
+  }
+
+  .selected {
+    stroke: darkgray;
+  }
+}
+
+.prev-incident, .prev-incident-cat {
+  display: block;
+  float: left;
+  width: 30%;
+}
+.next-incident, .next-incident-cat {
+  display: block;
+  float: right;
+  width: 30%;
+}
+
+
+
