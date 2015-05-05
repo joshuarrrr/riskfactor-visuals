@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>Risk Factor Anniversary Project</title>
+    <title>Anatomy of a Failed Project</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -26,23 +26,14 @@
 
     <div class="container">
       
-      <h1>Risk Factor Anniversary Project</h1>
+      <h1>Anatomy of a Failed Project</h1>
+      <h2 id="chart-title"></h2>
       
-      <p>Welcome to the work in progress! Check out the current state of the visualizations:
-      <ol>
-        <li><a href="complexity.html">Software projects are getting bigger and more complex</a></li>
-        <li><a href="timeline.html">Software failures seem to be growing more costly and more frequent</a></li>
-        <li>Projects are often late and over budget
-          <ul>
-            <li>Version 1: <a href="failure1.html">Stacked area chart</a></li>
-          </ul>
-        </li>
-        <li><a href="blamegame.html">What failed projects have in common</a></li>
-        <li><a href="humancost.html">Software failures have a human cost</a></li>
-      </ol>
+      <div id="chart"></div>
 
 
     </div>
+    <footer><a href="/">Back to viz index</a></footer>
 
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -65,7 +56,7 @@
     </script>
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
-        
+        <script src="scripts/failure1.js"></script>
         <!-- endbuild -->
 </body>
 </html>

@@ -44,11 +44,19 @@ $border1: black 2px solid;
   margin: 0 auto;
 }
 
+footer {
+  text-align: center;
+}
+
 .axis path,
 .axis line {
   fill: none;
   stroke: #000;
   shape-rendering: crispEdges;
+}
+
+.y.axis .tick:first-child {
+  display: none;
 }
 
 .timeline {
