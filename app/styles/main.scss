@@ -161,5 +161,43 @@ footer {
   width: 30%;
 }
 
+// failures
+
+.area1 {
+  path.area {
+    fill: lightgray;
+    opacity: .4;
+  }
+
+  path.area:first-child {
+    fill: lightgreen;
+    opacity: .5;
+  }
+
+  path.area:last-child {
+    fill: yellow;
+    opacity: .7;
+  }
+}
+
+.area2 {
+  path.area {
+    fill: darkgray;
+    opacity: .4;
+  }
+
+  path.area:first-child {
+    fill: darkgreen;
+    opacity: .5;
+  }
+
+  path.area:last-child {
+    fill: orange;
+    opacity: .7;
+  }
+}
+
+
+
 
 
