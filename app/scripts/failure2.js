@@ -245,6 +245,21 @@ d3.chart("BaseChart").extend("FailureChart", {
               .call(xAxis);
 
             return selection;
+          },
+
+          "exit" : function() {
+            var chart = this.chart();
+            var selection = this;
+            // draw xaxis
+            var xAxis = d3.svg.axis()
+              .scale(chart.xScale)
+              .orient("bottom")
+              .ticks(5)
+              .outerTickSize(0)
+              .tickFormat(chart._xformat || d3.time.format("%Y"));
+
+            chart.base.select(".x.axis")
+              .call(xAxis);
           }
         }
 
@@ -291,7 +306,30 @@ d3.chart("BaseChart").extend("FailureChart", {
               .call(yAxis);
 
             return selection;
+          },
+
+          "exit" : function() {
+            var chart = this.chart();
+            var selection = this;
+            // draw yaxis
+            var yAxis = d3.svg.axis()
+              .scale(chart.yScale)
+              .orient("left")
+              .ticks(5)
+              .outerTickSize(0)
+              .tickFormat(chart._yformat || function(d) { 
+                if ( d >= 1e3 ) {
+                  return (d / 1e3) + " Billion";
+                }
+                else {
+                  return d + " Million";
+                }
+              });
+
+            chart.base.select(".y.axis")
+              .call(yAxis);
           }
+
         }
 
       });
@@ -476,6 +514,10 @@ d3.chart("BaseChart").extend("FailureChart", {
       
 
             return selection;
+          },
+
+          "exit" : function() {
+            this.remove();
           }
         }
 
@@ -603,6 +645,10 @@ d3.chart("BaseChart").extend("FailureChart", {
       
 
             return selection;
+          },
+
+          "exit" : function() {
+            this.remove();
           }
         }
 
@@ -727,6 +773,10 @@ d3.chart("BaseChart").extend("FailureChart", {
             }
 
             return selection;
+          },
+
+          "exit" : function() {
+            this.remove();
           }
         }
 
@@ -961,6 +1011,7 @@ var data = d3.csv("../sampleproject.csv", function (dataOrig) {
     failure.draw(data);
 
     d3.select(this).property("disabled", true);
+    d3.select("#prev").property("disabled", true);
     
   });
 
@@ -969,6 +1020,7 @@ var data = d3.csv("../sampleproject.csv", function (dataOrig) {
     data.push(dataToPlot.shift());
     failure.draw(data);
     d3.select("#reset").property("disabled", false);
+    d3.select("#prev").property("disabled", false);
 
     if(dataToPlot.length === 0) {
       d3.select(this).property("disabled", true);
@@ -976,12 +1028,15 @@ var data = d3.csv("../sampleproject.csv", function (dataOrig) {
   });
 
   d3.select("#prev").on("click", function() {
-    if(data.length > 1) {
-      dataToPlot.push(data.shift());
-      failure.draw(data);
+    dataToPlot.unshift(data.pop());
+    failure.draw(data);
+
+    if(data.length === 1) {
+      d3.select(this).property("disabled", true);
+      d3.select("#reset").property("disabled", true);
     }
-    else {
-      d3.select(this).property("disabled");
+    else if (dataToPlot.length > 0) {
+      d3.select("#next").property("disabled", false);
     }
   });
 
