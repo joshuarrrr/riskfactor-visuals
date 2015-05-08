@@ -1,0 +1,104 @@
+[
+  { 
+    "project":"BC’s Integrated Case Management (ICM) System",
+    "url":"http://spectrum.ieee.org/riskfactor/computing/it/british-columbias-integrated-case-management-system-falls-over",
+    "cost-unit":"C$",
+    "milestones": [
+     {
+      "milestone": "start", 
+      "systems_to_replace" : 56,
+      "cost": null
+      }, 
+     {
+      "milestone": "complete", 
+      "systems_to_replace" : 17,
+      "cost": 1.82E+08
+      }
+    ] 
+  }, 
+  { 
+    "project":"California Court system project",
+    "url":"http://www.sfgate.com/bayarea/matier-ross/article/Computer-system-dropped-after-500-million-spent-3450186.php",
+    "cost-unit":"US$",
+    "milestones": [
+     {
+      "milestone": "start", 
+      "systems_to_replace" : 70,
+      "cost": null
+      }, 
+     {
+      "milestone": "complete", 
+      "systems_to_replace" : 0,
+      "cost": 5.00E+06
+      }
+    ] 
+  }, 
+  { 
+    "project":"California MyCalPays modernization project",
+    "url":"http://spectrum.ieee.org/riskfactor/computing/it/californias-payroll-project-debacle-another-50-million-up-in-smoke",
+    "cost-unit":"US$",
+    "milestones": [
+     {
+      "milestone": "start", 
+      "systems_to_replace" : 13,
+      "cost": null
+      }, 
+     {
+      "milestone": "complete", 
+      "systems_to_replace" : 0,
+      "cost": 5.00E+07
+      }
+    ] 
+  }, 
+  { 
+    "project":"CalPERS benefits management system",
+    "url":"http://googleblog.blogspot.com/2014/02/shedding-some-light-on-foreign.html",
+    "cost-unit":"US$",
+    "milestones": [
+     {
+      "milestone": "start", 
+      "systems_to_replace" : 49,
+      "cost": 2.79E+08
+      }, 
+     {
+      "milestone": "complete", 
+      "systems_to_replace" : 49,
+      "cost": 4.33E+08
+      }
+    ] 
+  }, 
+  { 
+    "project":"The IRS Disability Case Processing System",
+    "url":"http://oig.ssa.gov/sites/default/files/audit/full/pdf/A-14-15-15016.pdf",
+    "cost-unit":"US$",
+    "milestones": [
+     {
+      "milestone": "start", 
+      "systems_to_replace" : 54,
+      "cost": null
+      }, 
+     {
+      "milestone": "todate", 
+      "systems_to_replace" : 54,
+      "cost": 2.88E+08
+      }
+    ] 
+  }, 
+  { 
+    "project":"Navy’s ERP project", 
+    "url":"",
+    "cost-unit":"US$",
+    "milestones": [
+     {
+      "milestone": "start", 
+      "systems_to_replace" : 96,
+      "cost": 1.90E+09
+      }, 
+     {
+      "milestone": "complete", 
+      "systems_to_replace" : 96,
+      "cost": 2.70E+09
+      }
+    ] 
+  }
+]
