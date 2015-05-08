@@ -242,6 +242,8 @@ d3.chart("BaseChart").extend("FailureChart", {
               .tickFormat(chart._xformat || d3.time.format("%Y"));
 
             chart.base.select(".x.axis")
+            .transition()
+              .duration(300)
               .call(xAxis);
 
             return selection;
@@ -259,6 +261,8 @@ d3.chart("BaseChart").extend("FailureChart", {
               .tickFormat(chart._xformat || d3.time.format("%Y"));
 
             chart.base.select(".x.axis")
+            .transition()
+              .duration(300)
               .call(xAxis);
           }
         }
@@ -297,12 +301,17 @@ d3.chart("BaseChart").extend("FailureChart", {
                 if ( d >= 1e3 ) {
                   return (d / 1e3) + " Billion";
                 }
-                else {
+                else if (d > 0) {
                   return d + " Million";
+                }
+                else {
+                  return "";
                 }
               });
 
             chart.base.select(".y.axis")
+            .transition()
+              .duration(300)
               .call(yAxis);
 
             return selection;
@@ -327,6 +336,8 @@ d3.chart("BaseChart").extend("FailureChart", {
               });
 
             chart.base.select(".y.axis")
+            .transition()
+              .duration(300)
               .call(yAxis);
           }
 
@@ -457,17 +468,21 @@ d3.chart("BaseChart").extend("FailureChart", {
           //       .text(d.notes);
           // }
 
-          return this.selectAll("path")
+          return this.selectAll("g")
             .data(data);
+          // var segment = function(d) { return d.totProjection; };
+
+          // return this.selectAll("g")
+          //     .data(data)
+          //   .enter().append("g").selectAll("path")
+          //     .data(function(d) { return [d.totProjection]; });
                 
         },
 
         // insert area 1
         insert: function() {
           var chart = this.chart();
-          var selection = this.append("path")
-            .classed("area",true);
-
+          var selection = this.append("g");
           return selection;
         },
 
@@ -475,27 +490,62 @@ d3.chart("BaseChart").extend("FailureChart", {
           "merge" : function() {
             var chart = this.chart();
             var selection = this;
+            var area1 = d3.svg.area()
+              .x(function(d) { console.log(d.x); return chart.xScale(d.x); })
+              .y0(function(d) { return chart.yScale(d.y0); })
+              .y1(function(d) { return chart.yScale(d.y1); }); 
+
+            var area2 = d3.svg.area()
+              .x(function(d) { console.log(d.x); return chart.xScale(d.x); })
+              .y0(function(d) { return chart.yScale(d.y0); })
+              .y1(function(d) { return chart.yScale(d.y2); });           
 
             console.log(selection);
 
-            selection
+            selection.selectAll("path.total")
+              .data(function(d) { console.log(d); return [d.projection]; })
+              .attr("d", area2)
+            .enter()
+              .append("path")
+              .attr("class", "area total")
+              .transition().delay(300)
+              .attr("d", area2)
               .style("stroke", "none");
 
-            selection
-              .attr("class", "area total")
-              .attr("d", function(d) {
-                return "M " +
-                chart.xScale(d.dateObject) +
-                " " +
-                chart.yScale(d.spentMillions) +
-                " L " + 
-                chart.xScale(d.schedObject) + 
-                " " + 
-                chart.yScale(d.totMillions) +
-                " V " +
-                chart.yScale(d.spentMillions) + 
-                " Z ";
-              });
+            selection.selectAll("path.dev")
+              .data(function(d) { console.log(d); return [d.projection]; })
+              .attr("d", area1)
+            .enter()
+              .append("path")
+              .style("stroke", "none")
+              .attr("class", "area dev")
+              .transition().delay(300).duration(300)
+              .attr("d", area1);
+          
+            // function pathTween() {
+            //   var interpolate = d3.scale.quantile()
+            //     .domain([0,1])
+            //     .range(d3.range(1, data.length + 1));
+            //   return function(t) {
+            //     return area1(data.slice(0, interpolate(t)));
+            //   };
+            // }
+
+            // selection
+            //   .attr("class", "area total")
+            //   .attr("d", function(d) {
+            //     return "M " +
+            //     chart.xScale(d.dateObject) +
+            //     " " +
+            //     chart.yScale(d.spentMillions) +
+            //     " L " + 
+            //     chart.xScale(d.schedObject) + 
+            //     " " + 
+            //     chart.yScale(d.totMillions) +
+            //     " V " +
+            //     chart.yScale(d.spentMillions) + 
+            //     " Z ";
+            //   });
             // .transition()
             //   .duration(2000)
             //   .attrTween("d", pathTween);
@@ -508,9 +558,6 @@ d3.chart("BaseChart").extend("FailureChart", {
             //     return area(data.slice(0, interpolate(t)));
             //   };
             // }
-
-            // chart.base.select("g").select(".x.axis")
-            //   .call(xAxis);
       
 
             return selection;
@@ -586,73 +633,107 @@ d3.chart("BaseChart").extend("FailureChart", {
 
       // });
 
-      // add area layer 2
-      this.layer("estarea", areaBase2, {
-        modes : ["web", "tablet"],
-        dataBind: function(data) {
-          var chart = this.chart();
+      // // add area layer 2
+      // this.layer("estarea", areaBase2, {
+      //   modes : ["web", "tablet"],
+      //   dataBind: function(data) {
+      //     var chart = this.chart();
 
-          return this.selectAll("path")
-            .data(data);
+      //     return this.selectAll("g")
+      //       .data(data);
                 
-        },
+      //   },
 
-        // insert area 2
-        insert: function() {
-          var chart = this.chart();
-          var selection = this.append("path");
+      //   // insert area 2
+      //   insert: function() {
+      //     var chart = this.chart();
+      //     var selection = this.append("g");
 
-          return selection;
-        },
+      //     return selection;
+      //   },
 
-        events: {
-          "merge" : function() {
-            var chart = this.chart();
-            var selection = this;
+      //   events: {
+      //     "merge" : function() {
+      //       var chart = this.chart();
+      //       var selection = this;
+      //       var area = d3.svg.area()
+      //         .x(function(d) { console.log(d.x); return chart.xScale(d.x); })
+      //         .y0(function(d) { return chart.yScale(d.y0); })
+      //         .y1(function(d) { return chart.yScale(d.y); });            
 
-            console.log(selection);
 
-            selection
-              .style("stroke", "none");
+      //       // function pathify(sel, data) {
+      //       //   var p = sel.selectAll("path").data(function(d) { console.log(d); return [d.totProjection]; });
+      //       //   console.log("pathified!");
+      //       //   p.exit().remove();
+      //       //   p.enter().append("path").attr("d", area);
+      //       //   p.text(function(d) { return d; });
+      //       // }
+      //       console.log(selection);
+      //       console.log(selection.data());
 
-            selection
-              .attr("class", "area total")
-              .attr("d", function(d) {
-                return "M " +
-                chart.xScale(d.dateObject) +
-                " " +
-                chart.yScale(d.spentMillions) +
-                " L " + 
-                chart.xScale(d.schedObject) + 
-                " " + 
-                chart.yScale(d.estMillions) +
-                " V " +
-                chart.yScale(d.spentMillions) + 
-                " Z ";
-              });
-            // .transition()
-            //   .duration(2000)
-            //   .attrTween("d", pathTween);
+      //       // selection.call(pathify,selection.data());
+
+      //       selection.selectAll("path")
+      //         .data(function(d) { console.log(d); return [d.estProjection]; })
+      //         .attr("d", area)
+      //       .enter()
+      //         .append("path")
+      //         .attr("class", "area")
+      //         .attr("d", area)
+      //         .style("stroke", "none");
+
+
+      //       console.log(selection);
+
+      //       // var chart = this.chart();
+      //       // var selection = this;
+
+      //       // console.log(selection);
+
+      //       // selection
+      //       //   .style("stroke", "none");
+
+      //       // selection
+      //       //   .attr("class", "area total")
+      //       //   .attr("d", function(d) {
+      //       //     return "M " +
+      //       //     chart.xScale(d.dateObject) +
+      //       //     " " +
+      //       //     chart.yScale(d.spentMillions) +
+      //       //     " L " + 
+      //       //     chart.xScale(d.schedObject) + 
+      //       //     " " + 
+      //       //     chart.yScale(d.estMillions) +
+      //       //     " V " +
+      //       //     chart.yScale(d.spentMillions) + 
+      //       //     " Z ";
+      //       //   });
+
+
+      //       // .transition()
+      //       //   .duration(2000)
+      //       //   .attrTween("d", pathTween);
           
-            // function pathTween() {
-            //   var interpolate = d3.scale.quantile()
-            //     .domain([0,1])
-            //     .range(d3.range(1, data.length + 1));
-            //   return function(t) {
-            //     return area(data.slice(0, interpolate(t)));
-            //   };
-            // }
+      //       // function pathTween() {
+      //       //   var interpolate = d3.scale.quantile()
+      //       //     .domain([0,1])
+      //       //     .range(d3.range(1, data.length + 1));
+      //       //   return function(t) {
+      //       //     return area(data.slice(0, interpolate(t)));
+      //       //   };
+      //       // }
       
 
-            return selection;
-          },
+      //       return selection;
+      //     },
 
-          "exit" : function() {
-            this.remove();
-          }
-        }
+      //     "exit" : function() {
+      //       this.remove();
+      //     }
+      //   }
 
-      });
+      // });
 
       // // add line layer 2
       // this.layer("estline", lineBase2, {
@@ -758,9 +839,32 @@ d3.chart("BaseChart").extend("FailureChart", {
 
             selection
               .attr("class", "area spent")
+              .attr("d", area);
+            // .transition()
+            //   .duration(300)
+            //   .attrTween("d", pathTween);
+          
+            // function pathTween() {
+            //   var interpolate = d3.scale.quantile()
+            //     .domain([0,1])
+            //     .range(d3.range(1, data.length + 1));
+            //   return function(t) {
+            //     return area(data.slice(0, interpolate(t)));
+            //   };
+            // }
+
+            return selection;
+          },
+
+          "enter:transition" : function() {
+            var chart = this.chart();
+            var area = d3.svg.area()
+              .x(function(d) { return chart.xScale(d.dateObject); })
+              .y0(chart.height())
+              .y1(function(d) { return chart.yScale(d.spentMillions); });
+
+            this.duration(300)
               .attr("d", area)
-            .transition()
-              .duration(300)
               .attrTween("d", pathTween);
           
             function pathTween() {
@@ -772,7 +876,25 @@ d3.chart("BaseChart").extend("FailureChart", {
               };
             }
 
-            return selection;
+            // function getSmoothInterpolation() {
+            //   var interpolate = d3.scale.linear()
+            //       .domain([0, 1])
+            //       .range([1, data.length + 1]);
+
+            //   return function(t) {
+            //       var flooredX = Math.floor(interpolate(t));
+            //       var interpolatedLine = data.slice(0, flooredX);
+            //       console.log(interpolate(t));
+                      
+            //       if(flooredX > 0 && flooredX < data.length) {
+            //           var weight = interpolate(t) - flooredX;
+            //           var weightedLineAverage = data[flooredX].spentMillions * weight + data[flooredX-1].spentMillions * (1-weight);
+            //           interpolatedLine.push( {"dateObject":interpolate(t)-1, "spentMillions":weightedLineAverage} );
+            //           }
+              
+            //       return area(interpolatedLine);
+            //       }
+            //   }
           },
 
           "exit" : function() {
@@ -848,7 +970,7 @@ d3.chart("BaseChart").extend("FailureChart", {
         dataBind: function(data) {
           var chart = this.chart();
 
-          return this.selectAll("path.line")
+          return this.selectAll("line.line")
             .data([data]);
                 
         },
@@ -856,7 +978,7 @@ d3.chart("BaseChart").extend("FailureChart", {
         // insert line
         insert: function() {
           var chart = this.chart();
-          var selection = this.append("path");
+          var selection = this.append("svg:line");
 
           return selection;
         },
@@ -866,18 +988,27 @@ d3.chart("BaseChart").extend("FailureChart", {
             var chart = this.chart();
             var selection = this;
             var lineY = chart.yScale(data[0].estMillions);
-            var line = d3.svg.line()
-              .x(function(d, i) {
-                if ( i === 0 ) {
-                  return chart.xScale(d.dateObject);
-                }
-                else {
-                  return chart.xScale(d.schedObject);
-                }
-              })
-              .y(function(d) {
-                return chart.yScale(data[0].estMillions);
-              });
+            
+            var line = {
+              'x1':(function(d) { return chart.xScale(data[0].dateObject); }),
+              'y1':(function(d) { return chart.yScale(data[0].estMillions); }),
+              'x2':(function(d) { return chart.xScale(data[data.length - 1].schedObject); }),
+              'y2':(function(d) { return chart.yScale(data[0].estMillions); }),
+            };
+
+
+            // var line = d3.svg.line()
+            //   .x(function(d, i) {
+            //     if ( i === 0 ) {
+            //       return chart.xScale(d.dateObject);
+            //     }
+            //     else {
+            //       return chart.xScale(d.schedObject);
+            //     }
+            //   })
+            //   .y(function(d) {
+            //     return chart.yScale(data[0].estMillions);
+            //   });
 
             selection
               .style("fill", "none")
@@ -887,8 +1018,9 @@ d3.chart("BaseChart").extend("FailureChart", {
               .style("stroke-dasharray","10,10");
 
             selection
-              .attr("class", "line")
-              .attr("d", line);
+              .attr("class", "line");
+
+              
             // .transition()
             //   .duration(1000)
             //   .delay(1000)
@@ -906,6 +1038,37 @@ d3.chart("BaseChart").extend("FailureChart", {
 
             return selection;
           }
+        },
+
+        "merge:transition" : function() {
+          var chart = this.chart();
+
+          var line = {
+            'x1':(function(d) { return chart.xScale(data[0].dateObject); }),
+            'y1':(function(d) { return chart.yScale(data[0].estMillions); }),
+            'x2':(function(d) { return chart.xScale(data[data.length - 1].schedObject); }),
+            'y2':(function(d) { return chart.yScale(data[0].estMillions); }),
+          };
+
+          // var line = d3.svg.line()
+          //   .x(function(d, i) {
+          //     if ( i === 0 ) {
+          //       return chart.xScale(d.dateObject);
+          //     }
+          //     else {
+          //       return chart.xScale(d.schedObject);
+          //     }
+          //   })
+          //   .y(function(d) {
+          //     return chart.yScale(data[0].estMillions);
+          //   });
+
+          this.duration(300)
+          .attr("x1", line.x1)
+          .attr("y1", line.y1)
+          .attr("x2", line.x2)
+          .attr("y2", line.y2);
+
         }
 
       });
@@ -936,7 +1099,19 @@ d3.chart("BaseChart").extend("FailureChart", {
         d.estMillions = (parseInt(d.estMillions) > 0) ? parseInt(d.estMillions) : 0;
         d.totMillions = (parseInt(d.totMillions) > 0) ? parseInt(d.totMillions) : 0;
         d.spentMillions = (parseInt(d.spentMillions) > 0) ? parseInt(d.spentMillions) : 0;
+
+        d.projection = [
+          {x: d.dateObject, y2: d.spentMillions, y1: d.spentMillions, y0: d.spentMillions},
+          {x: d.schedObject, y2: d.totMillions, y1: d.estMillions, y0: d.spentMillions}
+        ];
+
+        // d.totProjection = [
+        //   {x: d.dateObject, y: d.spentMillions, y0: d.spentMillions},
+        //   {x: d.schedObject, y: d.totMillions, y0: d.spentMillions}
+        // ];
+
         console.log("data point processed");
+        console.log(d.projection);
       });
 
       var sorted = data.sort(function(a,b){ return b.date - a.date; });
@@ -949,17 +1124,52 @@ d3.chart("BaseChart").extend("FailureChart", {
       var maxTot = d3.max(data, function (d) { 
         return d.totMillions;
       });
-      
+
       chart.xScale.domain([mindate,maxdate]);
 
-      console.log(mindate);
-      console.log(maxdate);
+      // var oldDomain = chart.xScale.domain();
+      // var newDomain = [mindate,maxdate];
+
+      // if (oldDomain !== newDomain) {
+      //   // trigger a change event
+      //   this.trigger("change:xdomain", newDomain, oldDomain);
+
+      //   chart.xScale.domain([mindate,maxdate]);
+
+      //   console.log(mindate);
+      //   console.log(maxdate);
+      // }
+      
+      
 
       //update y scale domain
       chart.yScale.domain([0,maxTot]);
 
       return data;
     },
+
+    // xScale: function(newWidth) {
+    //   if (arguments.length === 0) {
+    //     return this._width;
+    //   }
+
+    //   // only if the width actually changed:
+    //   if (this._width !== newWidth) {
+
+    //     var oldWidth = this._width;
+
+    //     this._width = newWidth;
+
+    //     // set higher container width
+    //     this.updateContainerWidth();
+
+    //     // trigger a change event
+    //     this.trigger("change:width", newWidth, oldWidth);
+    //   }
+
+    //   // always return the chart, for chaining magic.
+    //   return this;
+    // },
 
     // for mobile, add a small text layer
     //   this.layer("mobile-text", this.base.append("g"), {
@@ -1012,7 +1222,7 @@ var data = d3.csv("../sampleproject.csv", function (dataOrig) {
 
     d3.select(this).property("disabled", true);
     d3.select("#prev").property("disabled", true);
-    
+    d3.select("#next").property("disabled", false);
   });
 
   d3.select("#next").on("click", function() {

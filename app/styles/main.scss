@@ -166,17 +166,27 @@ footer {
 .area1 {
   path.area {
     fill: lightgray;
-    opacity: .4;
-  }
-
-  path.area:first-child {
-    fill: lightgreen;
     opacity: .5;
   }
 
-  path.area:last-child {
+  g:first-child > path.total  {
+    fill: lightgreen;
+    opacity: .6;
+  }
+
+  g:first-child > path.dev  {
+    fill: darkgreen;
+    opacity: .6;
+  }
+
+  g:last-child > path.total {
     fill: yellow;
-    opacity: .7;
+    opacity: .6;
+  }
+
+  g:last-child > path.dev {
+    fill: orange;
+    opacity: .6;
   }
 }
 
@@ -186,15 +196,19 @@ footer {
     opacity: .4;
   }
 
-  path.area:first-child {
+  g:first-child > path.area {
     fill: darkgreen;
     opacity: .5;
   }
 
-  path.area:last-child {
+  g:last-child > path.area {
     fill: orange;
     opacity: .7;
   }
+}
+
+.hidden {
+  display: none;
 }
 
 

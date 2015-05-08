@@ -27,7 +27,9 @@
     <div class="container">
       
       <h1>Anatomy of a Failed Project</h1>
-      <h2 id="chart-title"></h2>
+      <h2>How timelines and budgets grow</h2>
+      <p><em>If at first you don't suceed, just change your estimates.</em></p>
+      <h3 id="chart-title"></h3>
       <button id="reset" disabled>Reset</button>
       <button id="prev" disabled>Previous</button>
       <button id="next">Next</button>
@@ -36,13 +38,27 @@
 
       <h3>To Do:</h3>
       <ul>
-        <li><strike>Clean up unused code</strike></li>
-        <li><strike>Add reset button to go to initial state</strike></li>
-        <li><strike>Add previous button (requires adding exit event handlers)</strike></li>
+        <li>Add project selector</li>
+        <li><strike>Add reset button to go to initial state</strike><ul>
+          <li>Add initial state chart class</li>
+        </ul></li>
         <li>Add a legend</li>
-        <li>Add tooltip/values</li>
-        <li>Change layer structure to nest by data point, not series</li>
+        <li>Add tooltip/values
+          <ul>
+            <li>Spent so far (%)</li>
+            <li>Estimate increase</li>
+            <li>Deadline incease</li>
+          </ul>
+        </li>
+        <li>Clean up unused code</li>
+        <li>Add estimate filter controls</li>
+        <li><strike>Change layer structure to nest by data point, not series</strike></li>
         <li>Are areas more appropriate than lines?</li>
+        <li>Improve animation
+          <ul>
+            <li>Break spent area into segments</li>
+          </ul>
+        </li>
         <li>Add mobile mode</li>
       </ul>
 
