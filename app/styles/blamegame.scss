@@ -1,0 +1,78 @@
+.container {
+	width: 620px;
+	margin: 0 auto;
+}
+
+.container div {
+	margin-bottom: 10px;
+}
+
+.buttons {
+	text-align: right;
+	margin-bottom: -10px;
+}
+
+.pure-button {
+	border-radius: 10px;
+}
+
+.impact-summary, .answer>.cause, .sumtext, .wrong {
+	border: 3px solid black;
+	border-radius: 10px;
+	padding: 20px;
+	margin: 10px 0;
+}
+
+.container h2 {
+	margin: 0 0 10px;
+}
+
+.answer {
+	padding-right: 10px;
+} 
+
+.answer:last-child {
+	padding-right: 0;
+}
+
+.causes ul {
+	padding: 0;
+	margin: 0;
+}
+
+.wrong {
+	display: none;
+}
+
+.pure-g > li {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.answer>.cause,  .impact-summary, .sumtext {
+	background: #ddd;
+	display: block;
+	text-align: center;
+}
+
+.clickable {
+	cursor: pointer;
+}
+
+.sumtext>.cause {
+	display: inline;
+	background: #ffff77;
+}
+
+.hidden, .answer .effect {
+	display: none;
+}
+
+.answer.correct .sumtext, .impact-summary.correct {
+	background-color: #77ff77;
+}
+
+.answer.incorrect .cause {
+	background-color: #ff7777;
+} 
