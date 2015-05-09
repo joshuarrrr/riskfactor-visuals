@@ -883,7 +883,7 @@ d3.chart("BaseChart").extend("SystemsChart", {
 
 });
 
-var data = d3.json("../systems.json", function (data) {
+var data = d3.json("systems.json", function (data) {
 
   var title = d3.select("#chart-title")
     .text("Project Complexity and Cost");
