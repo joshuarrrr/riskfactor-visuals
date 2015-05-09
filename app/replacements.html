@@ -33,7 +33,7 @@
 
       
       <div id="chart"></div>
-      <svg>
+      <svg width="0" height="0">
         <defs>
           <marker id="markerCircle" markerWidth="8" markerHeight="8" refX="5" refY="5">
               <circle cx="5" cy="5" r="3" style="stroke: none; fill:#000000;"></circle>
@@ -59,10 +59,10 @@
 
 
     </div>
-    <footer><a href="/">Back to viz index</a></footer>
+    <footer><a href="index.html">Back to viz index</a></footer>
 
 
-    <!-- build:js(.) scripts/vendor.js
+    <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/d3/d3.js"></script>
@@ -81,7 +81,7 @@
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
 
-        <!-- build:js({app,.tmp}) scripts/main.js -->
+        <!-- build:js({app,.tmp}) scripts/replacements.js -->
         <script src="scripts/replacements.js"></script>
         <!-- endbuild -->
 </body>

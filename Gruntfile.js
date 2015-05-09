@@ -19,7 +19,7 @@ module.exports = function (grunt) {
   // Configurable paths
   var config = {
     app: 'app',
-    dist: 'dist'
+    dist: 'rfproject'
   };
 
   // Define the configuration for all the tasks
@@ -224,7 +224,7 @@ module.exports = function (grunt) {
       options: {
         dest: '<%= config.dist %>'
       },
-      html: '<%= config.app %>/index.html'
+      html: '<%= config.app %>/{,*/}*.html'
     },
 
     // Performs rewrites based on rev and the useminPrepare configuration
@@ -323,12 +323,15 @@ module.exports = function (grunt) {
             '*.{ico,png,txt}',
             'images/{,*/}*.webp',
             '{,*/}*.html',
-            'styles/fonts/{,*/}*.*'
+            'styles/fonts/{,*/}*.*',
+            '*.{json,csv}'
           ]
-        }, {
-          src: 'node_modules/apache-server-configs/dist/.htaccess',
-          dest: '<%= config.dist %>/.htaccess'
-        }]
+        } 
+        // ,{
+        //   src: 'node_modules/apache-server-configs/dist/.htaccess',
+        //   dest: '<%= config.dist %>/.htaccess'
+        // }
+        ]
       },
       styles: {
         expand: true,
