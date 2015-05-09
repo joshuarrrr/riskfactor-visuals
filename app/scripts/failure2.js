@@ -1253,7 +1253,7 @@ var data = d3.csv("../sampleproject.csv", function (dataOrig) {
   var failure = d3.select("#chart")
     .append("svg")
     .chart("FailureChart")
-    .width(900)
+    .width(830)
     .height(300)
     .margin({top: 20, bottom: 50, right: 20, left: 90});
 
