@@ -362,7 +362,26 @@ d3.chart("BaseChart").extend("SystemsChart", {
             // brush event to any listeners.
             this.on("mouseover", function() {
               var el = d3.select(this);
-              el.selectAll("circle")
+              el.selectAll("circle.complete")
+                .style("stroke", function(d) { 
+                if (d.milestones[1].systems_to_replace === 0 || null && this.classed("start")) {
+                  return "none";
+                }
+                else {
+                  return "gray";
+                }
+              })
+                .style("stroke-width", "3")
+                .attr("r", function(d) { 
+                if (d.milestones[1].systems_to_replace === 0 || null) {
+                  return 0;
+                }
+                else {
+                  return 8;
+                }
+              });
+
+              el.selectAll("circle.start")
                 .style("stroke", "gray")
                 .style("stroke-width", "3")
                 .attr("r", 8);
@@ -418,6 +437,7 @@ d3.chart("BaseChart").extend("SystemsChart", {
 
             this.selectAll("line.line").delay(500)
               .attr("stroke-width", 2)
+              .attr("marker-end", "")
             .transition().duration(1000)
               .attr("x2", function(d) {
                 return chart.xScale(d.milestones[1].systems_to_replace);
@@ -430,7 +450,17 @@ d3.chart("BaseChart").extend("SystemsChart", {
                 else {
                   return chart.yScale(d.milestones[0].cost);
                 }
+              })
+              .transition()
+              .attr("marker-end", function(d) {
+                if (d.milestones[1].systems_to_replace === 0 || null) {
+                  return "url(#markerExplode)";
+                }
+                else{
+                  return "";
+                }
               });
+
 
             this.selectAll("circle.complete").delay(1500)
               .attr("r", 5);
@@ -786,6 +816,17 @@ d3.chart("BaseChart").extend("SystemsChart", {
       chart.data = data;
 
       data.forEach(function(d) {
+
+        if ( d.cost_unit === "C$" ) {
+          console.log("Canadian $!");
+          for (i in d.milestones) {
+            console.log(i);
+            if (d.milestones[i].cost !== null) {
+              d.milestones[i].cost = d.milestones[i].cost * .9;
+            }
+          }
+        }
+
         // d.dateOriginal = d.date;
         // d.formattedDate = formatString.parse(d.date);
         // d.dateObject = new Date(d.date);
@@ -806,6 +847,8 @@ d3.chart("BaseChart").extend("SystemsChart", {
         //   {x: d.schedObject, y2: d.totMillions, y1: d.estMillions, y0: d.spentMillions}
         // ];
       });
+
+      console.log(data);
 
       // var sorted = data.sort(function(a,b){ return b.date - a.date; });
       // var sortedByDate = data.sort(function(a,b){return a.dateObject.getTime() - b.dateObject.getTime();});
