@@ -35,11 +35,13 @@ d3.chart("BaseChart", {
 
   width: function(newWidth) {
     if (arguments.length === 0) {
+      console.log("no width args");
       return this._width;
     }
 
     // only if the width actually changed:
     if (this._width !== newWidth) {
+      console.log("width changed");
 
       var oldWidth = this._width;
 
