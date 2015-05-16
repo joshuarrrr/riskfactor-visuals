@@ -211,7 +211,30 @@ footer {
   display: none;
 }
 
+//refactored timeline
+.line {
+  shape-rendering: crispEdges;
+}
 
+.label {
+  text-transform: capitalize;
+}
 
+.data-point {
+  fill: blue;
+  opacity: 0.2; 
+}
 
+.data-point.active {
+  opacity: 0.8;
+  stroke: gray;
+  stroke-width: 2;
+}
 
+.select-category {
+  text-align: right;
+
+  button {
+    margin-left: 5px;
+  }
+}
