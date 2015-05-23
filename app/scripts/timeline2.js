@@ -109,10 +109,11 @@
 
 // chart.draw(data);
 
-
+/*global d3 */
 d3.chart("MarginChart").extend("BubbleTimeline", {
 
   transform: function(data) {
+    "use strict";
     var chart = this;
 
     chart.data = data;
@@ -165,8 +166,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     var min = d3.min(data, function(d) { return d[chart.rData()]; });
     var max = d3.max(data, function(d) { return d[chart.rData()]; });
 
-    console.log(min);
-    console.log(max);
+    // console.log(min);
+    // console.log(max);
 
     chart.rScale.domain([0, max]);
 
@@ -174,6 +175,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
   },
 
   initialize: function() {
+    "use strict";
 
     var chart = this;
 
@@ -209,7 +211,20 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     // when the height changes, update the y scale range
     chart.on("change:height", function(newHeight) {
-      chart.yScale.rangeRoundBands([0, chart.height()], 0);
+      chart.yScale.rangeRoundBands([0, newHeight], 0);
+    });
+
+    // when the y data changes, update y scale domain
+    chart.on("change:yData", function(newYData) {
+      //get an array of unique values for a given key
+      console.log(newYData);
+      console.log(chart.yData());
+      // console.log(chart.data);
+      var categories = chart.data ? d3.set(chart.data.map(function(d) { return d[chart.yData()]; })).values() : [];
+      console.log(categories);
+      //update y scale domain
+      chart.yScale.domain(categories);
+
     });
       
     // create a rScale
@@ -223,7 +238,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       dataBind: function(data) {
         var chart = this.chart();
 
-        return this.selectAll(".line")
+        return this.selectAll(".straight-line")
           .data(d3.set(data.map(function(d) { return d[chart.yData()]; })).values());
       },
 
@@ -242,16 +257,27 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           // draw lines
           selection
-          .attr("class","line")
+          .attr("class","straight-line")
             .attr("x1",0)
             .attr("x2",chart.width())
             .attr("y1",function(d) { return chart.yScale(d) + (chart.yScale.rangeBand() / 2); })
             .attr("y2",function(d) { return chart.yScale(d) + (chart.yScale.rangeBand() / 2); })
             .attr("stroke","black")
-            .attr("stroke-width", 1);
+            .attr("stroke-width", 1)
+            .style("opacity", 0);
 
 
           return selection;
+        },
+
+        "merge:transition" : function() {
+          var chart = this.chart();
+          var selection = this;
+
+          selection
+            .duration(300)
+            .style("opacity", 1);
+
         },
 
         "exit" : function() {
@@ -280,22 +306,21 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       },
 
       events: {
+        // "enter" : function() {
+        //   var chart = this.chart();
+        //   var selection = this;
+
+        //   selection
+        //     .style("opacity", 0);
+        // },
+
         "merge" : function() {
           var chart = this.chart();
           var selection = this;
 
-          // when the y data changes, update y scale domain
-          chart.on("change:yData", function(newYData) {
-            //get an array of unique values for a given key
-            console.log(newYData);
-            console.log(chart.yData())
-            // console.log(chart.data);
-            var categories = d3.set(chart.data.map(function(d) { return d[chart.yData()]; })).values();
-            console.log(categories);
-            //update y scale domain
-            chart.yScale.domain(categories);
 
-          });
+
+          
 
           // draw labels
           selection
@@ -305,13 +330,59 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .attr("dy", ".35em")
             .attr("dx", "-.5em")
             .text(function(d) { return d; })
-            .attr("text-anchor","end");
+            .attr("text-anchor","end")
+            .style("opacity", 0);
 
           return selection;
         },
+
+        // "update": function() {
+        //   var chart = this.chart();
+        //   var selection = this;
+
+        //   selection.text(function(d) { return d; });
+
+        //   return selection;
+        // },
+
         "exit" : function() {
           this.remove();
-        }
+        },
+
+        "merge:transition": function() {
+          var chart = this.chart();
+          var selection = this;
+
+          console.log(selection);
+
+          selection
+            .duration(300)
+            .style("opacity", 1);
+        },
+
+        // "update:transition": function() {
+        //   var chart = this.chart();
+        //   var selection = this;
+        //   var all = d3.selectAll(".y.label");
+
+        //   console.log(selection);
+
+        //   selection
+        //     .transition()
+        //     .duration(1000)
+        //     .attr("y",function(d) { return chart.yScale(d) + (chart.yScale.rangeBand() / 2); })
+        //     .transition()
+        //     .duration(1000)
+        //     .style("opacity", 1);
+
+        // },
+
+        // "exit:transition": function() {
+        //   this.duration(1000)
+        //   .style("opacity", 0)
+        //   .remove();
+
+        // }
 
       }
 
@@ -419,7 +490,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           selection
             .attr("cx",function(d) { return chart.xScale(d.formattedDate); })
-            .attr("cy",function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
+            // .attr("cy",function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
             .attr("r", function(d) { return chart.rScale(d[chart.rData()]); });
 
           
@@ -443,7 +514,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 .attr("dy", "-.5em")
                 .attr("dx", ".5em")
                 .attr("class", "ttText")
-                .text(function(d) { return d.hed; });
+                .text(function(d) { return d.Headline; });
 
             el.select(".tt")
               .append("text")
@@ -460,7 +531,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             tooltip.parentNode.parentNode.appendChild(tooltip);
 
             var ttText = d3.selectAll("text.ttText");
-            if (ttText.attr("x") > chart.width() * .5 ) {
+            if (ttText.attr("x") > chart.width() / 2 ) {
               ttText
                 .attr("text-anchor","end")
                 .attr("dx", "-.5em");
@@ -480,6 +551,16 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
 
           return selection;
+        },
+
+        "merge:transition": function() {
+          var chart = this.chart();
+          var selection = this;
+
+          selection
+            .duration(1000)
+            .attr("cy",function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); });
+
         }
       }
 
@@ -558,7 +639,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       events: {
         merge : function() {
           return this.text(function(d) {
-            return "There are " + d + " boxes painted on the screen";
+            return "There are " + d + " items painted on the screen";
           });
         }
       }
@@ -566,14 +647,16 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
   },
 });
 
-var data = d3.csv("RiskFactor-monetary-test.csv", function (data) {
+d3.csv("timeline-data-monetary.csv", function (data) {
+  "use strict";
+
   var categories = [
-    "country",
-    "failure_type",
-    "org_type",
-    "gov_type",
-    "gov_dept",
-    "industry_area"
+    "Country",
+    "Failure Type",
+    "Organization Type",
+    "Government Type",
+    "Government Department",
+    "Industry Area"
   ];
 
   var buttons = d3.select("#chart").append("div")
@@ -582,7 +665,7 @@ var data = d3.csv("RiskFactor-monetary-test.csv", function (data) {
     .data(categories)
     .enter()
   .append("button")
-    .attr("id", function(d) { return d; })
+    .attr("id", function(d) { return d.toLowerCase().replace(" ","-"); })
     .text(function(d) { return d; });
 
   var bubbles = d3.select("#chart")
@@ -590,22 +673,41 @@ var data = d3.csv("RiskFactor-monetary-test.csv", function (data) {
     .chart("BubbleTimeline")
     .width(700)
     .height(400)
-    .margin({top: 20, bottom: 70, right: 0, left: 240})
+    .margin({top: 50, bottom: 70, right: 20, left: 240})
     .dateParse("iso")
     .dateDisplay("%B %d, 20%y")
-    .yData("gov_dept")
-    .rData("impact_qty");
+    .yData("Country")
+    .rData("Impact - Qty");
 
     // .margins([20,90,70,90])
+
+  d3.select("#country")
+    .property("disabled", true);
 
 
   buttons.on("click", function() {
     var button = d3.select(this);
-    console.log(button.datum());
+    var toFade = d3.selectAll(".label, .straight-line");
 
-    bubbles.yData(button.datum());
+    console.log(toFade);
+    
+    toFade
+      .transition()
+      .duration(300)
+      .style("opacity", 0)
+      .each("end", fadeIn);
 
-    bubbles.draw(data);
+    function fadeIn() {
+      console.log(button.datum());
+      bubbles.yData(button.datum());
+
+      bubbles.draw(data);
+    }
+
+    buttons.property("disabled", false);
+
+    button.property("disabled", true);
+    
   });
 
 
