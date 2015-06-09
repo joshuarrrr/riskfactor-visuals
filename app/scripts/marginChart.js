@@ -51,7 +51,7 @@ d3.chart("BaseChart").extend('MarginChart', {
     }
  
     // only if the width actually changed:
-    if (this._innerWidth !== newWidth) {
+    if (this.outerWidth() !== newWidth) {
  
       var oldWidth = this._innerWidth;
  
@@ -73,7 +73,7 @@ d3.chart("BaseChart").extend('MarginChart', {
       return this._innerHeight;
     }
  
-    if (this._innerHeight !== oldHeight) {
+    if (this.outerHeight() !== newHeight) {
       
       var oldHeight = this._innerHeight;
  

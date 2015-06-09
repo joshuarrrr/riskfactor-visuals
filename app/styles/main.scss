@@ -46,6 +46,10 @@ $border1: black 2px solid;
 
 footer {
   text-align: center;
+
+  a, a:visited {
+    color: white!important;
+  }
 }
 
 .axis path,
@@ -221,7 +225,7 @@ footer {
 }
 
 .data-point {
-  fill: blue;
+  fill: #03a6e3;
   opacity: 0.2; 
 }
 
@@ -237,4 +241,63 @@ footer {
   button {
     margin-left: 5px;
   }
+}
+
+#chart {
+  position: relative;
+}
+
+.legend {
+  width: 220px;
+  right: 0px;
+  position: absolute;
+  //background-color: blue;
+}
+
+p.fail-stat {
+  font-size: 2em;
+  margin: 1em 0;
+  color: red;
+}
+
+p.fail-stat .number {
+  font-size: 1.45em;
+}
+
+@font-face {
+    font-family: 'Theinhardt-Medium';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../fonts/Theinhardt/Theinhardt-Medium.otf');
+  }
+
+@font-face {
+    font-family: 'Theinhardt-Medium';
+    font-style: italic;
+    font-weight: normal;
+    src: url('../fonts/Theinhardt/Theinhardt-MediumIta.otf');
+  }
+
+
+/* Check it out - create a gradient for the buttons based on one color */
+/*
+@mixin button-gradient($base-color: #00acee){
+  $start-color: $base-color + #181818;
+  background: linear-gradient(top, $start-color 50%, $base-color);
+  background-color:$start-color;
+    &:hover{
+        background: linear-gradient(top, $base-color 40%, $start-color);
+    }
+
+}
+*/
+
+a.button.inactive {
+  background: -webkit-linear-gradient(top, #efefef 50%, #ddd);
+  background: linear-gradient(top, #efefef 50%, 
+#ddd);
+    &:hover{
+        background: -webkit-linear-gradient(top, #ddd 50%, #efefef);
+        background: linear-gradient(top, #ddd 40%, #efefef);
+    }
 }
