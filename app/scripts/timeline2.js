@@ -574,16 +574,16 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               .attr("href", function(d) { return d.url; })
               .text("Read More");
 
-            console.log(el.selectAll(".tt")[0][0].parentNode.parentNode);
-            var tooltip = el.selectAll(".tt")[0][0];
-            tooltip.parentNode.parentNode.appendChild(tooltip);
+            // console.log(el.selectAll(".tt")[0][0].parentNode.parentNode);
+            // var tooltip = el.selectAll(".tt")[0][0];
+            // tooltip.parentNode.parentNode.appendChild(tooltip);
 
-            var ttText = d3.selectAll("text.ttText");
-            if (ttText.attr("x") > chart.width() / 2 ) {
-              ttText
-                .attr("text-anchor","end")
-                .attr("dx", "-.5em");
-            }
+            // var ttText = d3.selectAll("text.ttText");
+            // if (ttText.attr("x") > chart.width() / 2 ) {
+            //   ttText
+            //     .attr("text-anchor","end")
+            //     .attr("dx", "-.5em");
+            // }
           });
 
           // selection.on("mouseout", function() {
