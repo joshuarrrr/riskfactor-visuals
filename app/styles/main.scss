@@ -245,6 +245,62 @@ footer {
 
 #chart {
   position: relative;
+
+  svg {
+    display: none;
+  }
+}
+
+.totals {
+
+  overflow: auto;
+
+  p {
+    margin: 0;
+  }  
+  
+  .total {
+    width: 300px;
+    height: 110px;
+    float: left;
+    margin-right: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+    text-shadow: #888 1px 1px 3px;
+
+    &.selected {
+      outline: 3px white inset;
+      outline-offset: -3px;
+      //-webkit-box-shadow: inset 0 0 120px rgba(245, 245, 245, 0.8);
+      //-moz-box-shadow:    inset 0 0 120px rgba(245, 245, 245, 0.8);
+      //box-shadow:         inset 0 0 120px rgba(245, 245, 245, 0.8);
+    }
+  }
+  .total:last-child {
+    margin-right: 0;
+  }
+  .people {
+    background: rgba(0,0,255,.5);
+    background-image: url('../images/iconmonstr-user-14-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .time {
+    background: rgba(255,0,0,.5);
+    background-image: url('../images/iconmonstr-time-3-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .money {
+    background: rgba(0,255,0,.5);
+    background-image: url('../images/iconmonstr-banknote-5-icon.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
 }
 
 .legend {
@@ -256,11 +312,15 @@ footer {
 
 p.fail-stat {
   font-size: 2em;
-  margin: 1em 0;
-  color: red;
+  margin: .4em 0;
 }
 
-p.fail-stat .number {
+.legend .fail-stat {
+  color: red;
+  margin: 1em 0;
+}
+
+.number {
   font-size: 1.45em;
 }
 
@@ -275,7 +335,7 @@ p.fail-stat .number {
     font-family: 'Theinhardt-Medium';
     font-style: italic;
     font-weight: normal;
-    src: url('fonts/Theinhardt/Theinhardt-MediumIta.otf');
+    src: url('fonts/Theinhardt/Theinhardt-MedilumIta.otf');
   }
 
 

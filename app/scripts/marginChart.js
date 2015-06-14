@@ -26,7 +26,7 @@ d3.chart("BaseChart").extend('MarginChart', {
     this._dateParse = d3.time.format.iso;
     this._dateDisplay = "%B %d, 20%y";
     this._yData = "y";
-    this._yData = "r";
+    this._rData = "r";
  
     // make sure container height and width are set.
     this.base.attr('width', this.outerWidth());
@@ -212,6 +212,7 @@ d3.chart("BaseChart").extend('MarginChart', {
     }
  
     this.trigger('change:rData', newRData, oldRData);
+    this.trigger('change:yData', this._yData, this._yData);
  
     return this;
   }

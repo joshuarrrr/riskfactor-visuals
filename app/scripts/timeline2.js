@@ -133,7 +133,14 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       d.date = format(d.dateObject);
 
       //coerce to number
-      d[chart.rData()] = +d[chart.rData()];
+      if (d[chart.rData()] === null) {
+        d[chart.rData()] = 0;
+      }
+      else {
+        d[chart.rData()] = +d[chart.rData()];
+      }
+      
+
       // d.impact_qty = (parseInt(d.impact_qty) > 0) ? parseInt(d.impact_qty) : 0;
     });
 
@@ -229,6 +236,17 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     // create a rScale
     this.rScale = d3.scale.sqrt()
       .range([0, 70]);
+
+    // when the r data changes, update r scale domain
+    chart.on("change:rData", function(newRData) {
+      console.log(newRData);
+      //update r scale domain
+      var min = chart.data ? d3.min(chart.data, function(d) { return d[chart.rData()]; }) : 0;
+      var max = chart.data ? d3.max(chart.data, function(d) { return d[chart.rData()]; }) : 0;
+
+      chart.rScale.domain([0, max]);
+
+    });
 
 
     // add lines layer
@@ -695,8 +713,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
   },
 });
 
-d3.csv("timeline-data-monetary.csv", function (data) {
+d3.csv("timeline-data-jun9-2.csv", function (data) {
   "use strict";
+
+  var moneyData = {"columnName":"Impact - Qty", "id":"money","data":[]};
+  var peopleData = {"columnName":"Impact - customers affected", "id":"people","data":[]};
+  var timeData = {"columnName":"Impact - hours", "id":"time","data":[]};
 
   var categories = [
     "Country",
@@ -728,10 +750,25 @@ d3.csv("timeline-data-monetary.csv", function (data) {
     .margin({top: 50, bottom: 70, right: 240, left: 20})
     .dateParse("iso")
     .dateDisplay("%B %d, 20%y")
-    .yData("Country")
-    .rData("Impact - Qty");
+    .yData("Country");
 
     // .margins([20,90,70,90])
+
+  data.forEach(function(d) {
+    if (d[moneyData.columnName]) {
+      moneyData.data.push(d);
+    }
+    if (d[timeData.columnName]) {
+      timeData.data.push(d);
+    }
+    if (d[peopleData.columnName]) {
+      peopleData.data.push(d);
+    }
+  });
+
+  console.log(peopleData.data);
+  console.log(moneyData.data);
+  console.log(timeData.data);
 
   d3.select("#country")
     // .property("disabled", true);
@@ -767,6 +804,32 @@ d3.csv("timeline-data-monetary.csv", function (data) {
     
   });
 
+  var totalCounters = d3.selectAll(".total");
 
-  bubbles.draw(data);
+  totalCounters.on("click", function() {
+    console.log("clicked total");
+    var selection = d3.select(this);
+
+    totalCounters.classed("selected", false);
+
+    selection.classed("selected", true);
+
+    d3.select("#chart svg").attr("style", "display: block;");
+
+    if (selection.attr("id") === moneyData.id) {
+      bubbles.rData(moneyData.columnName);
+      bubbles.draw(moneyData.data);
+    }
+    else if (selection.attr("id") === timeData.id) {
+      bubbles.rData(timeData.columnName);
+      bubbles.draw(timeData.data);
+    }
+    else if (selection.attr("id") === peopleData.id) {
+      bubbles.rData(peopleData.columnName);
+      bubbles.draw(peopleData.data);
+    }
+  });
+
+
+  // bubbles.draw(data);
 });
