@@ -7,7 +7,8 @@
     "d3": "~3.5.5",
     "d3.chart": "~0.2.1",
     "d3.chart.base": "~0.4.0",
-    "d3.chart.plot": "~0.1.0"
+    "d3.chart.plot": "~0.1.0",
+    "pym.js": "~0.4.3"
   },
   "resolutions": {
     "d3": "~3.5.5",
