@@ -19,7 +19,8 @@ module.exports = function (grunt) {
   // Configurable paths
   var config = {
     app: 'app',
-    dist: 'rfproject'
+    dist: 'rfproject',
+    distNS: 'rf-project-assets'
   };
 
   // Define the configuration for all the tasks
@@ -122,6 +123,15 @@ module.exports = function (grunt) {
           ]
         }]
       },
+      distNS: {
+        files: [{
+          dot: true,
+          src: [
+            '.tmp',
+            '<%= config.distNS %>/*'
+          ]
+        }]
+      },
       server: '.tmp'
     },
 
@@ -195,7 +205,7 @@ module.exports = function (grunt) {
     wiredep: {
       app: {
         ignorePath: /^\/|\.\.\//,
-        src: ['<%= config.app %>/index.html']
+        src: ['<%= config.app %>/*.html']
       },
       sass: {
         src: ['<%= config.app %>/styles/{,*/}*.{scss,sass}'],
@@ -213,6 +223,17 @@ module.exports = function (grunt) {
             '<%= config.dist %>/images/{,*/}*.*',
             '<%= config.dist %>/styles/fonts/{,*/}*.*',
             '<%= config.dist %>/*.{ico,png}'
+          ]
+        }
+      },
+      distNS: {
+        files: {
+          src: [
+            '<%= config.distNS %>/scripts/{,*/}*.js',
+            '<%= config.distNS %>/styles/{,*/}*.css',
+            '<%= config.distNS %>/images/{,*/}*.*',
+            '<%= config.distNS %>/styles/fonts/{,*/}*.*',
+            '<%= config.distNS %>/*.{ico,png}'
           ]
         }
       }
@@ -250,6 +271,14 @@ module.exports = function (grunt) {
           src: '{,*/}*.{gif,jpeg,jpg,png}',
           dest: '<%= config.dist %>/images'
         }]
+      },
+      distNS: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>/images',
+          src: '{,*/}*.{gif,jpeg,jpg,png}',
+          dest: '<%= config.distNS %>/images'
+        }]
       }
     },
 
@@ -261,7 +290,15 @@ module.exports = function (grunt) {
           src: '{,*/}*.svg',
           dest: '<%= config.dist %>/images'
         }]
-      }
+      },
+      distNS: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.app %>/images',
+          src: '{,*/}*.svg',
+          dest: '<%= config.distNS %>/images'
+        }]
+      },
     },
 
     htmlmin: {
@@ -282,6 +319,25 @@ module.exports = function (grunt) {
           cwd: '<%= config.dist %>',
           src: '{,*/}*.html',
           dest: '<%= config.dist %>'
+        }]
+      },
+      distNS: {
+        options: {
+          collapseBooleanAttributes: true,
+          collapseWhitespace: true,
+          conservativeCollapse: true,
+          removeAttributeQuotes: true,
+          removeCommentsFromCDATA: true,
+          removeEmptyAttributes: true,
+          removeOptionalTags: true,
+          removeRedundantAttributes: true,
+          useShortDoctype: true
+        },
+        files: [{
+          expand: true,
+          cwd: '<%= config.distNS %>',
+          src: '{,*/}*.html',
+          dest: '<%= config.distNS %>'
         }]
       }
     },
@@ -331,7 +387,22 @@ module.exports = function (grunt) {
         // ,{
         //   src: 'node_modules/apache-server-configs/dist/.htaccess',
         //   dest: '<%= config.dist %>/.htaccess'
-        // }
+        // }a
+        ]
+      },
+      distNS: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: '<%= config.app %>',
+          dest: '<%= config.distNS %>',
+          src: [
+            'images/{,*/}*.webp',
+            '{,*/}*.html',
+            'styles/fonts/{,*/}*.*',
+            '*.{json,csv}'
+          ]
+        } 
         ]
       },
       styles: {
@@ -357,6 +428,35 @@ module.exports = function (grunt) {
           ]
         },
         uglify: true
+      },
+      distNS: {
+        devFile: 'bower_components/modernizr/modernizr.js',
+        outputFile: '<%= config.distNS %>/scripts/vendor/modernizr.js',
+        files: {
+          src: [
+            '<%= config.distNS %>/scripts/{,*/}*.js',
+            '<%= config.distNS %>/styles/{,*/}*.css',
+            '!<%= config.distNS %>/scripts/vendor/*'
+          ]
+        },
+        uglify: true
+      },
+    },
+
+    rsync: {
+      options: {
+        args: ["--verbose"],
+        exclude: [".git*","*.scss","node_modules"],
+        recursive: true,
+        ssh: true
+      },
+      prod: {
+        options: {
+          src: "<%= config.dist %>",
+          dest: "joshromero.com",
+          host: "joshuarrrr_shell@joshromero.com",
+          delete: true // Careful this option could cause data loss, read the docs!
+        }
       }
     },
 
@@ -427,15 +527,35 @@ module.exports = function (grunt) {
     'cssmin',
     'uglify',
     'copy:dist',
-    'modernizr',
-    'rev',
+    'modernizr:dist',
+    'rev:dist',
     'usemin',
-    'htmlmin'
+    'htmlmin:dist'
+  ]);
+
+  grunt.registerTask('buildForNetStorage', [
+    'clean:distNS',
+    'wiredep',
+    'useminPrepare',
+    'concurrent:dist',
+    'autoprefixer',
+    'concat',
+    'cssmin',
+    'uglify',
+    'copy:distNS',
+    'modernizr:distNS',
+    'rev:distNS',
+    'usemin',
+    'htmlmin:distNS'
   ]);
 
   grunt.registerTask('default', [
     'newer:jshint',
     'test',
     'build'
+  ]);
+
+  grunt.registerTask('deploy', [
+    'rsync:prod'
   ]);
 };
