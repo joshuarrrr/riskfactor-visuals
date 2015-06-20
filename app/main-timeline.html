@@ -1,0 +1,116 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>Risk Factor Anniversary Project</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/style.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/sb.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/slimbox2.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/site420a.css">
+
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+
+    <style>
+      .buttons {
+        text-align: center;
+        margin-bottom: 0;
+      }
+      .buttons a.button {
+        float: none;
+        margin: 0 5px;
+      }
+      a.button {
+        cursor: pointer;  
+      }
+      a.button.inactive {
+        background: -webkit-linear-gradient(top, #cdcdcd 50%, #bbb);
+        background: linear-gradient(top, #cdcdcd 50%, #bbb);
+      }
+      a.button.inactive:hover{
+        background: -webkit-linear-gradient(top, #bbb 50%, #cdcdcd);
+        background: linear-gradient(top, #bbb 40%, #cdcdcd);
+      }
+    </style>
+
+  </head>
+  <body>
+
+    <div class="container">
+        <div style="background:white;max-width:940px;">
+          <article class="article-detail">
+            <div id="artBody">
+    
+              <div class="totals">
+                <div id="money" class="money total">
+                  <p>Over</p>
+                  <p class="fail-stat">$ <span class="number"></span> Billion</p>
+                  <p>spent or wasted</p>
+                </div>
+                <div id="time" class="time total">
+                  <p>Over</p>
+                  <p class="fail-stat"><span class="number"></span> hours</p>
+                  <p>of delays and disruptions</p>
+                </div>
+                <div id="people" class="people total">
+                  <p>Over</p>
+                  <p class="fail-stat"><span class="number"></span> Million</p>
+                  <p>people affected</p>
+                </div>
+              </div>
+              <div id="chart">
+              </div>
+              <div class="totals-intro">
+                <p>Not all failures can be measured the same way. Some, like failed upgrades or modernization projects have straightforward financial consequences. Others, like system outages and failures make their impact felt by wasted time and productivity. In the sums above, we've only included stories in which a quantified impact was readily available.</p>
+                <p><strong><em>Select one of the totals to see a timeline of failures.</em></strong></p>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/d3.chart/d3.chart.js"></script>
+    <script src="bower_components/d3.chart.base/d3.chart.base.js"></script>
+    <script src="bower_components/d3.chart.plot/d3.chart.plot.js"></script>
+    <script src="bower_components/pym.js/dist/pym.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+      ga('create','UA-XXXXX-X');ga('send','pageview');
+    </script>
+
+    <!-- build:js({app,.tmp}) scripts/main.js -->
+    <script src="scripts/marginChart.js"></script>
+    <script src="scripts/marginChart2.js"></script>
+    <!-- endbuild -->
+
+    <!-- build:js({app,.tmp}) scripts/timeline2.js -->
+    <script src="scripts/timeline2.js"></script>
+    <!-- endbuild -->
+</body>
+</html>

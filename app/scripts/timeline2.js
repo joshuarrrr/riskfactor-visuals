@@ -1,114 +1,3 @@
-// d3.chart("Circles", {
-
-//   initialize: function() {
-//     // create a base scale we will use later.
-//     this.xScale = d3.scale.linear();
-//     this.f = d3.time.format("%B %d, 20%y");
-
-//     var circlesBase = this.base.append("g")
-//         .classed("circles", true)
-//         .attr("height", this.h)
-//         .attr("width", this.w);
-
-//     this.layer("circles", circlesBase, {
-//       dataBind: function(data) {
-//         var chart = this.chart();
-
-//         // update the domain of the xScale since it depends on the data
-//         chart.xScale.domain(d3.extent(data));
-
-//         // return a data bound selection for the passed in data.
-//         return this.selectAll("circle")
-//           .data(data);
-
-//       },
-//       insert: function() {
-//         var chart = this.chart();
-
-//         // update the range of the xScale (account for radius width)
-//         // on either side
-//         chart.xScale.range([chart.r, chart.w - chart.r]);
-
-//         // setup the elements that were just created
-//         return this.append("circle")
-//           .classed("circle", true)
-//           .style("fill", "red")
-//           .attr("cy", chart.h/2)
-//           .attr("r", chart.r);
-//       },
-
-//       // setup an enter event for the data as it comes in:
-//       events: {
-//         "enter" : function() {
-//           var chart = this.chart();
-
-//           // position newly entering elements
-//           return this.attr("cx", function(d) {
-//             return chart.xScale(d);
-//           });
-//         }
-//       }
-//     });
-//   },
-
-//   // configures the width of the chart.
-//   // when called without arguments, returns the
-//   // current width.
-//   width: function(newWidth) {
-//     if (arguments.length === 0) {
-//       return this.w;
-//     }
-//     this.w = newWidth;
-//     return this;
-//   },
-
-//   // configures the height of the chart.
-//   // when called without arguments, returns the
-//   // current height.
-//   height: function(newHeight) {
-//     if (arguments.length === 0) {
-//       return this.h;
-//     }
-//     this.h = newHeight;
-//     return this;
-//   },
-
-//   // configures the radius of the circles in the chart.
-//   // when called without arguments, returns the
-//   // current radius.
-//   radius: function(newRadius) {
-//    if (arguments.length === 0) {
-//       return this.r;
-//     }
-//     this.r = newRadius;
-//     return this;
-//   },
-
-//   // configures the date format
-//   // when called without arguments, returns
-//   // current radius.
-//   format: function(newFormat) {
-//    if (arguments.length === 0) {
-//       return this.f;
-//     }
-//     this.f = newFormat;
-//     return this;
-//   }
-
-// });
-
-
-// var data = [1,3,4,6,10];
-
-// var chart = d3.select("#chart2")
-//   .append("svg")
-//   .chart("Circles")
-//     .width(100)
-//     .height(50)
-//     .radius(5);
-
-// chart.draw(data);
-
 /*global d3 */
 d3.chart("MarginChart").extend("BubbleTimeline", {
 
@@ -116,7 +5,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     "use strict";
     var chart = this;
 
-    chart.data = data;
+    // chart.data = data;
 
     // console.log(data);
 
@@ -145,7 +34,16 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     });
 
     //get an array of unique values for a given key
-    var categories = d3.set(data.map(function(d) { return d[chart.yData()]; })).values();
+    var categories = d3.set(data
+      .filter(function (d) {
+        // filter out data that has no set value (category)
+        if (d[chart.yData()] !== "") {
+          return d;
+        } 
+      })
+      .map(function(d) { return d[chart.yData()]; }))
+      .values().sort();
+
     console.log(categories);
     //update y scale domain
     chart.yScale.domain(categories);
@@ -170,11 +68,15 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.xScale.domain(d3.extent(data, function(d) { return d.dateObject; })).nice();
 
     //update r scale domain
-    var min = d3.min(data, function(d) { return d[chart.rData()]; });
+    var min = d3.min(data, function(d) { 
+      if (d[chart.rData()] > 0) {
+        return d[chart.rData()]; 
+      }
+    });
     var max = d3.max(data, function(d) { return d[chart.rData()]; });
 
-    // console.log(min);
-    // console.log(max);
+    console.log(min);
+    console.log(max);
 
     chart.rScale.domain([0, max]);
 
@@ -202,8 +104,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.layers.circlesBase = this.base.select("g").append("g")
       .classed("circles", true);
 
+    chart.layers.legendBase = this.base.append("g")
+      .classed("circle-legend", true);
+
     // create an xScale
-    this.xScale = d3.time.scale()
+    chart.xScale = d3.time.scale()
       .range([0, chart.width()]);
 
     // when the width changes, update the x scale range
@@ -212,7 +117,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     });
 
     // create a yScale
-    this.yScale = d3.scale.ordinal()
+    chart.yScale = d3.scale.ordinal()
       .rangeRoundBands([0, chart.height()], 0);
 
     // when the height changes, update the y scale range
@@ -234,19 +139,19 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     });
       
     // create a rScale
-    this.rScale = d3.scale.sqrt()
+    chart.rScale = d3.scale.sqrt()
       .range([0, 70]);
 
-    // when the r data changes, update r scale domain
-    chart.on("change:rData", function(newRData) {
-      console.log(newRData);
-      //update r scale domain
-      var min = chart.data ? d3.min(chart.data, function(d) { return d[chart.rData()]; }) : 0;
-      var max = chart.data ? d3.max(chart.data, function(d) { return d[chart.rData()]; }) : 0;
+    // // when the r data changes, update r scale domain
+    // chart.on("change:rData", function(newRData) {
+    //   console.log(newRData);
+    //   //update r scale domain
+    //   var min = chart.data ? d3.min(chart.data, function(d) { return d[chart.rData()]; }) : 0;
+    //   var max = chart.data ? d3.max(chart.data, function(d) { return d[chart.rData()]; }) : 0;
+    //   console.log(max);
+    //   chart.rScale.domain([0, max]);
 
-      chart.rScale.domain([0, max]);
-
-    });
+    // });
 
 
     // add lines layer
@@ -256,7 +161,13 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         var chart = this.chart();
 
         return this.selectAll(".straight-line")
-          .data(d3.set(data.map(function(d) { return d[chart.yData()]; })).values());
+          .data(d3.set(data.filter(function (d) {
+            // filter out data that has no set value (category)
+            if (d[chart.yData()] !== "") {
+              return d;
+            } 
+          })
+          .map(function(d) { return d[chart.yData()]; })).values());
       },
 
       // insert lines
@@ -311,7 +222,13 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         var chart = this.chart();
 
         return this.selectAll(".y.label")
-          .data(d3.set(data.map(function(d) { return d[chart.yData()]; })).values());
+          .data(d3.set(data.filter(function (d) {
+            // filter out data that has no set value (category)
+            if (d[chart.yData()] !== "") {
+              return d;
+            } 
+          })
+          .map(function(d) { return d[chart.yData()]; })).values());
       },
 
       // insert labels
@@ -471,9 +388,16 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         var chart = this.chart();
 
         return this.selectAll("circle")
-          .data(data.sort(function(a,b) {
-            return b[chart.rData()] - a[chart.rData()];
-          }));
+          .data(data
+            .filter(function (d) {
+              // filter out data that has no set value (category)
+              if (d[chart.yData()] !== "") {
+                return d;
+              } 
+            })
+            .sort(function(a,b) {
+              return b[chart.rData()] - a[chart.rData()];
+            }), function (d) { return d.Headline; });
       },
 
       // insert circles
@@ -482,7 +406,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         var selection =  this.append("circle");
 
         selection
-          .classed("data-point", true);
+          .classed("data-point", true)
+          .attr("r", 0);
 
         return selection;
       },
@@ -508,9 +433,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
 
           selection
-            .attr("cx",function(d) { return chart.xScale(d.formattedDate); })
+            .attr("cx",function(d) { return chart.xScale(d.formattedDate); });
             // .attr("cy",function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
-            .attr("r", function(d) { return chart.rScale(d[chart.rData()]); });
+            
+
+          selection.order();
 
           
           // add a mouseover listener to our circles
@@ -577,6 +504,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             legendContent
               .append("a")
               .attr("href", function(d) { return d.url; })
+              .attr("target", "_blank")
               .append("h3")
               .attr("class", "fail-hed")
               .text(function(d) { return d.Headline; });
@@ -590,6 +518,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               .append("a")
               .attr("class", "readmore")
               .attr("href", function(d) { return d.url; })
+              .attr("target", "_blank")
               .text("Read More");
 
             // console.log(el.selectAll(".tt")[0][0].parentNode.parentNode);
@@ -625,8 +554,17 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           selection
             .duration(1000)
-            .attr("cy",function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); });
+            .attr("cy",function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
+            .attr("r", function(d) { return chart.rScale(d[chart.rData()]); });
+        },
 
+        "exit:transition": function() {
+          var chart = this.chart();
+          var selection = this;
+
+          selection
+            .duration(1000)
+            .attr("r", 0);
         }
       }
 
@@ -713,7 +651,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
   },
 });
 
-d3.csv("timeline-data-jun9-2.csv", function (data) {
+
+d3.csv("timeline-data-6-18.csv", function (data) {
   "use strict";
 
   var moneyData = {"columnName":"Impact - Qty", "id":"money","data":[]};
@@ -730,7 +669,7 @@ d3.csv("timeline-data-jun9-2.csv", function (data) {
   ];
 
   var buttons = d3.select("#chart").append("div")
-    .attr("class", "select-category buttons")
+    .attr("class", "select-category buttons hidden")
     .selectAll("a.button")
     .data(categories)
     .enter()
@@ -744,6 +683,7 @@ d3.csv("timeline-data-jun9-2.csv", function (data) {
 
   var bubbles = d3.select("#chart")
     .append("svg")
+    .attr("class", "hidden")
     .chart("BubbleTimeline")
     .width(680)
     .height(400)
@@ -791,6 +731,13 @@ d3.csv("timeline-data-jun9-2.csv", function (data) {
       console.log(button.datum());
       bubbles.yData(button.datum());
 
+      // bubbles.draw(data.filter(function (d) {
+      //   // console.log(d[button.datum()]);
+      //   if (d[button.datum()] !== "") {
+      //     return d;
+      //   } 
+      // }));
+
       bubbles.draw(data);
     }
 
@@ -806,6 +753,16 @@ d3.csv("timeline-data-jun9-2.csv", function (data) {
 
   var totalCounters = d3.selectAll(".total");
 
+  console.log(moneyData.data);
+  d3.select(".totals").select(".money").select(".number")
+    .text(Math.floor(d3.sum(data, function (d) { return d[moneyData.columnName]; }) / 1e9));
+
+  d3.select(".totals").select(".time").select(".number")
+    .text(Math.floor(d3.sum(data, function (d) { return d[timeData.columnName]; }) / 1e3) + ",000");
+
+  d3.select(".totals").select(".people").select(".number")
+    .text(Math.floor(d3.sum(data, function (d) { return d[peopleData.columnName]; }) / 1e6));
+
   totalCounters.on("click", function() {
     console.log("clicked total");
     var selection = d3.select(this);
@@ -814,21 +771,28 @@ d3.csv("timeline-data-jun9-2.csv", function (data) {
 
     selection.classed("selected", true);
 
-    d3.select("#chart svg").attr("style", "display: block;");
+    d3.select("#chart svg").classed("hidden", false);
+    d3.select(".buttons").classed("hidden", false);
+    d3.select(".totals-intro").classed("hidden", true)
 
     if (selection.attr("id") === moneyData.id) {
       bubbles.rData(moneyData.columnName);
-      bubbles.draw(moneyData.data);
+      // bubbles.draw(moneyData.data);
     }
     else if (selection.attr("id") === timeData.id) {
       bubbles.rData(timeData.columnName);
-      bubbles.draw(timeData.data);
+      // bubbles.draw(timeData.data);
     }
     else if (selection.attr("id") === peopleData.id) {
       bubbles.rData(peopleData.columnName);
-      bubbles.draw(peopleData.data);
+      // bubbles.draw(peopleData.data);
     }
+
+    bubbles.draw(data);
+    pymChild.sendHeight();
   });
+
+  var pymChild = new pym.Child();
 
 
   // bubbles.draw(data);

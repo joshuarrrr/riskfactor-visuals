@@ -227,6 +227,7 @@ footer {
 .data-point {
   fill: #03a6e3;
   opacity: 0.2; 
+  cursor: pointer;
 }
 
 .data-point.active {
@@ -246,7 +247,7 @@ footer {
 #chart {
   position: relative;
 
-  svg {
+  svg.hidden {
     display: none;
   }
 }
@@ -301,6 +302,10 @@ footer {
     background-repeat: no-repeat;
     background-position: center;
   }
+}
+
+.totals-intro {
+  padding: 1em 0;
 }
 
 .legend {
