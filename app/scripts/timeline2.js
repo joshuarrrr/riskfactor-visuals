@@ -106,7 +106,10 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       .classed("circles", true);
 
     chart.layers.legendBase = this.base.append("g")
-      .classed("circle-legend", true);
+      .classed("legend", true);
+
+    chart.layers.infoBoxBase = this.base.append("g")
+      .classed("circle-info-box", true);
 
     // create an xScale
     chart.xScale = d3.time.scale()
@@ -193,7 +196,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .attr("x2",chart.width())
             .attr("y1",function(d) { return chart.yScale(d) + (chart.yScale.rangeBand() / 2); })
             .attr("y2",function(d) { return chart.yScale(d) + (chart.yScale.rangeBand() / 2); })
-            .attr("stroke","black")
             .attr("stroke-width", 1);
 
 
@@ -437,7 +439,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           .on("click", function() {
             var el = d3.select(this);
             var selectedData = el.datum();
-            var legend = d3.select(".legend");
+            var infoBox = d3.select(".info-box");
             
             console.log(selectedData);
             // el.selectAll("circle")
@@ -448,6 +450,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
               el
                 .classed("active", true);
+
+              d3.select(".legend-ring").remove();
 
               // el
               //   .append("g")
@@ -477,21 +481,30 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               //       }
               //     });
 
-              legend.selectAll("div").remove();
+              d3.select(".legend").append("circle")
+                .attr("class", "legend-ring")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", chart.rScale(selectedData[chart.rData()]))
+                .attr("stroke-width", 2)
+                .attr("fill", "none")
+                .style("stroke", "red");
 
-              var legendContent = legend.selectAll("div")
+              infoBox.selectAll("div").remove();
+
+              var infoBoxContent = infoBox.selectAll("div")
               .data([selectedData]).enter().append("div")
               .attr("class", "isotope-item");
                 
-              legendContent.append("p")
+              infoBoxContent.append("p")
                 .attr("class", "fail-stat")
                 .html(function (d) { return displayStat(chart, d); });
 
-              legendContent.append("time")
+              infoBoxContent.append("time")
                 .attr("class", "date")
                 .text(function (d) { return d.date; });
 
-              legendContent
+              infoBoxContent
                 .append("a")
                 .attr("href", function(d) { return d.url; })
                 .attr("target", "_blank")
@@ -499,12 +512,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 .attr("class", "fail-hed")
                 .text(function (d) { return d.Headline; });
 
-              legendContent
+              infoBoxContent
                 .append("p")
                 .attr("class", "fail-impact")
                 .text(function(d) { return d["Impact - Raw"]; });
 
-              legendContent
+              infoBoxContent
                 .append("a")
                 .attr("class", "readmore")
                 .attr("href", function(d) { return d.url; })
@@ -562,16 +575,149 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     });
 
+    this.layer("legend", chart.layers.legendBase, {
+      modes: ["web", "tablet"],
+      dataBind: function(data) {
+        var chart = this.chart();
+        var min = d3.min(data, function(d) { 
+          if (d[chart.rData()] > 0) {
+            return d[chart.rData()]; 
+          }
+        });
+        var max = d3.max(data, function(d) { return d[chart.rData()]; });
+        var intervals = [];
+
+        for (var i = 1; i < max; i = i*10) {
+          if ( i > min ) {
+            intervals.unshift(i);
+          }
+        }
+
+        intervals.splice(1, 0, intervals[0]/2);
+
+        console.log(intervals.slice(0,4));
+
+        d3.select(".legend")
+          .attr("transform", "translate("+ 
+          (chart.width() + (2 * chart.margin().left) + chart.rScale(intervals[0])) + 
+          "," + 
+          (chart.margin().top + chart.rScale(intervals[0])) +
+          ")");
+
+        return this.selectAll("g")
+          .data(intervals.slice(0,4), function (d) { return d; } );
+      },
+
+      insert: function() {
+        var chart = this.chart();
+        var selection =  this.append("g");
+
+        selection
+          .append("circle")
+          .classed("legend-circle", true)
+          .attr("r", 0);
+
+        selection
+          .append("line")
+          .classed("legend-line", true);
+
+        selection
+          .append("text")
+          .classed("legend-text", true);
+
+        return selection;
+      },
+
+      events: {
+        "enter" : function() {
+          var chart = this.chart();
+          var selection = this;
+          var el = d3.select(this);
+
+          selection.selectAll(".legend-circle")
+            .attr("cx", 0)
+            .attr("cy", 0);
+
+          selection.selectAll(".legend-line")
+            .attr("x1", 0)
+            .attr("x2", 0)
+            .attr("y1", function(d) { console.log(d); return - chart.rScale(d); })
+            .attr("y2", function(d) { return - chart.rScale(d); })
+            .attr("stroke", "gray")
+            .attr("stroke-width", 1);
+
+          selection.selectAll(".legend-text")
+            .attr("x", 70)
+            .attr("dy", ".5em")
+            .attr("dy", ".5em")
+            .attr("y", function (d) { return - chart.rScale(d); })
+            .style("opacity", 0);
+
+          var last = d3.select(".legend").select("g:last-child");
+
+          last.select(".legend-line")
+            .attr("y1", function(d) { return chart.rScale(d); })
+            .attr("y2", function(d) { return chart.rScale(d); });
+
+          last.select(".legend-text")
+            .attr("y", function (d) { return chart.rScale(d); });
+
+          return selection;
+        },
+
+        "exit" : function() {
+          this.remove();
+        },
+ 
+        "merge:transition": function() {
+          var chart = this.chart();
+          var selection = this;
+          var active = d3.select(".data-point.active");
+
+          selection.selectAll(".legend-circle")
+            .duration(1000)
+            .attr("r", function(d) { return chart.rScale(d); });
+
+          selection.selectAll(".legend-line")
+            .delay(1000)
+            .duration(300)
+            .attr("x2", 70);
+
+          selection.selectAll(".legend-text")
+            .delay(1300)
+            .text(function (d) { return readableNumbers(d); })
+            .style("opacity", 1);
+
+          if ( active.empty() === false && d3.select(".legend-ring").empty() === true) {
+            d3.select(".legend").append("circle")
+              .attr("class", "legend-ring")
+              .attr("cx", 0)
+              .attr("cy", 0)
+              .attr("stroke-width", 2)
+              .attr("fill", "none")
+              .style("stroke", "red")
+              .attr("r", 0)
+              .transition()
+              .duration(1000)
+              .attr("r", chart.rScale(active.datum()[chart.rData()]));
+              
+
+          }
+        }
+      }
+
+    });
+
     // this.layer("item-info", this.base.append("g"), {
     //   modes: ["web", "tablet"],
     //   dataBind: function(data) {
     //     var chart = this.chart();
-    //     return this.select(".legend").selectAll("isotope-item")
+    //     return this.select(".info-box").selectAll("isotope-item")
     //       .data(d3.select(".datapoint.active").datum());
     //   },
 
     //   insert: function() {
-    //     var chrt = ths.chart();
+    //     var chrt = this.chart();
     //     return this.append("div")
     //       .attr("class", "isotope-item");
     //   }
@@ -644,8 +790,8 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     "Industry Area"
   ];
 
-  var legend = d3.select("#chart").append("div")
-      .attr("class","legend");
+  var infoBox = d3.select("#chart").append("div")
+      .attr("class","info-box");
 
   var bubbles = d3.select("#chart")
     .append("svg")
@@ -708,10 +854,11 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     if ( activeSelection.empty() === false ){
 
       if ( activeSelection.datum()[category] === "" ) {
-        legend.selectAll("div").remove();
+        infoBox.selectAll("div").remove();
+        d3.select(".legend-ring").remove();
         activeSelection.classed("active", false);
       }
-      
+
     }
 
     buttons
@@ -728,7 +875,8 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     console.log("clicked total");
     var selection = d3.select(this);
     var activeSelection = d3.select(".data-point.active");
-    var legend = d3.select(".legend");
+    var infoBox = d3.select(".info-box");
+    var ring = d3.select(".legend-ring");
 
     if (selection.classed("selected") !== true) {
       totalCounters.classed("selected", false);
@@ -745,13 +893,21 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
       if ( activeSelection.empty() === false ){
         console.log(activeSelection.datum()[bubbles.rData()]);
+        ring.remove();
 
         if ( activeSelection.datum()[bubbles.rData()] > 0 ) {
-          legend.select(".fail-stat")
-          .html(function (d) { return displayStat(bubbles, d); });
+          infoBox.select(".fail-stat")
+            .html(function (d) { return displayStat(bubbles, d); });
+
+          // ring
+          //   .transition()
+          //   .duration(bubbles.duration())
+          //   .attr("r", bubbles.rScale(activeSelection.datum()[selection.datum().columnName]));
+
         }
         else {
-          legend.selectAll("div").remove();
+          infoBox.selectAll("div").remove();
+          
           activeSelection.classed("active", false);
         }
       }

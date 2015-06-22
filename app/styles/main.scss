@@ -216,7 +216,8 @@ footer {
 }
 
 //refactored timeline
-.straight-line {
+.straight-line, .legend-line {
+  stroke: #bbb;
   shape-rendering: crispEdges;
 }
 
@@ -224,7 +225,7 @@ footer {
   text-transform: capitalize;
 }
 
-.data-point {
+.data-point, .legend-circle {
   fill: #03a6e3;
   opacity: 0.2; 
   cursor: pointer;
@@ -232,7 +233,7 @@ footer {
 
 .data-point.active {
   opacity: 0.8;
-  stroke: gray;
+  stroke: red;
   stroke-width: 2;
 }
 
@@ -308,9 +309,10 @@ footer {
   padding: 1em 0;
 }
 
-.legend {
+.info-box {
   width: 220px;
   right: 0px;
+  top: 160px;
   position: absolute;
   //background-color: blue;
 }
@@ -320,13 +322,24 @@ p.fail-stat {
   margin: .4em 0;
 }
 
-.legend .fail-stat {
+.info-box .fail-stat {
   color: red;
-  margin: 1em 0;
+  margin: 1em 0 .5em;
+}
+
+.info-box .readmore {
+  margin-top: 0;
 }
 
 .number {
   font-size: 1.45em;
+}
+
+.legend-circle {
+  stroke-width: 1;
+  stroke: gray;
+  opacity: 1;
+  fill-opacity: .2;
 }
 
 @font-face {
