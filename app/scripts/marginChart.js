@@ -127,8 +127,17 @@ d3.chart("BaseChart").extend('MarginChart', {
     return this;
   },
  
-  duration: function() {
-    return this._duration;
+  duration: function(newDuration) {
+    if (arguments.length === 0) {
+      return this._duration;
+    }
+    var oldDuration = this._duration;
+
+    if ( oldDuration !== newDuration) {
+      this._duration = newDuration;
+    }
+ 
+    return this;
   },
  
   color: function() {
