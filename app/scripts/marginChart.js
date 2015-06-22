@@ -185,7 +185,7 @@ d3.chart("BaseChart").extend('MarginChart', {
     var oldDateDisplay = this._dateDisplay;
 
     if ( oldDateDisplay !== newDateDisplay) {
-      this._dateDisplay = d3.time.format(newDateDisplay);
+      this._dateDisplay = newDateDisplay;
     }
  
     this.trigger('change:dateDisplay', newDateDisplay, oldDateDisplay);

@@ -20,6 +20,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       d.formattedDate = formatString.parse(d.date);
       d.dateObject = new Date(d.date);
       d.date = format(d.dateObject);
+      d.month = d.dateObject.getMonth()
 
       //coerce to number
       if (d[chart.rData()] === null) {
@@ -486,13 +487,17 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 .attr("class", "fail-stat")
                 .html(function (d) { return displayStat(chart, d); });
 
+              legendContent.append("time")
+                .attr("class", "date")
+                .text(function (d) { return d.date; });
+
               legendContent
                 .append("a")
                 .attr("href", function(d) { return d.url; })
                 .attr("target", "_blank")
                 .append("h3")
                 .attr("class", "fail-hed")
-                .text(function(d) { return d.Headline; });
+                .text(function (d) { return d.Headline; });
 
               legendContent
                 .append("p")
@@ -650,7 +655,7 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     .height(400)
     .margin({top: 50, bottom: 70, right: 240, left: 20})
     .dateParse("iso")
-    .dateDisplay("%B %d, 20%y")
+    .dateDisplay("%B 20%y")
     .yData("Country")
     .duration(300);
 
@@ -674,6 +679,7 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     var button = d3.select(this);
     var toFade = d3.selectAll(".label, .straight-line");
     var category = button.datum();
+    var activeSelection = d3.select(".data-point.active");
 
     // console.log(toFade);
     
@@ -697,6 +703,15 @@ d3.csv("timeline-data-6-18.csv", function (data) {
       // }));
 
       bubbles.draw(data);
+    }
+
+    if ( activeSelection.empty() === false ){
+
+      if ( activeSelection.datum()[category] === "" ) {
+        legend.selectAll("div").remove();
+        activeSelection.classed("active", false);
+      }
+      
     }
 
     buttons
