@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>Risk Factor Anniversary Project</title>
+    <title>Building Systems of Systems</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -26,24 +26,25 @@
 
     <div class="container">
       
-      <h1>Risk Factor Anniversary Project</h1>
+      <h1>Building Systems of Systems</h1>
+      <h2>Bigger Ambitions, Bigger Failure</h2>
       
-      <p>Welcome to the work in progress! Check out the current state of the visualizations:
-      <ol>
-        <li><a href="timeline.html">Software failures seem to be growing more costly and more frequent</a></li>
-        <li><a href="replacements.html">Software projects are getting bigger and more complex</a></li>
-        <li>Projects are often late and over budget
-          <ul>
-            <li>Version 1: <a href="failure1.html">Stacked area chart</a></li>
-            <li>Version 2: <a href="failure2.html">Seqential area chart, includes moving deadlines</a></li>
-          </ul>
-        </li>
-        <li><a href="blamegame.html">What failed projects have in common</a></li>
-        <li>Software failures have a human cost</li>
-      </ol>
+      <h3 id="chart-title"></h3>
+
+      
+      <div id="chart"></div>
+
+      <h3>To Do:</h3>
+      <ul>
+        <li>Clean up Google Docs data for import</li>
+        <li>Clean up d3.Chart structure</li>
+        <li>Incorporate real data</li>
+        <li>Add axes</li>
+      </ul>
 
 
     </div>
+    <footer><a href="index.html">Back to viz index</a></footer>
 
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -67,9 +68,8 @@
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
 
-        <!-- build:js({app,.tmp}) scripts/main.js -->
-        <script src="scripts/marginChart.js"></script>
-        <script src="scripts/marginChart2.js"></script>
+        <!-- build:js({app,.tmp}) scripts/timeline.js -->
+        <script src="scripts/timeline.js"></script>
         <!-- endbuild -->
 </body>
 </html>
