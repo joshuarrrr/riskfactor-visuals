@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>Risk Factor Anniversary Project</title>
+    <title>Building Systems of Systems</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -27,34 +27,27 @@
   </head>
   <body>
 
-    <div class="container">
+    <div class="container normal">
       <div class="content-area">
         <article class="article-detail">
           <div id="artBody">
-  
-            <div class="totals">
-              <div id="money" class="money total">
-                <p>Over</p>
-                <p class="fail-stat">$ <span class="number"></span></p>
-                <p>spent or wasted</p>
-              </div>
-              <div id="time" class="time total">
-                <p>Over</p>
-                <p class="fail-stat"><span class="number">&nbsp;</span> hours</p>
-                <p>of delays and disruptions</p>
-              </div>
-              <div id="people" class="people total">
-                <p>Over</p>
-                <p class="fail-stat"><span class="number">&nbsp;</span></p>
-                <p>people affected</p>
-              </div>
-            </div>
-            <div id="chart" class="chart-container">
-            </div>
-            <div class="totals-intro">
-              <p>Not all failures can be measured the same way. Some, like failed upgrades or modernization projects have straightforward financial consequences. Others, like system outages and failures make their impact felt by wasted time and productivity. In the sums above, we've only included stories in which a quantified impact was readily available.</p>
-              <p><strong><em>Select one of the totals to see a timeline of failures.</em></strong></p>
-            </div>
+            <div id="chart" class="chart-container"></div>
+            <svg width="0" height="0">
+              <defs>
+                <marker id="markerCircle" markerWidth="8" markerHeight="8" refX="5" refY="5">
+                    <circle cx="5" cy="5" r="3" style="stroke: none; fill:#000000;"></circle>
+                </marker>
+
+                <marker id="markerArrow" markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto">
+                    <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;"></path>
+                </marker>
+                <marker id="markerExplode" markerWidth="17" markerHeight="17" refX="5" refY="5">
+                  <polygon xmlns="http://www.w3.org/2000/svg" id="e7_polygon" style="stroke-width: 1px; vector-effect: non-scaling-stroke;" points="3308.65 2406.83 3327.34 2456.77 3401.65 2434.83 3364.77 2484.77 3458.88 2534.32 3357.97 2557.89 3371.65 2610.83 3325.65 2580.06 3299.85 2650.38 3273.45 2573.91 3188.36 2600.69 3244.87 2545.09 3178.65 2504.83 3257.59 2483.83 3214.65 2425.55 3271.59 2447.03" fill="red" transform="translate(-143.5,-108.3) scale(.045)"></polygon>
+                </marker>
+              </defs>
+
+            </svg>
+
           </div>
         </article>
       </div>
@@ -86,8 +79,9 @@
     <script src="scripts/marginChart.js"></script>
     <!-- endbuild -->
 
-    <!-- build:js({app,.tmp}) scripts/timeline.js -->
-    <script src="scripts/timeline.js"></script>
+    <!-- build:js({app,.tmp}) scripts/replacements.js -->
+    <script src="scripts/replacements.js"></script>
     <!-- endbuild -->
-  </body>
+
+</body>
 </html>
