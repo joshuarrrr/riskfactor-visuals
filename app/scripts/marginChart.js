@@ -1,25 +1,31 @@
-d3.chart("BaseChart").extend('MarginChart', {
+/*global d3, Modernizr */
+
+d3.chart("BaseChart").extend("MarginChart", {
 
   modes: {
     mobile : function() {
-      return Modernizr.mq("only all and (max-width: 480px)");
+      "use strict";
+      var isMobile = /ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent);
+      return isMobile && Modernizr.mq("only all and (max-width: 480px)");
     },
     tablet: function() {
-      return Modernizr.mq("only all and (min-width: 481px) and (max-width: 767px)");
+      "use strict";
+      return Modernizr.mq("only all and (min-width: 481px) and (max-width: 768px)");
     },
     web: function() {
-      return Modernizr.mq("only all and (min-width: 768px)");
+      "use strict";
+      return Modernizr.mq("only all and (min-width: 769px)");
     }
   },
  
   initialize: function() {
- 
+    "use strict";
     /**
       Private properties and methods
     */
     this._margin = {top: 20, right: 20, bottom: 20, left: 20};
-    this._innerWidth  = this.base.attr('width') ? this.base.attr('width') - this._margin.left - this._margin.right : 200;
-    this._innerHeight = this.base.attr('height') ? this.base.attr('height') - this._margin.top - this._margin.bottom : 200;
+    this._innerWidth  = this.base.attr("width") ? this.base.attr("width") - this._margin.left - this._margin.right : 200;
+    this._innerHeight = this.base.attr("height") ? this.base.attr("height") - this._margin.top - this._margin.bottom : 200;
     this._asideWidth = 0;
     this._duration = 500;
     this._color = "#ddd";
@@ -29,23 +35,24 @@ d3.chart("BaseChart").extend('MarginChart', {
     this._rData = "r";
  
     // make sure container height and width are set.
-    this.base.attr('width', this.outerWidth());
-    this.base.attr('height', this.outerHeight());
+    this.base.attr("width", this.outerWidth());
+    this.base.attr("height", this.outerHeight());
  
     // Adjust the margins
-    this.base.append('g').attr('transform', 'translate(' + this._margin.left + ',' + this._margin.top + ')');
+    this.base.append("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
   },
  
   /**
     Public methods
   */
-  getOriginalData: function(d) {return d;},
+  getOriginalData: function(d) { "use strict"; return d;},
   
-  outerWidth: function() { return this._innerWidth + this._margin.left + this._margin.right; },
+  outerWidth: function() { "use strict"; return this._innerWidth + this._margin.left + this._margin.right; },
  
-  outerHeight: function() { return this._innerHeight + this._margin.top + this._margin.bottom; },
+  outerHeight: function() { "use strict"; return this._innerHeight + this._margin.top + this._margin.bottom; },
  
   width: function(newWidth) {
+    "use strict";
     if (arguments.length === 0) {
       return this._innerWidth;
     }
@@ -58,10 +65,10 @@ d3.chart("BaseChart").extend('MarginChart', {
       this._innerWidth = newWidth;
  
       // set higher container width
-      this.base.attr('width', this.outerWidth());
+      this.base.attr("width", this.outerWidth());
  
       // trigger a change event
-      this.trigger('change:width', newWidth, oldWidth);
+      this.trigger("change:width", newWidth, oldWidth);
     }
  
     // always return the chart, for chaining magic.
@@ -69,6 +76,7 @@ d3.chart("BaseChart").extend('MarginChart', {
   },
  
   height: function(newHeight) {
+    "use strict";
     if (arguments.length === 0) {
       return this._innerHeight;
     }
@@ -79,15 +87,16 @@ d3.chart("BaseChart").extend('MarginChart', {
  
       this._innerHeight = newHeight;
  
-      this.base.attr('height', this.outerHeight());
+      this.base.attr("height", this.outerHeight());
  
-      this.trigger('change:height', newHeight, oldHeight);
+      this.trigger("change:height", newHeight, oldHeight);
     }
  
     return this;
   },
  
   margin: function(newMargin) {
+    "use strict";
     if (arguments.length === 0) {
       return this._margin;
     }
@@ -96,25 +105,28 @@ d3.chart("BaseChart").extend('MarginChart', {
     this._margin = newMargin;
  
     // Update the base
-    this.base.select('g').attr('transform', 'translate(' + this._margin.left + ',' + this._margin.top + ')');
-    this.base.attr('width', this.outerWidth());
-    this.base.attr('height', this.outerHeight());
+    this.base.select("g").attr("transform", "translate(" + this._margin.left + "," + this._margin.top + ")");
+    this.base.attr("width", this.outerWidth());
+    this.base.attr("height", this.outerHeight());
  
  
-    this.trigger('change:margin', newMargin, oldMargin);
+    this.trigger("change:margin", newMargin, oldMargin);
  
     return this;
   },
  
   chartWidth: function() {
+    "use strict";
     return this.width() - this._asideWidth;
   },
  
   chartHeight: function() {
+    "use strict";
     return this.height();
   },
  
   asideWidth: function(newAsideWidth) {
+    "use strict";
     if (arguments.length === 0) {
       return this._asideWidth;
     }
@@ -122,12 +134,13 @@ d3.chart("BaseChart").extend('MarginChart', {
     var oldAsideWidth = this._asideWidth;
     this._asideWidth = newAsideWidth;
  
-    this.trigger('change:asideWidth', newAsideWidth, oldAsideWidth);
+    this.trigger("change:asideWidth", newAsideWidth, oldAsideWidth);
  
     return this;
   },
  
   duration: function(newDuration) {
+    "use strict";
     if (arguments.length === 0) {
       return this._duration;
     }
@@ -141,6 +154,7 @@ d3.chart("BaseChart").extend('MarginChart', {
   },
  
   color: function() {
+    "use strict";
     return this._color;
   },
  
@@ -151,17 +165,19 @@ d3.chart("BaseChart").extend('MarginChart', {
     single color (which will apply to all bars) or an array.
   */
   colors: function(newColors) {
+    "use strict";
     if (arguments.length === 0) {
       return this._color.range();
     }
  
-    newColors = (typeof newColors === 'string') ? [newColors] : newColors;
+    newColors = (typeof newColors === "string") ? [newColors] : newColors;
     this._color.range(newColors);
  
     return this;
   },
 
   dateParse: function(newDateParse) {
+    "use strict";
     if (arguments.length === 0) {
       return this._dateParse;
     }
@@ -172,12 +188,13 @@ d3.chart("BaseChart").extend('MarginChart', {
       this._dateParse = d3.time.format(newDateParse);
     }
  
-    this.trigger('change:dateParse', newDateParse, oldDateParse);
+    this.trigger("change:dateParse", newDateParse, oldDateParse);
  
     return this;
   },
   
   dateDisplay: function(newDateDisplay) {
+    "use strict";
     if (arguments.length === 0) {
       return d3.time.format(this._dateDisplay);
     }
@@ -188,12 +205,13 @@ d3.chart("BaseChart").extend('MarginChart', {
       this._dateDisplay = newDateDisplay;
     }
  
-    this.trigger('change:dateDisplay', newDateDisplay, oldDateDisplay);
+    this.trigger("change:dateDisplay", newDateDisplay, oldDateDisplay);
  
     return this;
   },
 
   yData: function(newYData) {
+    "use strict";
     if (arguments.length === 0) {
       return this._yData;
     }
@@ -204,12 +222,13 @@ d3.chart("BaseChart").extend('MarginChart', {
       this._yData = newYData;
     }
  
-    this.trigger('change:yData', newYData, oldYData);
+    this.trigger("change:yData", newYData, oldYData);
  
     return this;
   },
 
   rData: function(newRData) {
+    "use strict";
     if (arguments.length === 0) {
       return this._rData;
     }
@@ -220,8 +239,8 @@ d3.chart("BaseChart").extend('MarginChart', {
       this._rData = newRData;
     }
  
-    this.trigger('change:rData', newRData, oldRData);
-    this.trigger('change:yData', this._yData, this._yData);
+    this.trigger("change:rData", newRData, oldRData);
+    this.trigger("change:yData", this._yData, this._yData);
  
     return this;
   }
