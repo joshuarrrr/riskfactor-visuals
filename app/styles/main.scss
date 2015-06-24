@@ -5,21 +5,9 @@ body {
   background: #fafafa;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #333;
-}
 
-.hero-unit {
-  margin: 50px auto 0 auto;
-  width: 300px;
-  font-size: 18px;
-  font-weight: 200;
-  line-height: 30px;
-  background-color: #eee;
-  border-radius: 6px;
-  padding: 60px;
-  h1 {
-    font-size: 60px;
-    line-height: 1;
-    letter-spacing: -1px;
+  &.parent {
+    margin: 0 20px;
   }
 }
 
@@ -33,139 +21,235 @@ body {
 ////////////
 // CUSTOM //
 ////////////
+$spectrumblue: #03a6e3;
+
+$black: rgb(0, 0, 0);
+$white: rgb(255, 255, 255);
+$impact: rgb(255, 0, 0);
+$lightgray: #ddd;
+$lightergray: #efefef;
+$medgray: #bbb;
+$gray: #808080;
+
+$halfred: rgba(255, 0, 0, .5);
+$halfgreen: rgba(0, 255, 0, .5);
+$halfblue: rgba(0, 0, 255, .5);
 
 $containerwidth: 940px;
+$articlewidth: 620px;
 $timelinewidth: 700px;
 $summarywidth: $containerwidth - $timelinewidth - 24;
-$border1: black 2px solid;
+$border1: $black 2px solid;
 
+/////////////////////
+// Dev-Only Styles //
+/////////////////////
 .container {
-  width: 940px;
   margin: 0 auto;
+  max-width: $containerwidth;
+
+  &.normal {
+    max-width: $articlewidth;
+  }
 }
 
-footer {
+.content-area {
+  background: $white;
+}
+
+.dev-footer {
   text-align: center;
 
-  a, a:visited {
-    color: white!important;
+  a, 
+  a:visited {
+    color: $white;
   }
+}
+
+@font-face {
+  font-family: 'Theinhardt-Medium';
+  font-style: normal;
+  font-weight: normal;
+  src: url('fonts/Theinhardt/Theinhardt-Medium.otf');
+}
+
+@font-face {
+  font-family: 'Theinhardt-Medium';
+  font-style: italic;
+  font-weight: normal;
+  src: url('fonts/Theinhardt/Theinhardt-MedilumIta.otf');
+}
+
+/////////////////
+// Real Styles //
+/////////////////
+
+// ALL CHARTS
+
+.chart-container {
+  position: relative;
+}
+
+.hidden {
+  display: none;
 }
 
 .axis path,
 .axis line {
   fill: none;
-  stroke: #000;
   shape-rendering: crispEdges;
+  stroke: $black;
 }
 
-.y.axis .tick:first-child {
+.y.axis .tick:first-of-type {
   display: none;
 }
 
-.timeline {
-  float: right;
-  width: $timelinewidth;
-  margin-bottom: 160px;
+.straight-line, 
+.legend-line {
+  shape-rendering: crispEdges;
+  stroke: $medgray;
 }
 
-.summary {
-  float: right;
-  width: $summarywidth;
-  clear: none;
-  text-align: left;
-  height: auto;
-  border: $border1;
-  padding: 6px 10px 10px;
 
-  h3, p {
-    margin: 0 auto;
-  }
+// TIMELINE CHART
+// .label {
+//   text-transform: capitalize;
+// }
 
-  p em {
-    font-size: .9em;
-  }
+// Totals Section
+.totals {
 
-  .impact {
-    color: red;
-  }
+  overflow: auto;
 
-  p.timeline-nav {
-    border-top: black 2px solid;
-    margin: 10px -10px;
-    padding: 5px 10px 0;
-    overflow: auto;
+  p {
+    margin: 0;
+  }  
+  
+  .total {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    color: $white;
+    cursor: pointer;
+    float: left;
+    height: 110px;
+    margin-right: 20px;
     text-align: center;
+    text-shadow: $gray 1px 1px 3px;
+    width: 300px;
+
+    &.selected {
+      outline: 3px $white inset;
+      outline-offset: -3px;
+      //-webkit-box-shadow: inset 0 0 120px rgba(245, 245, 245, 0.8);
+      //-moz-box-shadow:    inset 0 0 120px rgba(245, 245, 245, 0.8);
+      //box-shadow:         inset 0 0 120px rgba(245, 245, 245, 0.8);
+    }
+  }
+
+  .total:last-child {
+    margin-right: 0;
+  }
+
+  .people {
+    background: $halfblue;
+    background-image: url('../images/iconmonstr-user-14-icon.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .time {
+    background: $halfred;
+    background-image: url('../images/iconmonstr-time-3-icon.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  .money {
+    background: $halfgreen;
+    background-image: url('../images/iconmonstr-banknote-5-icon.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
   }
 }
 
-.summary.empty {
-  border: none;
+p.fail-stat {
+  font-size: 2em;
+  margin: .4em 0;
 }
 
-.incident-date {
+// Totals Intro
+.totals-intro {
+  padding: 1em 0;
+}
+
+// Chart Area
+.data-point, 
+.legend-circle {
   cursor: pointer;
+  fill: $spectrumblue;
+  fill-opacity: .2;  
+}
 
-  .government {
-    color: blue;
-    fill: blue;
-    stroke: blue;
+.legend-circle {
+  stroke: $gray;
+  stroke-width: 1;
+}
+
+.data-point.active {
+  fill-opacity: .8;
+  stroke: $impact;
+  stroke-width: 2;
+}
+
+// Info Box Area
+.info-box {
+  position: absolute;
+  right: 0;
+  top: 160px;
+  width: 220px;
+
+  .fail-stat {
+    color: $impact;
+    margin: 1em 0 .5em;
   }
 
-  .commercial {
-    color: green;
-    fill: green;
-    stroke: green;
-  }
-
-  .other {
-    color: black;
-    fill: black;
-    stroke: black;
-  }
-
-  .customs {
-    fill: orange;
-    stroke: white;
-  }
-
-  .law {
-      fill: darkred;
-      stroke: white;
-  }
-
-  .defense {
-      fill: red;
-      stroke: white;
-  }
-
-  .treasury {
-      fill: yellow;
-      stroke: white;
-  }
-
-  .IT {
-      fill: darkgreen;
-      stroke: white;
-  }
-
-  .selected {
-    stroke: darkgray;
+  .readmore {
+    margin-top: 0;
   }
 }
 
-.prev-incident, .prev-incident-cat {
-  display: block;
-  float: left;
-  width: 30%;
-}
-.next-incident, .next-incident-cat {
-  display: block;
-  float: right;
-  width: 30%;
+.number {
+  font-size: 1.45em;
 }
 
-// failures
+// Selection Buttons
+.select-category {
+  text-align: right;
+
+  button {
+    margin-left: 5px;
+  }
+}
+
+.buttons {
+  margin-bottom: 0;
+  text-align: center;
+
+  a.button {
+    cursor: pointer;
+    float: none;
+    margin: 0 5px;
+  }
+}
+
+/////////////////////
+// Failures Charts //
+/////////////////////
 
 .area1 {
   path.area {
@@ -211,171 +295,131 @@ footer {
   }
 }
 
-.hidden {
-  display: none;
-}
+//////////////////
+// Old Timeline //
+//////////////////
+// .timeline {
+//   float: right;
+//   margin-bottom: 160px;
+//   width: $timelinewidth;
+// }
 
-//refactored timeline
-.straight-line, .legend-line {
-  stroke: #bbb;
-  shape-rendering: crispEdges;
-}
+// .summary {
+//   border: $border1;
+//   clear: none;
+//   float: right;
+//   height: auto;
+//   padding: 6px 10px 10px;
+//   text-align: left;
+//   width: $summarywidth;
 
-.label {
-  text-transform: capitalize;
-}
+//   h3, 
+//   p {
+//     margin: 0 auto;
+//   }
 
-.data-point, .legend-circle {
-  fill: #03a6e3;
-  opacity: 0.2; 
-  cursor: pointer;
-}
+//   p em {
+//     font-size: .9em;
+//   }
 
-.data-point.active {
-  opacity: 0.8;
-  stroke: red;
-  stroke-width: 2;
-}
+//   .empty {
+//     border: 0;
+//   }
 
-.select-category {
-  text-align: right;
+//   .impact {
+//     color: $impact;
+//   }
 
-  button {
-    margin-left: 5px;
+//   .timeline-nav {
+//     border-top: $black 2px solid;
+//     margin: 10px -10px;
+//     overflow: auto;
+//     padding: 5px 10px 0;
+//     text-align: center;
+//   }
+// }
+
+// .incident-date {
+//   cursor: pointer;
+
+//   .government {
+//     color: blue;
+//     fill: blue;
+//     stroke: blue;
+//   }
+
+//   .commercial {
+//     color: green;
+//     fill: green;
+//     stroke: green;
+//   }
+
+//   .other {
+//     color: black;
+//     fill: black;
+//     stroke: black;
+//   }
+
+//   .customs {
+//     fill: orange;
+//     stroke: white;
+//   }
+
+//   .law {
+//       fill: darkred;
+//       stroke: white;
+//   }
+
+//   .defense {
+//       fill: red;
+//       stroke: white;
+//   }
+
+//   .treasury {
+//       fill: yellow;
+//       stroke: white;
+//   }
+
+//   .IT {
+//       fill: darkgreen;
+//       stroke: white;
+//   }
+
+//   .selected {
+//     stroke: darkgray;
+//   }
+// }
+
+// .prev-incident, .prev-incident-cat {
+//   display: block;
+//   float: left;
+//   width: 30%;
+// }
+// .next-incident, .next-incident-cat {
+//   display: block;
+//   float: right;
+//   width: 30%;
+// }
+
+
+/////////////////////////////
+// Spectrum missing styles //
+/////////////////////////////
+
+// Reworked the Spectrum button gradient LESS mixin
+// Had to change "top" -> "to top"
+
+@mixin button-gradient($base-color: $spectrumblue) {
+  $color-diff: #181818;
+  $start-color: $base-color - $color-diff;
+  background: linear-gradient(to top, $start-color 50%, $base-color);
+  background-color: $start-color;
+
+  &:hover {
+    background: linear-gradient(to top, $base-color 40%, $start-color);
   }
 }
 
-#chart {
-  position: relative;
-
-  svg.hidden {
-    display: none;
-  }
-}
-
-.totals {
-
-  overflow: auto;
-
-  p {
-    margin: 0;
-  }  
-  
-  .total {
-    width: 300px;
-    height: 110px;
-    float: left;
-    margin-right: 20px;
-    text-align: center;
-    cursor: pointer;
-    color: white;
-    text-shadow: #888 1px 1px 3px;
-
-    &.selected {
-      outline: 3px white inset;
-      outline-offset: -3px;
-      //-webkit-box-shadow: inset 0 0 120px rgba(245, 245, 245, 0.8);
-      //-moz-box-shadow:    inset 0 0 120px rgba(245, 245, 245, 0.8);
-      //box-shadow:         inset 0 0 120px rgba(245, 245, 245, 0.8);
-    }
-  }
-  .total:last-child {
-    margin-right: 0;
-  }
-  .people {
-    background: rgba(0,0,255,.5);
-    background-image: url('../images/iconmonstr-user-14-icon.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  .time {
-    background: rgba(255,0,0,.5);
-    background-image: url('../images/iconmonstr-time-3-icon.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-  .money {
-    background: rgba(0,255,0,.5);
-    background-image: url('../images/iconmonstr-banknote-5-icon.svg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-  }
-}
-
-.totals-intro {
-  padding: 1em 0;
-}
-
-.info-box {
-  width: 220px;
-  right: 0px;
-  top: 160px;
-  position: absolute;
-  //background-color: blue;
-}
-
-p.fail-stat {
-  font-size: 2em;
-  margin: .4em 0;
-}
-
-.info-box .fail-stat {
-  color: red;
-  margin: 1em 0 .5em;
-}
-
-.info-box .readmore {
-  margin-top: 0;
-}
-
-.number {
-  font-size: 1.45em;
-}
-
-.legend-circle {
-  stroke-width: 1;
-  stroke: gray;
-  opacity: 1;
-  fill-opacity: .2;
-}
-
-@font-face {
-    font-family: 'Theinhardt-Medium';
-    font-style: normal;
-    font-weight: normal;
-    src: url('fonts/Theinhardt/Theinhardt-Medium.otf');
-  }
-
-@font-face {
-    font-family: 'Theinhardt-Medium';
-    font-style: italic;
-    font-weight: normal;
-    src: url('fonts/Theinhardt/Theinhardt-MedilumIta.otf');
-  }
-
-
-/* Check it out - create a gradient for the buttons based on one color */
-/*
-@mixin button-gradient($base-color: #00acee){
-  $start-color: $base-color + #181818;
-  background: linear-gradient(top, $start-color 50%, $base-color);
-  background-color:$start-color;
-    &:hover{
-        background: linear-gradient(top, $base-color 40%, $start-color);
-    }
-
-}
-*/
-
-a.button.inactive {
-  background: -webkit-linear-gradient(top, #efefef 50%, #ddd);
-  background: linear-gradient(top, #efefef 50%, 
-#ddd);
-    &:hover{
-        background: -webkit-linear-gradient(top, #ddd 50%, #efefef);
-        background: linear-gradient(top, #ddd 40%, #efefef);
-    }
+.button.inactive {
+  @include button-gradient($medgray);
 }
