@@ -1,4 +1,4 @@
-/*global d3 */
+/*global d3, pym */
 d3.chart("MarginChart").extend("BubbleTimeline", {
 
   transform: function(data) {
@@ -20,7 +20,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       d.formattedDate = formatString.parse(d.date);
       d.dateObject = new Date(d.date);
       d.date = format(d.dateObject);
-      d.month = d.dateObject.getMonth()
+      d.month = d.dateObject.getMonth();
 
       //coerce to number
       if (d[chart.rData()] === null) {
@@ -885,7 +885,7 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
       d3.select("#chart svg").classed("hidden", false);
       d3.select(".buttons").classed("hidden", false);
-      d3.select(".totals-intro").classed("hidden", true)
+      d3.select(".totals-intro").classed("hidden", true);
 
       bubbles.rData(selection.datum().columnName);
 
@@ -930,6 +930,7 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
 
 function readableNumbers (n, mode) {
+  "use strict";
   var hundreds = d3.format(",3g");
   var bigNumbers = d3.format("f");
 
@@ -955,6 +956,8 @@ function readableNumbers (n, mode) {
 }
 
 function displayStat (chart, d) {
+  "use strict";
+
   var svg = d3.select("#chart").select("svg");
   var pre = "";
   var fullNum = readableNumbers(d[chart.rData()]);
