@@ -446,10 +446,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
             if ( el.classed("active") !== true ) {
               d3.selectAll(".active")
-              .classed("active", false);
+                .classed("active", false);
 
               el
                 .classed("active", true);
+            }
 
               d3.select(".legend-ring").remove();
 

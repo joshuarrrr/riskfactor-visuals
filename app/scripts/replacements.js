@@ -7,6 +7,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     // Private properties and methods
     this._lineData = "line";
+    this._dataLabel = "label";
     this._xData = "x";
     this._yData = "y";
 
@@ -19,8 +20,14 @@ d3.chart("MarginChart").extend("SystemsChart", {
     chart.layers.xAxisBase = chart.base.select("g").append("g")
       .classed("axes", true);
 
+    chart.layers.infoBoxBase = d3.select(".circle-info-box");
+
     chart.layers.datapointBase = chart.base.select("g").append("g")
       .classed("data-series", true);
+
+    chart.layers.legendBase = chart.base.append("g")
+      .classed("legend-base", true)
+      .attr("transform", "translate(0, 354)");
 
 
     // create an xScale
@@ -41,6 +48,25 @@ d3.chart("MarginChart").extend("SystemsChart", {
       chart.yScale.range([newHeight, 0]);
     });
 
+    var legendValues = ["start", "to date", "end"];
+
+    var legendItem = chart.layers.legendBase.selectAll(".legend-item")
+      .data(legendValues)
+    .enter().append("g")
+      .classed("legend-item", true);
+
+    legendItem.append("circle")
+      .attr("cx", function (d,i) { return 14 + (i * 70) - ((7 - (i > 0 ? legendValues[i-1].length : 7)) * 5); })
+      .attr("cy", 5)
+      .attr("r", 5)
+      .attr("class", function(d) { return d.replace(" ", "-"); });
+
+    legendItem.append("text")
+      .attr("x", function (d,i) { return i * 70 - ((7 - (i > 0 ? legendValues[i-1].length : 7)) * 5); })
+      .attr("y", 0)
+      .attr("dx", 24)
+      .attr("dy", ".65em")
+      .text(function (d) { return d; });
   
     // add axes layer 
     this.layer("x-axis", chart.layers.xAxisBase, {
@@ -50,7 +76,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
           .data([data]);
       },
 
-      // insert area 1
+      // insert x axis
       insert: function() {
         var chart = this.chart();
         var selection = this.append("g")
@@ -61,11 +87,11 @@ d3.chart("MarginChart").extend("SystemsChart", {
           .attr("class", "x axis-label")
           .append("text")
             .attr("y", 0)
-            .attr("x", chart.width() / 2)
+            .attr("x", chart.width())
+            .attr("text-anchor", "end")
             .attr("dy", "3em")
             .attr("dx", "0")
-            .text("Number of Legacy Systems to Replace")
-            .attr("text-anchor", "middle");
+            .text("Number of Legacy Systems to Replace");
 
         return selection;
       },
@@ -101,6 +127,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
       // insert area 1
       insert: function() {
+        var chart = this.chart();
         var selection = this.append("g")
           .attr("class", "y axis");
 
@@ -108,9 +135,10 @@ d3.chart("MarginChart").extend("SystemsChart", {
             .attr("class", "y axis-label")
             .append("text")
               .attr("y", 0)
-              .attr("x",0)
-              .attr("dy", ".32em")
-              .attr("dx", "9")
+              .attr("x", -9)
+              .attr("dy", -20)
+              .attr("dx", 0)
+              .attr("text-anchor", "end")
               .text("Cost, US$");
 
         return selection;
@@ -176,7 +204,8 @@ d3.chart("MarginChart").extend("SystemsChart", {
           var selection = this;
 
           selection
-            .attr("class", "datapoint");
+            .attr("class", "datapoint")
+            .classed("active", function(d,i) { return i === (chart.data.length - 1); });
 
           // var line = d3.svg.line()
           //     .x(function(d) { return chart.xScale(d[chart.xData()]); })
@@ -224,9 +253,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
             .attr("y2", function(d) {
               return chart.yScale(d[chart.lineData()][0][chart.yData()]);
             })
-            .attr("class", "line")
-            .attr("stroke", "black")
-            .attr("stroke-width", 0);
+            .attr("class", "line");
 
           
 
@@ -258,8 +285,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
               return chart.yScale(d[chart.lineData()][0][chart.yData()]);
             })
             .attr("r", 0)
-            .attr("class", function(d) { return d[chart.lineData()][0].milestone; })
-            .style("fill", "green");
+            .attr("class", function(d) { return d[chart.lineData()][0].milestone; });
 
           
 
@@ -287,78 +313,68 @@ d3.chart("MarginChart").extend("SystemsChart", {
             //   }
             // });
 
-            el.selectAll(".line")
-              .attr("x2", function(d) {
-                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-              })
-              .attr("y2", function(d) {
-                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-              })
-              .attr("marker-end", "")
-              .transition().duration(1000)
-              .attr("x2", function(d) {
-                return chart.xScale(d[chart.lineData()][1][chart.xData()]);
-              })
-              .attr("y2", function(d) {
-                return chart.yScale(d[chart.lineData()][1][chart.yData()]);
-              })
-              .transition().duration(1000)
-              .attr("marker-end", function(d) {
-                if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
-                  return "url(#markerExplode)";
-                }
-                else{
-                  return "url(#markerCircle)";
-                }
-              });
+            if ( el.classed("active") !== true ) {
+              d3.selectAll(".active")
+                .classed("active", false)
+                .selectAll("circle")
+                  .attr("r", 5);
 
-            el.selectAll("circle.start")
-              .style("stroke", "gray")
-              .style("stroke-width", "3")
-              .attr("r", 8);
+              el
+                .classed("active", true);
 
-            el.selectAll(".line")
-              .style("stroke", "gray")
-              .style("stroke-width", "3");
+              chart.layer("info-box").draw();
 
-            el
-              .append("g")
-                .attr("class","tt")
-              .append("text")
-                .attr("y", function(d) { return chart.yScale(d[chart.lineData()][1].cost); })
-                .attr("x", function(d) { return chart.xScale(d[chart.lineData()][0]["systems to replace"]); })
-                .attr("dy", "-.5em")
-                .attr("dx", 0)
-                .attr("class", "ttText")
-                .text(function(d) { return d.project; });
+              el.selectAll(".line")
+                .attr("x2", function(d) {
+                  return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+                })
+                .attr("y2", function(d) {
+                  return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+                })
+                .attr("marker-end", "")
+                .transition().duration(1000)
+                .attr("x2", function(d) {
+                  return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+                })
+                .attr("y2", function(d) {
+                  return chart.yScale(d[chart.lineData()][1][chart.yData()]);
+                })
+                .transition().duration(1000)
+                .attr("marker-end", function(d) {
+                  if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
+                    if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
+                      return "url(#markerExplodeEnd)";
+                    }
+                    else {
+                      return "url(#markerExplodeToDate)";
+                    }
+                  }
+                  else{
+                    return "url(#markerCircle)";
+                  }
+                });
 
-            var ttText = d3.select("text.ttText");
+              el.selectAll("circle.start")
+                .attr("r", 7);
 
-            ttText.call(chart.wrap, 140);
-
-            if (ttText.attr("x") > chart.width() * 0.8 ) {
-              ttText
-                .attr("text-anchor","end")
-                .attr("dx", "-.5em");
+              chart.trigger("brush", this);
             }
-
-            chart.trigger("brush", this);
+            
           });
 
-          this.on("mouseout", function() {
-            var el = d3.select(this);
-            el.selectAll("circle")
-              .style("stroke", "none")
-              .attr("r", 5);
+          // this.on("mouseout", function() {
+          //   var el = d3.select(this);
 
-            el.selectAll(".line")
-              .style("stroke", "black")
-              .style("stroke-width", "2");
+          //   // el.classed("active", false);
 
-            el.select(".tt").remove();
+          //   // el.selectAll("circle")
+          //   //   .style("stroke", "none")
+          //   //   .attr("r", 5);
 
-            chart.trigger("unbrush", this);
-          });
+          //   // el.select(".tt").remove();
+
+          //   chart.trigger("unbrush", this);
+          // });
 
         },
         // then transition them to a radius of 5 and change
@@ -366,9 +382,9 @@ d3.chart("MarginChart").extend("SystemsChart", {
         "enter:transition": function() {
           var chart = this.chart();
           this.selectAll("circle.start").transition().duration(500)
-            .attr("r", 5);
+            .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
 
-          this.selectAll("line.line")
+          this.selectAll(".line")
             .attr("stroke-width", 2)
             .attr("marker-end", "")
           .transition().delay(500).duration(1000)
@@ -381,7 +397,12 @@ d3.chart("MarginChart").extend("SystemsChart", {
           .transition().duration(1000)
             .attr("marker-end", function(d) {
               if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
-                return "url(#markerExplode)";
+                if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
+                  return "url(#markerExplodeEnd)";
+                }
+                else {
+                  return "url(#markerExplodeToDate)";
+                }
               }
               else{
                 return "url(#markerCircle)";
@@ -394,6 +415,65 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
         }
       }
+    });
+
+    this.layer("info-box", chart.layers.infoBoxBase, {
+      dataBind: function() {
+        console.log([d3.select(".active").datum()]);
+        return this.selectAll(".info-box")
+          .data([d3.select(".active").datum()]);
+      },
+
+      insert: function() {
+        var chart = this.chart();
+        var selection = this.append("div")
+          .attr("class", "info-box replacements-chart")
+          .append("div")
+            .attr("class", "isotope-item");
+
+        return selection;
+      },
+
+      events: {
+        "merge": function() {
+          var selection = this;
+          var chart = this.chart();
+          var infoBoxContent = selection.select(".isotope-item");
+
+          infoBoxContent.selectAll("*").remove();
+
+          // infoBoxContent.append("time")
+          //   .attr("class", "date")
+          //   .text(function (d) { return d.date; });
+
+          infoBoxContent
+            .append("a")
+            .attr("href", function(d) { return d.url; })
+            .attr("target", "_blank")
+            .append("h3")
+            .attr("class", "fail-hed")
+            .text(function (d) { return d.project; });
+
+          infoBoxContent.append("p")
+            .attr("class", "fail-stat small")
+            .html(function (d) { return chart.displayStat(d); });
+
+          // infoBoxContent
+          //   .append("p")
+          //   .attr("class", "fail-impact")
+          //   .text(function(d) { return d["Impact - Raw"]; });
+
+          infoBoxContent
+            .append("a")
+            .attr("class", "readmore")
+            .attr("href", function(d) { return d.url; })
+            .attr("target", "_blank")
+            .text("Read More");
+
+          return selection;
+        } 
+      }
+
     });
   },
 
@@ -491,6 +571,21 @@ d3.chart("MarginChart").extend("SystemsChart", {
     return this;
   },
 
+  dataLabel: function(newDataLabel) {
+    "use strict";
+    if (arguments.length === 0) {
+      return this._dataLabel;
+    }
+
+    var oldDataLabel = this._dataLabel;
+
+    if ( oldDataLabel !== newDataLabel) {
+      this._dataLabel = newDataLabel;
+    }
+
+    return this;
+  },
+
   xData: function(newXData) {
     "use strict";
     if (arguments.length === 0) {
@@ -521,40 +616,61 @@ d3.chart("MarginChart").extend("SystemsChart", {
     return this;
   },
 
-  wrap: function(text, width) {
+  // wrap: function(text, width) {
+  //   "use strict";
+  //   text.each(function() {
+  //     var text = d3.select(this),
+  //         words = text.text().split(/\s+/).reverse(),
+  //         word,
+  //         line = [],
+  //         lineNumber = 0,
+  //         lineHeight = 1.1, // ems
+  //         y = text.attr("y"),
+  //         dy = parseFloat(text.attr("dy")),
+  //         tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
+  //     while ((word = words.pop())) {
+  //       line.push(word);
+  //       tspan.text(line.join(" "));
+  //       if (tspan.node().getComputedTextLength() > width) {
+  //         line.pop();
+  //         tspan.text(line.join(" "));
+  //         line = [word];
+  //         tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
+  //       }
+  //     }
+  //   });
+  // },
+
+  displayStat: function (d) {
     "use strict";
-    text.each(function() {
-      var text = d3.select(this),
-          words = text.text().split(/\s+/).reverse(),
-          word,
-          line = [],
-          lineNumber = 0,
-          lineHeight = 1.1, // ems
-          y = text.attr("y"),
-          dy = parseFloat(text.attr("dy")),
-          tspan = text.text(null).append("tspan").attr("x", 0).attr("y", y).attr("dy", dy + "em");
-      while ((word = words.pop())) {
-        line.push(word);
-        tspan.text(line.join(" "));
-        if (tspan.node().getComputedTextLength() > width) {
-          line.pop();
-          tspan.text(line.join(" "));
-          line = [word];
-          tspan = text.append("tspan").attr("x", 0).attr("y", y).attr("dy", ++lineNumber * lineHeight + dy + "em").text(word);
-        }
-      }
-    });
+
+    var pre = "Delivered "; 
+    var mid = " functionality <br>for ";
+    var post = " the original cost";
+
+    var func = d.functionality + "%";
+    var cost = d.overBudget + "%";
+
+    if ( d.functionality === 0 ) {
+      func = "no";
+    }
+
+    return pre + 
+      " <span class=\"number\">" + func + "</span> " + 
+      mid +
+      " <span class=\"number\">" + cost + "</span> " + 
+      post;
   }
 
 });
 
-d3.csv("systems-to-replace.csv", function (data) {
+d3.csv("systems-to-replace-6-26.csv", function (data) {
   "use strict";
 
   console.log(data);
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
-  var margins = {top: 20, bottom: 70, right: 20, left: 100};
+  var margins = {top: 35, bottom: 70, right: 20, left: 100};
   var width = parWidth - margins.left - margins.right;
   var height = width * 9 / 16;
 
@@ -571,17 +687,20 @@ d3.csv("systems-to-replace.csv", function (data) {
     d.milestones = d.values.map(function (point, i) { 
       var ii = i;
       console.log(ii);
-      while( point.cost === "null" || "" ) {
+      while( point["cost USD"] === "null" || "" ) {
         ii++;
-        point.cost = d.values[ii].cost;
-        console.log(point.cost);
+        point["cost USD"] = d.values[ii]["cost USD"];
+        console.log(point["cost USD"]);
       }
       return {
-        "cost": point.cost === "null" || "" ? null : +point.cost,
+        "cost": point["cost USD"] === "null" || "" ? null : +point["cost USD"],
         "milestone": point.milestone,
         "systems to replace": point["systems to replace"] === "null" || "" ? null : +point["systems to replace"]
       }; 
     });
+
+    d.overBudget = Math.round((d.milestones[d.milestones.length - 1].cost / d.milestones[0].cost) * 100);
+    d.functionality = Math.round((d.milestones[d.milestones.length - 1]["systems to replace"] / d.milestones[0]["systems to replace"]) * 100);
 
     // d.costs = d.values.map(function (i) { return i.cost; });
     // d.milestones = d.values.map(function (i) { return i.milestone; });
@@ -593,6 +712,9 @@ d3.csv("systems-to-replace.csv", function (data) {
 
   console.log(data);  
 
+  container.append("div")
+    .attr("class", "circle-info-box");
+
   var systems = container
     .append("svg")
     .chart("SystemsChart")
@@ -601,7 +723,8 @@ d3.csv("systems-to-replace.csv", function (data) {
     .margin(margins)
     .lineData("milestones")
     .xData("systems to replace")
-    .yData("cost");
+    .yData("cost")
+    .dataLabel("milestone");
 
   var defs = container.select("svg")
     .append("defs");
@@ -624,7 +747,7 @@ d3.csv("systems-to-replace.csv", function (data) {
       .attr("class", "marker");
 
   defs.append("marker")
-    .attr("id", "markerExplode")
+    .attr("id", "markerExplodeEnd")
     .attr("markerWidth", 17)
     .attr("markerHeight", 17)
     .attr("refX", 5)
@@ -634,7 +757,20 @@ d3.csv("systems-to-replace.csv", function (data) {
       .attr("id", "explode")
       .attr("points", "3308.65 2406.83 3327.34 2456.77 3401.65 2434.83 3364.77 2484.77 3458.88 2534.32 3357.97 2557.89 3371.65 2610.83 3325.65 2580.06 3299.85 2650.38 3273.45 2573.91 3188.36 2600.69 3244.87 2545.09 3178.65 2504.83 3257.59 2483.83 3214.65 2425.55 3271.59 2447.03")
       .attr("transform", "translate(-143.5,-108.3) scale(.045)")
-      .attr("class", "marker");
+      .attr("class", "marker end");
+
+  defs.append("marker")
+    .attr("id", "markerExplodeToDate")
+    .attr("markerWidth", 17)
+    .attr("markerHeight", 17)
+    .attr("refX", 5)
+    .attr("refY", 5)
+    .append("polygon")
+      .attr("xmlns", "http://www.w3.org/2000/svg")
+      .attr("id", "explode")
+      .attr("points", "3308.65 2406.83 3327.34 2456.77 3401.65 2434.83 3364.77 2484.77 3458.88 2534.32 3357.97 2557.89 3371.65 2610.83 3325.65 2580.06 3299.85 2650.38 3273.45 2573.91 3188.36 2600.69 3244.87 2545.09 3178.65 2504.83 3257.59 2483.83 3214.65 2425.55 3271.59 2447.03")
+      .attr("transform", "translate(-143.5,-108.3) scale(.045)")
+      .attr("class", "marker to-date");
 
   defs.append("marker")
     .attr("id", "markerArrow")
@@ -646,7 +782,12 @@ d3.csv("systems-to-replace.csv", function (data) {
     .append("path")
       .attr("d", "M2,2 L2,11 L10,6 L2,2");
 
-  systems.draw(data);
+  systems.draw(data
+    .sort(function(a,b) {
+      var len = a.milestones.length;
+      return a.milestones[len - 1].cost - b.milestones[len - 1].cost;
+    }
+  ));
 
   var pymChild = new pym.Child();
   pymChild.sendHeight();

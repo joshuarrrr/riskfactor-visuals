@@ -25,11 +25,14 @@ $spectrumblue: #03a6e3;
 
 $black: rgb(0, 0, 0);
 $white: rgb(255, 255, 255);
-$impact: rgb(255, 0, 0);
 $lightgray: #ddd;
 $lightergray: #efefef;
 $medgray: #bbb;
 $gray: #808080;
+
+$impact: rgb(255, 0, 0);
+$green: rgb(0, 200, 0);
+$yellow: rgb(255, 255, 0);
 
 $halfred: rgba(255, 0, 0, .5);
 $halfgreen: rgba(0, 255, 0, .5);
@@ -216,10 +219,21 @@ p.fail-stat {
   .fail-stat {
     color: $impact;
     margin: 1em 0 .5em;
+
+    &.small {
+      font-size: 1.15em;
+      margin-top: 0;
+    }
   }
 
   .readmore {
     margin-top: 0;
+  }
+
+  &.replacements-chart {
+    right: 60px;
+    top: 0;
+    width: 380px;
   }
 }
 
@@ -254,6 +268,39 @@ p.fail-stat {
 
 .marker {
   fill: $impact;
+
+  &.to-date {
+    fill: $yellow;
+  }
+}
+
+.datapoint {
+  &.active {
+    .line {
+      stroke: $gray;
+      stroke-width: 3px;
+    }
+  }
+
+  .line {
+    stroke: $black;
+    stroke-width: 2px;
+  }
+}
+
+.start {
+  fill: $green;
+  stroke: none;
+}
+
+.end {
+  fill: $impact;
+  stroke: none;
+}
+
+.to-date {
+  fill: $yellow;
+  stroke: none;
 }
 
 /////////////////////
