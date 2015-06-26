@@ -436,108 +436,107 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           // and change their color and broadcast a chart
           // brush event to any listeners.
           selection
-          .on("click", function() {
-            var el = d3.select(this);
-            var selectedData = el.datum();
-            var infoBox = d3.select(".info-box");
+            .on("click", function() {
+              var el = d3.select(this);
+              var selectedData = el.datum();
+              var infoBox = d3.select(".info-box");
+              
+              console.log(selectedData);
+              // el.selectAll("circle")
+
+              if ( el.classed("active") !== true ) {
+                d3.selectAll(".active")
+                  .classed("active", false);
+
+                el
+                  .classed("active", true);
+
+                d3.select(".legend-ring").remove();
+
+                // el
+                //   .append("g")
+                //     .attr("class","tt")
+                //   .append("text")
+                //    .attr("y", function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
+                //     .attr("x", function(d) { return chart.xScale(d.formattedDate); })
+                //     .attr("dy", "-.5em")
+                //     .attr("dx", ".5em")
+                //     .attr("class", "ttText")
+                //     .text(function(d) { return d.Headline; });
+
+                // el.select(".tt")
+                //   .append("text")
+                //     .attr("y", function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
+                //     .attr("x", function(d) { return chart.xScale(d.formattedDate); })
+                //     .attr("dy", "-1.7em")
+                //     .attr("dx", ".5em")
+                //     .attr("class", "ttText")
+                //     .attr("color", "red")
+                //     .text(function(d) {
+                //       if ( d[chart.rData()] >= 1e9 ) {
+                //         return ("$ " + d[chart.rData()] / 1e9) + " Billion";
+                //       }
+                //       else if (d[chart.rData()] >= 1e6) {
+                //         return ("$ " + d[chart.rData()] / 1e6) + " Million";
+                //       }
+                //     });
+
+                d3.select(".legend").append("circle")
+                  .attr("class", "legend-ring")
+                  .attr("cx", 0)
+                  .attr("cy", 0)
+                  .attr("r", chart.rScale(selectedData[chart.rData()]))
+                  .attr("stroke-width", 2)
+                  .attr("fill", "none")
+                  .style("stroke", "red");
+
+                infoBox.selectAll("div").remove();
+
+                var infoBoxContent = infoBox.selectAll("div")
+                .data([selectedData]).enter().append("div")
+                .attr("class", "isotope-item");
+                  
+                infoBoxContent.append("p")
+                  .attr("class", "fail-stat")
+                  .html(function (d) { return displayStat(chart, d); });
+
+                infoBoxContent.append("time")
+                  .attr("class", "date")
+                  .text(function (d) { return d.date; });
+
+                infoBoxContent
+                  .append("a")
+                  .attr("href", function(d) { return d.url; })
+                  .attr("target", "_blank")
+                  .append("h3")
+                  .attr("class", "fail-hed")
+                  .text(function (d) { return d.Headline; });
+
+                infoBoxContent
+                  .append("p")
+                  .attr("class", "fail-impact")
+                  .text(function(d) { return d["Impact - Raw"]; });
+
+                infoBoxContent
+                  .append("a")
+                  .attr("class", "readmore")
+                  .attr("href", function(d) { return d.url; })
+                  .attr("target", "_blank")
+                  .text("Read More");
+
+                // console.log(el.selectAll(".tt")[0][0].parentNode.parentNode);
+                // var tooltip = el.selectAll(".tt")[0][0];
+                // tooltip.parentNode.parentNode.appendChild(tooltip);
+
+                // var ttText = d3.selectAll("text.ttText");
+                // if (ttText.attr("x") > chart.width() / 2 ) {
+                //   ttText
+                //     .attr("text-anchor","end")
+                //     .attr("dx", "-.5em");
+                // }
+              }
             
-            console.log(selectedData);
-            // el.selectAll("circle")
-
-            if ( el.classed("active") !== true ) {
-              d3.selectAll(".active")
-                .classed("active", false);
-
-              el
-                .classed("active", true);
-            }
-
-              d3.select(".legend-ring").remove();
-
-              // el
-              //   .append("g")
-              //     .attr("class","tt")
-              //   .append("text")
-              //    .attr("y", function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
-              //     .attr("x", function(d) { return chart.xScale(d.formattedDate); })
-              //     .attr("dy", "-.5em")
-              //     .attr("dx", ".5em")
-              //     .attr("class", "ttText")
-              //     .text(function(d) { return d.Headline; });
-
-              // el.select(".tt")
-              //   .append("text")
-              //     .attr("y", function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); })
-              //     .attr("x", function(d) { return chart.xScale(d.formattedDate); })
-              //     .attr("dy", "-1.7em")
-              //     .attr("dx", ".5em")
-              //     .attr("class", "ttText")
-              //     .attr("color", "red")
-              //     .text(function(d) {
-              //       if ( d[chart.rData()] >= 1e9 ) {
-              //         return ("$ " + d[chart.rData()] / 1e9) + " Billion";
-              //       }
-              //       else if (d[chart.rData()] >= 1e6) {
-              //         return ("$ " + d[chart.rData()] / 1e6) + " Million";
-              //       }
-              //     });
-
-              d3.select(".legend").append("circle")
-                .attr("class", "legend-ring")
-                .attr("cx", 0)
-                .attr("cy", 0)
-                .attr("r", chart.rScale(selectedData[chart.rData()]))
-                .attr("stroke-width", 2)
-                .attr("fill", "none")
-                .style("stroke", "red");
-
-              infoBox.selectAll("div").remove();
-
-              var infoBoxContent = infoBox.selectAll("div")
-              .data([selectedData]).enter().append("div")
-              .attr("class", "isotope-item");
-                
-              infoBoxContent.append("p")
-                .attr("class", "fail-stat")
-                .html(function (d) { return displayStat(chart, d); });
-
-              infoBoxContent.append("time")
-                .attr("class", "date")
-                .text(function (d) { return d.date; });
-
-              infoBoxContent
-                .append("a")
-                .attr("href", function(d) { return d.url; })
-                .attr("target", "_blank")
-                .append("h3")
-                .attr("class", "fail-hed")
-                .text(function (d) { return d.Headline; });
-
-              infoBoxContent
-                .append("p")
-                .attr("class", "fail-impact")
-                .text(function(d) { return d["Impact - Raw"]; });
-
-              infoBoxContent
-                .append("a")
-                .attr("class", "readmore")
-                .attr("href", function(d) { return d.url; })
-                .attr("target", "_blank")
-                .text("Read More");
-
-              // console.log(el.selectAll(".tt")[0][0].parentNode.parentNode);
-              // var tooltip = el.selectAll(".tt")[0][0];
-              // tooltip.parentNode.parentNode.appendChild(tooltip);
-
-              // var ttText = d3.selectAll("text.ttText");
-              // if (ttText.attr("x") > chart.width() / 2 ) {
-              //   ttText
-              //     .attr("text-anchor","end")
-              //     .attr("dx", "-.5em");
-              // }
-            }
-            
-          });
+            });
 
           // selection.on("mouseout", function() {
           //   var el = d3.select(this);
