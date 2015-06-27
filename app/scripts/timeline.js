@@ -170,7 +170,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
       // insert lines
       insert: function() {
-        var chart = this.chart();
         var selection =  this.append("line");
 
         return selection;
@@ -178,7 +177,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
       events: {
         "enter" : function() {
-          var chart = this.chart();
           var selection = this;
 
           selection
@@ -223,15 +221,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     this.layer("y-axis-labels", chart.layers.labelsBase, {
       modes : ["web", "tablet"],
       dataBind: function(data) {
-        var chart = this.chart();
-
         return this.selectAll(".y.label")
           .data(chart.categories, function (d) { return d; });
       },
 
       // insert labels
       insert: function() {
-        var chart = this.chart();
         var selection =  this.append("text");
 
         return selection;
@@ -239,7 +234,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
       events: {
         "enter" : function() {
-          var chart = this.chart();
           var selection = this;
 
           selection
@@ -319,8 +313,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     this.layer("x-axis", chart.layers.axesBase, {
       modes : ["web", "tablet"],
       dataBind: function(data) {
-        var chart = this.chart();
-
         return this.selectAll(".x")
           .data([data]);
       },
@@ -356,7 +348,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
         "exit" : function() {
           var chart = this.chart();
-          var selection = this;
           // draw xaxis
           var xAxis = d3.svg.axis()
             .scale(chart.xScale)
@@ -395,7 +386,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
       // insert circles
       insert: function() {
-        var chart = this.chart();
         var selection =  this.append("circle");
 
         selection
@@ -564,7 +554,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         },
 
         "exit:transition": function() {
-          var chart = this.chart();
           var selection = this;
 
           selection
@@ -609,7 +598,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       },
 
       insert: function() {
-        var chart = this.chart();
         var selection =  this.append("g");
 
         selection
@@ -734,7 +722,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       },
 
       insert: function() {
-        var chart = this.chart();
         return this.append("text")
           .style("fill", "blue")
           .attr("y", "10%")
@@ -754,6 +741,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
 d3.csv("timeline-data-6-18.csv", function (data) {
   "use strict";
+
+  var container = d3.select("#chart");
+  var parWidth = container.node().parentNode.offsetWidth;
+  var margins = {top: 50, bottom: 70, right: 240, left: 20};
+  var width = parWidth - margins.left - margins.right;
+  var height = width * 1 / 1.7;
 
   var quantities = [
     {"columnName":"Impact - Qty", "id":"money"},
@@ -797,9 +790,9 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     .append("svg")
     .attr("class", "hidden")
     .chart("BubbleTimeline")
-    .width(680)
-    .height(400)
-    .margin({top: 50, bottom: 70, right: 240, left: 20})
+    .width(width)
+    .height(height)
+    .margin(margins)
     .dateParse("iso")
     .dateDisplay("%B 20%y")
     .yData("Country")
