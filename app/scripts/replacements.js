@@ -127,7 +127,6 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
       // insert area 1
       insert: function() {
-        var chart = this.chart();
         var selection = this.append("g")
           .attr("class", "y axis");
 
@@ -425,7 +424,6 @@ d3.chart("MarginChart").extend("SystemsChart", {
       },
 
       insert: function() {
-        var chart = this.chart();
         var selection = this.append("div")
           .attr("class", "info-box replacements-chart")
           .append("div")

@@ -345,22 +345,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           return selection;
         },
-
-        "exit" : function() {
-          var chart = this.chart();
-          // draw xaxis
-          var xAxis = d3.svg.axis()
-            .scale(chart.xScale)
-            .orient("bottom")
-            .ticks(5)
-            .outerTickSize(0)
-            .tickFormat(chart._xformat || d3.time.format("%Y"));
-
-          chart.base.select(".x.axis")
-          .transition()
-            .duration(chart.duration())
-            .call(xAxis);
-        }
       }
 
     });
