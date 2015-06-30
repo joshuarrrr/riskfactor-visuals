@@ -1,4 +1,4 @@
-date,  Estimated Cost to Develop,estMillions,Total Life Cycle Cost,totMillions,Monies Spent to Date,spentMillions,estSchedule,notes,program
+date,Estimated Cost to Develop,estMillions,Total Life Cycle Cost,totMillions,Monies Spent to Date,spentMillions,estSchedule,notes,program
 1-Sep-2006,$628 Million,628.00,$3 billion,3000.00,0,0,1-Jan-2013,Contract Start,USAF ECSS
 1-Dec-2007,$628 Million,628.00,$3 billion,3000.00,$250 million,250,1-Jan-2013,,USAF ECSS
 1-Nov-2008,$1.325 Billion,1325.00,$3.7 billion,3700.00,$250 million,250,1-Jan-2016,Added functionality,USAF ECSS

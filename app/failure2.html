@@ -11,6 +11,12 @@
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
+
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/style.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/sb.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/slimbox2.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/site420a.css">
+
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
@@ -19,22 +25,28 @@
     <!-- endbuild -->
 
   </head>
-  <body>
+  <body class="parent">
     <!--[if lt IE 10]>
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container">
+     <div class="container normal">
+      <div class="content-area">
+        <article class="article-detail">
+          <h1>Anatomy of a Failed Project</h1>
+          <h2>How timelines and budgets grow</h2>
+          <div id="artBody">
+
+            <p>Any list of the most egregious IT project failures of the past ten years has to include the US Air Force’s Expeditionary Combat Support System which was canceled in 2012. ECSS was supposed to be a single integrated enterprise resource planning (ERP) system build using commercial off-the-shelf (COTS) software aimed at modernizing the service&#39;s global supply chain.</p>
+            <p>A hint as to why ECSS makes the list can be found in the Air Force&#39;s comptroller, Jamie Morin, testimony to the Senate Armed Services Committee&#39;s Subcommittee on Readiness and Management Support in April 2012: “We&#39;re now approaching seven years since funds were first expended on this system. The total cost is now over US $1 billion. I&#39;m personally appalled at the limited capabilities that program has produced relative to that amount of investment.”</p>
       
-      <h1>Anatomy of a Failed Project</h1>
-      <h2>How timelines and budgets grow</h2>
-      <p><em>If at first you don't suceed, just change your estimates.</em></p>
-      <h3 id="chart-title"></h3>
-      <button id="reset" disabled>Reset</button>
-      <button id="prev" disabled>Previous</button>
-      <button id="next">Next</button>
-      
-      <div id="chart"></div>
+            <p><em>If at first you don't suceed, just change your estimates.</em></p>
+            <div id="main-failure2"></div>
+
+            <p>The original estimated cost of ECSS in 2004 was put at some $1.5 billion for development and roll-out, with another $1.5 billion for operations and maintenance. The plan was to have a fully deployed system by 2012.  However, by 2010, the cost had jumped to $3.4 billion for development, operations and maintenance increased to $1.8 billion, and full deployment wasn’t going to happen until 2016 at the earliest.  Yet those cost and schedule estimates were optimistic: after spending over $1 billion, the Air Force admitted that it would cost another $1 billion to get just 25% of the system’s planned capability.  </p><p>Exactly what those planned capabilities were going to be is still a bit of a mystery. When the initial contract was set out, the Air Force said that ECSS was going to “replace more than 400 legacy systems.” Over time, that number jumped to “over 700 legacy systems,” to “over 500 legacy systems” to 240 legacy systems, which was the number given by the Air Force at the time of program cancelation. However, as a 2014 Senate investigate report into the debacle noted, “To date, the Air Force still cannot provide the exact number of legacy systems ECSS would have replaced.”</p><p>The cost of cancellation of ECSS goes beyond the direct cost of $1 billion; there are the opportunity costs of having to maintain whatever number of legacy systems ECSS was supposed to replace as well as the other logistical overheads (e.g., excess spare parts) that were supposed to be eliminated. If the numbers given in a 2010 Institute of Defense Analysis (IDA) report of ECSS is correct, some $5 billion plus in lost opportunity costs have been incurred so far, and it is likely another $7 billion or so at least will be incurred by the time a replacement system is put into place. At the present time, an ECSS replacement is being planned, but how much it will cost and when it is expected to be operational the Air Force isn’t saying, although it is promising it will cost less than ECSS.</p><p>Why did ECSS fail? There are three different publicly available reports (one from IDA, one from the Air Force and one from the Senate) providing a host of reasons to choose from, but if one were sum them up, management incompetence coupled with excessive hubris and a desire not to hear negative news would probably capture 95% of it. While promising to learn the lessons from previous similar large-scale IT failures (its own as well as others in the Department of Defense), the Air Force management not only studiously ignored them by seemed to willfully defy them. And as the IDA report noted, bring up bad news required “courage.”</p><p>Finally, who was held accountable for ECSS’s demise? No one as it turned out. The Air Force’s senior leadership made it crystal clear that firing or demoting anyone for blowing $1 billion on an absolutely useless IT system was “not necessary.”  A candid statement that goes a long way towards explaining why no one in ECSS ever brought up bad news.</p>
+          </div>
+        </article>
+      </div>
 
       <h3>To Do:</h3>
       <ul>
@@ -50,13 +62,13 @@
             <li>Deadline incease</li>
           </ul>
         </li>
-        <li>Clean up unused code</li>
+        <li><strike>Clean up unused code</strike></li>
         <li>Add estimate filter controls</li>
         <li><strike>Change layer structure to nest by data point, not series</strike></li>
         <li>Are areas more appropriate than lines?</li>
-        <li>Improve animation
+        <li><strike>Improve animation</strike>
           <ul>
-            <li>Break spent area into segments</li>
+            <li><strike>Break spent area into segments</strike></li>
           </ul>
         </li>
         <li>Add mobile mode</li>
@@ -64,7 +76,7 @@
 
 
     </div>
-    <footer><a href="index.html">Back to viz index</a></footer>
+    <footer class="dev-footer"><a href="index.html">Back to viz index</a></footer>
 
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -78,6 +90,11 @@
     <!-- endbower -->
     <!-- endbuild -->
 
+    <script>
+      /* global pym */
+      var pymParent = new pym.Parent("main-failure2", "main-failure2.html", {});
+    </script>
+
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
       (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
@@ -88,12 +105,5 @@
       ga('create','UA-XXXXX-X');ga('send','pageview');
     </script>
 
-    <!-- build:js({app,.tmp}) scripts/main.js -->
-    <script src="scripts/marginChart.js"></script>
-    <!-- endbuild -->
-
-    <!-- build:js({app,.tmp}) scripts/failure2.js -->
-    <script src="scripts/failure2.js"></script>
-    <!-- endbuild -->
 </body>
 </html>

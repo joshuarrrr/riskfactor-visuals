@@ -255,10 +255,13 @@ p.fail-stat {
   text-align: center;
 
   a.button {
-    cursor: pointer;
     float: none;
     margin: 0 5px;
   }
+}
+
+.button {
+  cursor: pointer;
 }
 
 
@@ -306,6 +309,22 @@ p.fail-stat {
 /////////////////////
 // Failures Charts //
 /////////////////////
+
+.chart-title {
+  margin: 0;
+  text-align: center;
+}
+
+.initline {
+  .line {
+    fill: none;
+    opacity: .7;
+    shape-rendering: crispEdges;
+    stroke: $black;
+    stroke-dasharray: 5, 5;
+    stroke-width: 2px;
+  }
+}
 
 .area1 {
   path.area {
