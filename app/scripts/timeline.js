@@ -96,11 +96,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.layers.axesBase = chart.base.select("g").append("g")
       .classed("axes", true);
 
-    chart.layers.labelsBase = chart.base.select("g").append("g")
-      .classed("labels", true);
-
     chart.layers.linesBase = chart.base.select("g").append("g")
       .classed("lines", true);
+
+    chart.layers.labelsBase = chart.base.select("g").append("g")
+      .classed("labels", true);
 
     chart.layers.circlesBase = this.base.select("g").append("g")
       .classed("circles", true);
@@ -866,7 +866,7 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
       bubbles.rData(selection.datum().columnName);
 
-      d3.select("#chart").select("svg").attr("id", selection.datum().id);
+      d3.select("#chart").select("svg").attr("class", selection.datum().id);
 
       if ( activeSelection.empty() === false ){
         console.log(activeSelection.datum()[bubbles.rData()]);
