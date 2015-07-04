@@ -30,13 +30,15 @@ $lightergray: #efefef;
 $medgray: #bbb;
 $gray: #808080;
 
-$impact: rgb(255, 0, 0);
-$green: rgb(0, 200, 0);
+$impact: #ff0500;
+$green: #00bb6a;
+$lightblue: #008db4;
+$deepblue: #006196;
 $yellow: rgb(255, 255, 0);
 
-$halfred: rgba(255, 0, 0, .5);
-$halfgreen: rgba(0, 255, 0, .5);
-$halfblue: rgba(0, 0, 255, .5);
+// $halfred: rgba(255, 0, 0, .5);
+// $halfgreen: rgba(0, 255, 0, .5);
+// $halfblue: rgba(0, 0, 255, .5);
 
 $containerwidth: 940px;
 $articlewidth: 620px;
@@ -70,17 +72,45 @@ $border1: $black 2px solid;
 }
 
 @font-face {
-  font-family: 'Theinhardt-Medium';
+  font-family: "Theinhardt-Regular";
   font-style: normal;
   font-weight: normal;
-  src: url('fonts/Theinhardt/Theinhardt-Medium.otf');
+  src: url("fonts/Theinhardt/Theinhardt-Regular.otf");
 }
 
 @font-face {
-  font-family: 'Theinhardt-Medium';
+  font-family: "Theinhardt-Regular";
   font-style: italic;
   font-weight: normal;
-  src: url('fonts/Theinhardt/Theinhardt-MedilumIta.otf');
+  src: url("fonts/Theinhardt/Theinhardt-RegularIta.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Medium";
+  font-style: normal;
+  font-weight: normal;
+  src: url("fonts/Theinhardt/Theinhardt-Medium.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Medium";
+  font-style: italic;
+  font-weight: normal;
+  src: url("fonts/Theinhardt/Theinhardt-MediumIta.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: url("fonts/Theinhardt/Theinhardt-Bold.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Bold";
+  font-style: italic;
+  font-weight: normal;
+  src: url("fonts/Theinhardt/Theinhardt-BoldIta.otf");
 }
 
 /////////////////
@@ -90,6 +120,8 @@ $border1: $black 2px solid;
 // ALL CHARTS
 
 .chart-container {
+  font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
+  font-size: .9em;
   position: relative;
 }
 
@@ -120,31 +152,48 @@ $border1: $black 2px solid;
 //   text-transform: capitalize;
 // }
 
+@mixin total-button-gradient($base-color: $green, $start-color: $black) {
+  background: linear-gradient(to left, $base-color 5%, $start-color);
+  background-color: $base-color;
+}
+
 // Totals Section
 .totals {
 
   overflow: auto;
 
   p {
-    margin: 0;
+    font-size: 1.6em;
+    margin: 0 20px;
+
+    &:first-child {
+      margin-top: 10px;
+    }
+
+    &:last-child {
+      font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif; 
+      margin-bottom: 10px;
+    }
   }  
   
   .total {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+    // background-position: center;
+    // background-repeat: no-repeat;
+    // background-size: contain;
     color: $white;
     cursor: pointer;
     float: left;
-    height: 110px;
+    font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
+    height: 105px;
     margin-right: 20px;
-    text-align: center;
-    text-shadow: $gray 1px 1px 3px;
+    text-align: left;
+    // text-shadow: $gray 1px 1px 3px;
     width: 300px;
 
     &.selected {
-      outline: 3px $white inset;
-      outline-offset: -3px;
+      background: $black;
+      // outline: 3px $white inset;
+      // outline-offset: -3px;
       //-webkit-box-shadow: inset 0 0 120px rgba(245, 245, 245, 0.8);
       //-moz-box-shadow:    inset 0 0 120px rgba(245, 245, 245, 0.8);
       //box-shadow:         inset 0 0 120px rgba(245, 245, 245, 0.8);
@@ -155,51 +204,107 @@ $border1: $black 2px solid;
     margin-right: 0;
   }
 
-  .people {
-    background: $halfblue;
-    background-image: url('../images/iconmonstr-user-14-icon.svg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+  .money {
+    background: $green;
+    // background-image: url('../images/iconmonstr-user-14-icon.svg');
+    // background-position: center;
+    // background-repeat: no-repeat;
+    // background-size: contain;
+
+    &.selected {
+      outline: 3px $green solid;
+      outline-offset: -3px;
+    }
+
+    &:hover {
+      @include total-button-gradient($green);
+      outline: none;
+    }
   }
 
   .time {
-    background: $halfred;
-    background-image: url('../images/iconmonstr-time-3-icon.svg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+    background: $lightblue;
+    // background-image: url('../images/iconmonstr-time-3-icon.svg');
+    // background-position: center;
+    // background-repeat: no-repeat;
+    // background-size: contain;
+
+    &.selected {
+      outline: 3px $lightblue solid;
+      outline-offset: -3px;
+    }
+
+    &:hover {
+      @include total-button-gradient($lightblue);
+      outline: none;
+    }
   }
 
-  .money {
-    background: $halfgreen;
-    background-image: url('../images/iconmonstr-banknote-5-icon.svg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+  .people {
+    background: $deepblue;
+    // background-image: url('../images/iconmonstr-banknote-5-icon.svg');
+    // background-position: center;
+    // background-repeat: no-repeat;
+    // background-size: contain;
+
+    &.selected {
+      outline: 3px $deepblue solid;
+      outline-offset: -3px;
+    }
+
+    &:hover {
+      @include total-button-gradient($deepblue);
+      outline: none;
+    }
   }
 }
 
 p.fail-stat {
-  font-size: 2em;
-  margin: .4em 0;
+  font-size: 2.075em;
+  margin-bottom: .1em;
+  margin-top: .2em;
+  text-transform: uppercase;
+}
+
+p.instructions {
+  font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
 }
 
 // Totals Intro
 .totals-intro {
-  padding: 1em 0;
+  padding: .5em 0 1em;
 }
 
 // Chart Area
 .data-point, 
 .legend-circle {
   cursor: pointer;
-  fill: $spectrumblue;
   fill-opacity: .2;  
 }
 
+.money {
+  .data-point, 
+  .legend-circle {
+    fill: $green;  
+  }
+}
+
+.time {
+  .data-point, 
+  .legend-circle {
+    fill: $lightblue;  
+  }
+}
+
+.people {
+  .data-point, 
+  .legend-circle {
+    fill: $deepblue;  
+  }
+}
+
 .legend-circle {
-  stroke: $gray;
+  stroke: $medgray;
   stroke-width: 1;
 }
 
@@ -237,9 +342,9 @@ p.fail-stat {
   }
 }
 
-.number {
-  font-size: 1.45em;
-}
+// .number {
+//   font-size: 1.45em;
+// }
 
 // Selection Buttons
 .select-category {
@@ -326,28 +431,38 @@ p.fail-stat {
   }
 }
 
+.area-labels {
+  text-anchor: end;
+}
+
 .area1 {
-  path.area {
+  .area, .projection {
     fill: lightgray;
     opacity: .5;
   }
 
-  g:first-child > path.total  {
+  g:first-child > path.total,
+  g:first-child > path.tot-est,
+  g:first-child > path.annual-est  {
     fill: lightgreen;
     opacity: .6;
   }
 
-  g:first-child > path.dev  {
+  g:first-child > path.dev,
+  g:first-child > path.dev-est  {
     fill: darkgreen;
     opacity: .6;
   }
 
-  g:last-child > path.total {
+  g:last-child > path.total,
+  g:last-child > path.tot-est,
+  g:last-child > path.annual-est  {
     fill: yellow;
     opacity: .6;
   }
 
-  g:last-child > path.dev {
+  g:last-child > path.dev,
+  g:last-child > path.dev-est {
     fill: orange;
     opacity: .6;
   }
