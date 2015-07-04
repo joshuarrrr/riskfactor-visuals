@@ -1,0 +1,46 @@
+Program,date,Currency,Estimated Cost to Develop,Total Life Cycle Cost,Annual Maintenance & Operational Costs,Monies Spent to Date,Estimated Schedule,Notes
+ECSS,2006-09-01T00:00:00Z,US$,6.28E8,3.0E9,,0,2013-01-01T00:00:00Z,Contract Start
+ECSS,2007-12-01T00:00:00Z,US$,6.28E8,3.0E9,,2.5E8,2013-01-01T00:00:00Z,
+ECSS,2008-11-01T00:00:00Z,US$,1.325E9,3.7E9,,2.5E8,2016-01-01T00:00:00Z,Added functionality
+ECSS,2009-12-01T00:00:00Z,US$,3.4E9,5.2E9,,5.19E8,2016-04-01T00:00:00Z,
+ECSS,2011-01-01T00:00:00Z,US$,3.4E9,5.2E9,,9.86E8,2018-09-01T00:00:00Z,
+ECSS,2012-11-01T00:00:00Z,US$,8.0E9,1.0E10,,1.1E9,2020-09-01T00:00:00Z,Program terminated after it was determined that it would cost $2.2 billion in development to get maybe 25% functionality; about $750 million in lost projected benefits to date
+NCTracks,2008-12-01T00:00:00Z,US$,9.27E7,2.65E8,,,2011-08-22T00:00:00Z,Contract Start
+NCTracks,2011-07-01T00:00:00Z,US$,2.3E8,4.84E8,,,2013-02-28T00:00:00Z,
+NCTracks,2012-12-01T00:00:00Z,US$,2.3E8,4.84E8,,,2013-07-01T00:00:00Z,"North Carolina spent at least $36 million (net)  to keep legacy system going because of the delay; Medicaid certification expected summer 2014, didn't happen until March 2015 becasuse of extensive bugs in system."
+California EDD Disability Insurance Upgrade,2006-01-01T00:00:00Z,US$,3.5E7,,3200000,,2009-06-01T00:00:00Z,Procurement Begins
+California EDD Disability Insurance Upgrade,2007-11-01T00:00:00Z,US$,3.3E7,,3700000,,2011-05-01T00:00:00Z,
+California EDD Disability Insurance Upgrade,2009-11-01T00:00:00Z,US$,1.19E8,,6900000,,2013-01-01T00:00:00Z,Development begins in earnest
+California EDD Disability Insurance Upgrade,2011-11-01T00:00:00Z,US$,1.58E8,,8800000,,2013-06-01T00:00:00Z,
+California EDD Disability Insurance Upgrade,2012-11-01T00:00:00Z,US$,1.58E8,,8800000,,2012-11-01T00:00:00Z,"Launched ""ahead"" of Schedule"
+CCNPAU,2003-10-01T00:00:00Z,US$,3.8E7,,,,2006-11-01T00:00:00Z,"Original set out as two system developments, the Call Center Network Platform and Application Upgrade
+(CCNPAU) and Continued Claims Redesign (CCR),  which were then merged into one."
+CCR,2003-10-01T00:00:00Z,US$,5.8E7,,,,2008-06-01T00:00:00Z,
+CCNPAU,2006-05-01T00:00:00Z,US$,4.8E7,,,,2010-04-01T00:00:00Z,"Projects merged into one, yet with separate still with completion dates"
+CCR,2006-05-01T00:00:00Z,US$,6.5E7,,,,2011-09-01T00:00:00Z,
+CCNPAU,2007-08-01T00:00:00Z,US$,5.6E7,,,,2009-09-01T00:00:00Z,More changes to producrement - notice shortening of CCNPAU schedule
+CCR,2007-08-01T00:00:00Z,US$,7.1E7,,,,2012-06-01T00:00:00Z,
+CCNPAU,2009-09-01T00:00:00Z,US$,7.1E7,,,,2011-01-01T00:00:00Z,More changes to producrement - notice shortening of CCR schedule
+CCR,2009-09-01T00:00:00Z,US$,8.7E7,,,,2012-05-01T00:00:00Z,
+CCNPAU,2012-04-01T00:00:00Z,US$,8.1E7,,,,2011-05-01T00:00:00Z,"CCNPAU was rolled out in May 2011, but complaints about call wait times have been rampant"
+CCR,2012-04-01T00:00:00Z,US$,1.06E8,,,,2013-05-01T00:00:00Z,
+CCR,2013-08-31T17:00:00Z,US$,1.06E8,,,,2013-09-01T00:00:00Z,CCR was rolled out over Labor Day weekend - was a total disaster (see Risk Factor Blog).
+Queensland Health Payroll Replacement System,2007-12-05T00:00:00Z,AU$,9.8E7,,,,2008-07-31T00:00:00Z,Contract to IBM was for $6.19 million for new payroll system
+Queensland Health Payroll Replacement System,2008-01-18T00:00:00Z,AU$,9.8E7,,,,2008-09-01T00:00:00Z,
+Queensland Health Payroll Replacement System,2008-06-18T00:00:00Z,AU$,1.0E8,,,,2008-11-18T00:00:00Z,
+Queensland Health Payroll Replacement System,2008-10-01T00:00:00Z,AU$,1.0E8,,,3.2E7,2008-11-18T00:00:00Z,
+Queensland Health Payroll Replacement System,2008-11-11T00:00:00Z,AU$,1.0E8,,,,2008-11-30T00:00:00Z,
+Queensland Health Payroll Replacement System,2008-11-28T00:00:00Z,AU$,1.0E8,,,,2008-12-23T00:00:00Z,
+Queensland Health Payroll Replacement System,2009-06-30T00:00:00Z,AU$,1.0E8,,,,2009-11-06T00:00:00Z,
+Queensland Health Payroll Replacement System,2009-08-31T00:00:00Z,AU$,1.0E8,,,,2009-11-20T00:00:00Z,
+Queensland Health Payroll Replacement System,2009-11-12T00:00:00Z,AU$,1.0E8,,,,2010-03-22T00:00:00Z,
+Queensland Health Payroll Replacement System,2010-03-14T00:00:00Z,AU$,1.02E8,,,,2010-03-24T00:00:00Z,"Goes live with disasterous effects,  IBM cost now is $25.7 million (still owed $3 million ); many staff underpaid, while $112.m million was overpaid as of May 2012"
+Queensland Health Payroll Replacement System,2010-11-01T00:00:00Z,AU$,3.11E8,,,,2011-07-01T00:00:00Z,Govt decides to spend another $209 million to try to fix system
+Queensland Health Payroll Replacement System,2011-07-01T00:00:00Z,AU$,3.11E8,,,,2011-06-30T17:00:00Z,Govt claims system is stabilized
+Queensland Health Payroll Replacement System,2012-06-01T00:00:00Z,AU$,5.3E8,8.369E8,,,2017-07-03T00:00:00Z,"Another $220.5 million needed to fix, and $837 million to operate for next 5 years; $91 m in overpayments still owed (note, a KPMG report says the development cost is closer to $515 million with another $25 million needed to see what other fixes are needed;"
+UK FiReControl System,2004-03-01T00:00:00Z,£,1.2E8,,,,2009-10-01T00:00:00Z,"FiReControl was to replacing 46 local control rooms with a network of nine purpose-built regional control centers using a national computer system to handle calls, mobilise equipment and manage incidents. Initial rollout was due in October 2007, and final by October 2009"
+UK FiReControl System,2007-06-01T00:00:00Z,£,3.4E8,,,,2009-10-01T00:00:00Z,"Increase project cost, keep schedule"
+UK FiReControl System,2008-07-01T00:00:00Z,£,3.8E8,,,,2009-07-01T00:00:00Z,"Increase project cost, shorten schedule"
+UK FiReControl System,2008-11-01T00:00:00Z,£,3.8E8,,,,2010-03-01T00:00:00Z,"Same project cost, increase schedule"
+UK FiReControl System,2009-05-01T00:00:00Z,£,3.8E8,,,,2010-05-01T00:00:00Z,"Increase project cost, shorten schedule"
+UK FiReControl System,2010-12-01T00:00:00Z,£,6.35E8,2.19E8,,2.5E8,2015-05-01T00:00:00Z,"Project terminated in December 2010 after spending £250 million and not impending anything of value; another £219 million in already committed costs, so a total waste of £460 million; another £180 million could be spent, the May 2015 date was a best guess, since the program was still estimated to be at least 5 years from completion"
