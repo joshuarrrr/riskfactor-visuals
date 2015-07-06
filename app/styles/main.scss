@@ -316,11 +316,6 @@ p.instructions {
 
 // Info Box Area
 .info-box {
-  position: absolute;
-  right: 0;
-  top: 160px;
-  width: 220px;
-
   .fail-stat {
     color: $impact;
     margin: 1em 0 .5em;
@@ -335,7 +330,15 @@ p.instructions {
     margin-top: 0;
   }
 
+  &.timeline-chart {
+    position: absolute;
+    right: 0;
+    top: 160px;
+    width: 220px;
+  }
+
   &.replacements-chart {
+    position: absolute;
     right: 60px;
     top: 0;
     width: 380px;

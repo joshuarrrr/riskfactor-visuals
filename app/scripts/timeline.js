@@ -768,7 +768,7 @@ d3.csv("timeline-data-6-18.csv", function (data) {
   ];
 
   var infoBox = d3.select("#chart").append("div")
-      .attr("class","info-box");
+      .attr("class","info-box timeline-chart");
 
   var bubbles = d3.select("#chart")
     .append("svg")
