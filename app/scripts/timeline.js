@@ -111,6 +111,9 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.layers.infoBoxBase = this.base.append("g")
       .classed("circle-info-box", true);
 
+    d3.select(chart.base.node().parentNode).append("div")
+      .attr("class","info-box timeline-chart");
+
     // create an xScale
     chart.xScale = d3.time.scale()
       .range([0, chart.width()]);
@@ -161,7 +164,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     // add lines layer
     this.layer("grid-lines", chart.layers.linesBase, {
       modes : ["web", "tablet"],
-      dataBind: function(data) {
+      dataBind: function() {
         var chart = this.chart();
 
         return this.selectAll(".straight-line")
@@ -220,7 +223,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     // add y-axis labels
     this.layer("y-axis-labels", chart.layers.labelsBase, {
       modes : ["web", "tablet"],
-      dataBind: function(data) {
+      dataBind: function() {
         return this.selectAll(".y.label")
           .data(chart.categories, function (d) { return d; });
       },
@@ -385,7 +388,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         "merge" : function() {
           var chart = this.chart();
           var selection = this;
-          var el = d3.select(this);
+          // var el = d3.select(this);
 
           /*
           if (chart.mode() === "tablet") {
@@ -413,7 +416,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .on("click", function() {
               var el = d3.select(this);
               var selectedData = el.datum();
-              var infoBox = d3.select(".info-box");
+              var infoBox = d3.select(chart.base.node().parentNode).select(".info-box");
               
               console.log(selectedData);
               // el.selectAll("circle")
@@ -425,7 +428,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 el
                   .classed("active", true);
 
-                d3.select(".legend-ring").remove();
+                chart.base.select(".legend-ring").remove();
 
                 // el
                 //   .append("g")
@@ -455,7 +458,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 //       }
                 //     });
 
-                d3.select(".legend").append("circle")
+                chart.base.select(".legend").append("circle")
                   .attr("class", "legend-ring")
                   .attr("cx", 0)
                   .attr("cy", 0)
@@ -489,14 +492,21 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 infoBoxContent
                   .append("p")
                   .attr("class", "fail-impact")
-                  .text(function(d) { return d["Impact - Raw"]; });
-
-                infoBoxContent
+                  .text(function(d) { return d["Impact - Raw"]; })
                   .append("a")
                   .attr("class", "readmore")
                   .attr("href", function(d) { return d.url; })
                   .attr("target", "_blank")
                   .text("Read More");
+
+                // infoBoxContent
+                //   .append("a")
+                //   .attr("class", "readmore")
+                //   .attr("href", function(d) { return d.url; })
+                //   .attr("target", "_blank")
+                //   .text("Read More");
+
+                chart.trigger("selection change", el);
 
                 // console.log(el.selectAll(".tt")[0][0].parentNode.parentNode);
                 // var tooltip = el.selectAll(".tt")[0][0];
@@ -570,7 +580,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
         console.log(intervals.slice(0,4));
 
-        d3.select(".legend")
+        chart.base.select(".legend")
           .attr("transform", "translate("+ 
           (chart.width() + (2 * chart.margin().left) + chart.rScale(intervals[0])) + 
           "," + 
@@ -604,7 +614,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         "enter" : function() {
           var chart = this.chart();
           var selection = this;
-          var el = d3.select(this);
+          // var el = d3.select(this);
 
           selection.selectAll(".legend-circle")
             .attr("cx", 0)
@@ -726,9 +736,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 d3.csv("timeline-data-6-18.csv", function (data) {
   "use strict";
 
+  var pymChild = new pym.Child();
+
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
-  var margins = {top: 50, bottom: 70, right: 240, left: 20};
+  var margins = {top: 50, bottom: 50, right: 240, left: 20};
   var width = parWidth - margins.left - margins.right;
   var height = width * 1 / 1.7;
 
@@ -767,8 +779,14 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     "Industry Area"
   ];
 
-  var infoBox = d3.select("#chart").append("div")
-      .attr("class","info-box timeline-chart");
+  // var infoBox = d3.select("#chart").append("div")
+  //     .attr("class","info-box timeline-chart");
+
+  var selector = d3.select("#chart").append("div")
+    .attr("class", "category-selection-container hidden")
+    .html("Sort by:<br>")
+    .append("select")
+      .attr("class", "select-category dropdown");
 
   var bubbles = d3.select("#chart")
     .append("svg")
@@ -784,28 +802,27 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
     // .margins([20,90,70,90])
 
-  var buttons = d3.select("#chart").append("div")
-    .attr("class", "select-category buttons hidden")
-    .selectAll("a.button")
+  selector.selectAll("option")
     .data(categories)
     .enter()
-  .append("a")
-    .attr("class", "button")
-    .attr("id", function(d) { return d.toLowerCase().replace(" ","-"); })
-    .text(function(d) { return d.replace("Government", "Gov"); });
+    .append("option")
+      .attr("value", function(d) { return d; })
+      .text(function(d) { return d.replace("Government", "Gov"); });
 
-  d3.select("#country")
-    // .property("disabled", true);
-    .classed("inactive", true);
+  selector.select("[value=" + bubbles.yData() + "]")
+    .property("selected", true);
 
-  buttons.on("click", function() {
-    var button = d3.select(this);
-    var toFade = d3.selectAll(".label, .straight-line");
-    var category = button.datum();
-    var activeSelection = d3.select(".data-point.active");
+  selector.on("change", function() {
+    var selection = this;
+    var toFade = bubbles.base.selectAll(".label, .straight-line");
+    var category = selection.value;
+    var activeSelection = bubbles.base.select(".data-point.active");
 
-    // console.log(toFade);
-    
+    console.log(activeSelection);
+    console.log(activeSelection.empty());
+
+    console.log(category);
+
     if (category !== bubbles.yData()) {
       toFade
       .transition()
@@ -818,42 +835,90 @@ d3.csv("timeline-data-6-18.csv", function (data) {
       console.log(category);
       bubbles.yData(category);
 
-      // bubbles.draw(data.filter(function (d) {
-      //   // console.log(d[button.datum()]);
-      //   if (d[button.datum()] !== "") {
-      //     return d;
-      //   } 
-      // }));
-
       bubbles.draw(data);
     }
 
     if ( activeSelection.empty() === false ){
 
       if ( activeSelection.datum()[category] === "" ) {
-        infoBox.selectAll("div").remove();
-        d3.select(".legend-ring").remove();
+        d3.select(bubbles.base.node().parentNode).select(".info-box").selectAll("div").remove();
+        bubbles.base.select(".legend-ring").remove();
         activeSelection.classed("active", false);
       }
 
     }
-
-    buttons
-      // .property("disabled", true);
-      .classed("inactive", false);
-
-    button
-      // .property("disabled", true);
-      .classed("inactive", true);
-    
   });
+
+  // var buttons = d3.select("#chart").append("div")
+  //   .attr("class", "select-category buttons hidden")
+  //   .selectAll("a.button")
+  //   .data(categories)
+  //   .enter()
+  // .append("a")
+  //   .attr("class", "button")
+  //   .attr("id", function(d) { return d.toLowerCase().replace(" ","-"); })
+  //   .text(function(d) { return d.replace("Government", "Gov"); });
+
+  // d3.select("#country")
+  //   // .property("disabled", true);
+  //   .classed("inactive", true);
+
+  // buttons.on("click", function() {
+  //   var button = d3.select(this);
+  //   var toFade = d3.selectAll(".label, .straight-line");
+  //   var category = button.datum();
+  //   var activeSelection = d3.select(".data-point.active");
+
+  //   // console.log(toFade);
+    
+  //   if (category !== bubbles.yData()) {
+  //     toFade
+  //     .transition()
+  //     .duration(bubbles.duration())
+  //     .style("opacity", 0)
+  //     .each("end", fadeIn);
+  //   }
+    
+  //   function fadeIn() {
+  //     console.log(category);
+  //     bubbles.yData(category);
+
+  //     // bubbles.draw(data.filter(function (d) {
+  //     //   // console.log(d[button.datum()]);
+  //     //   if (d[button.datum()] !== "") {
+  //     //     return d;
+  //     //   } 
+  //     // }));
+
+  //     bubbles.draw(data);
+  //   }
+
+  //   if ( activeSelection.empty() === false ){
+
+  //     if ( activeSelection.datum()[category] === "" ) {
+  //       bubbles.select("info-box").selectAll("div").remove();
+  //       bubbles.select(".legend-ring").remove();
+  //       activeSelection.classed("active", false);
+  //     }
+
+  //   }
+
+  //   buttons
+  //     // .property("disabled", true);
+  //     .classed("inactive", false);
+
+  //   button
+  //     // .property("disabled", true);
+  //     .classed("inactive", true);
+    
+  // });
 
   totalCounters.on("click", function() {
     console.log("clicked total");
     var selection = d3.select(this);
-    var activeSelection = d3.select(".data-point.active");
-    var infoBox = d3.select(".info-box");
-    var ring = d3.select(".legend-ring");
+    var activeSelection = bubbles.base.select(".data-point.active");
+    var infoBox = d3.select(bubbles.base.node().parentNode).select(".info-box");
+    var ring = bubbles.base.select(".legend-ring");
 
     if (selection.classed("selected") !== true) {
       totalCounters.classed("selected", false);
@@ -861,7 +926,8 @@ d3.csv("timeline-data-6-18.csv", function (data) {
       selection.classed("selected", true);
 
       d3.select("#chart svg").classed("hidden", false);
-      d3.select(".buttons").classed("hidden", false);
+      // d3.select(".buttons").classed("hidden", false);
+      d3.select(".category-selection-container").classed("hidden", false);
       d3.select(".totals-intro").classed("hidden", true);
 
       bubbles.rData(selection.datum().columnName);
@@ -898,17 +964,105 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
   });
 
-  var pymChild = new pym.Child();
-
   // bubbles.draw(data);
 
+  makeThemeChart("#modernization-chart","project termination/cancellation",quantities[0]);
+  makeThemeChart("#health-chart","health",quantities[0]);
+  makeThemeChart("#banks-chart","bank",quantities[2]);
+  makeThemeChart("#exchange-chart","stock exchange",quantities[1]);
+  makeThemeChart("#air-chart","airport/port/customs systems",quantities[1]);
+
+  
+
+  function makeThemeChart (id, filter, impact) {
+    var selector = d3.select(id).append("div")
+      .attr("class", "category-selection-container")
+      .html("Sort by:<br>")
+    .append("select")
+      .attr("class", "select-category dropdown");
+
+    selector.selectAll("option")
+      .data(categories)
+      .enter()
+    .append("option")
+      .attr("value", function(d) { return d; })
+      .text(function(d) { return d.replace("Government", "Gov"); });
+
+    var theme = d3.select(id)
+      .append("svg")
+      .attr("class", impact.id)
+      .chart("BubbleTimeline")
+      .width(width)
+      .height(height / 3)
+      .margin({top: 50, bottom: 20, right: 240, left: 20})
+      .dateParse("iso")
+      .dateDisplay("%B 20%y")
+      .yData("Country")
+      .rData(impact.columnName)
+      .duration(300);
+
+    console.log("[value=" + theme.yData() + "]");
+
+    selector.select("[value=" + theme.yData() + "]")
+      .property("selected", true);
+
+    var themeData = data.filter(function (d) {
+      // filter out data that has no set value (category)
+      if (d.Theme.indexOf(filter) !== -1 ) {
+        return d;
+      } 
+    });
+
+    theme.draw(themeData);
+
+    selector.on("change", function() {
+      var selection = this;
+      var toFade = theme.base.selectAll(".label, .straight-line");
+      var category = selection.value;
+      var activeSelection = theme.base.select(".data-point.active");
+
+      console.log(category);
+
+      if (category !== theme.yData()) {
+        toFade
+        .transition()
+        .duration(theme.duration())
+        .style("opacity", 0)
+        .each("end", fadeIn);
+      }
+      
+      function fadeIn() {
+        console.log(category);
+        theme.yData(category);
+
+        theme.draw(themeData);
+      }
+
+      if ( activeSelection.empty() === false ){
+
+        if ( activeSelection.datum()[category] === "" ) {
+          d3.select(theme.base.node().parentNode).select(".info-box").selectAll("div").remove();
+          theme.base.select(".legend-ring").remove();
+          activeSelection.classed("active", false);
+        }
+
+      }
+    });
+
+    theme.on("selection change", function(d) {
+      console.log("The element ", d, "was selected");
+      pymChild.sendHeight();
+    });
+  }
+
+  pymChild.sendHeight();
   
 });
 
 
-function readableNumbers (n, mode) {
+function readableNumbers (n) {
   "use strict";
-  var hundreds = d3.format(",3g");
+  var hundreds = d3.format(",3f");
   var bigNumbers = d3.format("f");
 
   // console.log(n);
@@ -935,24 +1089,31 @@ function readableNumbers (n, mode) {
 function displayStat (chart, d) {
   "use strict";
 
-  var svg = d3.select("#chart").select("svg");
+  var svg = chart.base;
   var pre = "";
   var fullNum = readableNumbers(d[chart.rData()]);
   console.log(fullNum);
   var num = fullNum.split(" ")[0];
   var post = fullNum.split(" ")[1] || "";
 
-  if ( svg.attr("id") === "money" ) {
+  if ( svg.attr("class").indexOf("money") !== -1 ) {
+    console.log("money value");
+    console.log(d["Currency Symbol"]);
     pre = d["Currency Symbol"];
   }
-  else if ( svg.attr("id") === "time" ) {
+  else if ( svg.attr("class").indexOf("time") !== -1 ) {
     num = readableNumbers(d["Impact - duration"]).split(" "[0]);
     post = d["Impact - duration unit"];
+    console.log(d["Impact - duration"]);
+    if (d["Impact - duration"] == 1) {
+      console.log("singular");
+      post = post.replace(/s$/,"");
+    }
   }
-  else if ( svg.attr("id") === "people" ) {
+  else if ( svg.attr("class").indexOf("people") !== -1 ) {
     post += " people";
   }
-
+  console.log(pre);
   return pre + " <span class=\"number\">" + num + "</span> " + post;
 
 }

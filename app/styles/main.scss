@@ -34,7 +34,7 @@ $impact: #ff0500;
 $green: #00bb6a;
 $lightblue: #008db4;
 $deepblue: #006196;
-$yellow: rgb(255, 255, 0);
+$yellow: #f8cf04;
 
 // $halfred: rgba(255, 0, 0, .5);
 // $halfgreen: rgba(0, 255, 0, .5);
@@ -159,8 +159,8 @@ $border1: $black 2px solid;
 
 // Totals Section
 .totals {
-
   overflow: auto;
+  padding-bottom: 1em;
 
   p {
     font-size: 1.6em;
@@ -328,13 +328,28 @@ p.instructions {
 
   .readmore {
     margin-top: 0;
+    margin-left: 1em;
   }
 
+  // &.timeline-chart {
+  //   position: absolute;
+  //   right: 0;
+  //   top: 160px;
+  //   width: 220px;
+  // }
+
   &.timeline-chart {
-    position: absolute;
-    right: 0;
-    top: 160px;
-    width: 220px;
+    .isotope-item {
+      margin-bottom: 30px;
+      margin-left: 20px;
+    }
+    .fail-stat {
+      position: absolute;
+      right: 0;
+      text-align: left;
+      top: 134px;
+      width: 220px;
+    }
   }
 
   &.replacements-chart {
@@ -350,6 +365,11 @@ p.instructions {
 // }
 
 // Selection Buttons
+.category-selection-container {
+  position: absolute;
+  left: 20px;
+}
+
 .select-category {
   text-align: right;
 
@@ -487,6 +507,101 @@ p.instructions {
     opacity: .7;
   }
 }
+
+
+//////////
+// Quiz //
+/////////
+.quiz {
+  font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
+  font-size: 18px;
+
+  .instructions {
+    float: left;
+    margin-right: 20px;
+    width: 380px;
+  }
+
+  .quiz-controls {
+    float: left;
+    text-align: right;
+    width: 220px;
+  }
+
+  .quiz-header {
+    overflow: auto;
+  }
+
+  .quiz-heading {
+    font-family: "Theinhardt-Medium", Helvetica, Arial, sans-serif;
+    font-size: 22px;
+    margin: 10px 0;
+    text-transform: uppercase;
+  }
+}
+
+.answer>.cause,
+.sumtext,
+.wrong {
+  border: 3px solid $black;
+  margin: 10px 0;
+  padding: 20px;
+}
+
+.answer {
+  display: block;
+
+  &.incorrect .cause {
+    background-color: $impact;
+  } 
+}
+
+.causes ul {
+  margin: 0;
+  padding: 0;
+}
+
+.wrong {
+  display: none;
+}
+
+.answers > li {
+  box-sizing: border-box;
+}
+
+.answer>.cause,
+.sumtext {
+  background: $lightgray;
+  display: block;
+  text-align: center;
+}
+
+.impact-summary {
+  display: block;
+  margin: 10px 0;
+  padding: 20px;
+  text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.sumtext>.cause {
+  background: $yellow;
+  display: inline;
+}
+
+.hidden,
+.answer .effect {
+  display: none;
+}
+
+.answer.correct .sumtext, 
+.impact-summary.correct {
+  background-color: $green;
+}
+
 
 //////////////////
 // Old Timeline //
