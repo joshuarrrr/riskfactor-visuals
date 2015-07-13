@@ -327,8 +327,8 @@ p.instructions {
   }
 
   .readmore {
-    margin-top: 0;
     margin-left: 1em;
+    margin-top: 0;
   }
 
   // &.timeline-chart {
@@ -343,6 +343,7 @@ p.instructions {
       margin-bottom: 30px;
       margin-left: 20px;
     }
+
     .fail-stat {
       position: absolute;
       right: 0;
@@ -358,6 +359,10 @@ p.instructions {
     top: 0;
     width: 380px;
   }
+
+  &.failure-chart {
+    padding-bottom: 1em;
+  }
 }
 
 // .number {
@@ -366,8 +371,8 @@ p.instructions {
 
 // Selection Buttons
 .category-selection-container {
-  position: absolute;
   left: 20px;
+  position: absolute; 
 }
 
 .select-category {
@@ -437,9 +442,18 @@ p.instructions {
 /////////////////////
 // Failures Charts //
 /////////////////////
+.project-selector {
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+
+  .placeholder {
+    display: none;
+  }
+}
 
 .chart-title {
-  margin: 0;
+  margin-bottom: .5em;
   text-align: center;
 }
 
@@ -458,53 +472,43 @@ p.instructions {
   text-anchor: end;
 }
 
-.area1 {
-  .area, .projection {
-    fill: lightgray;
-    opacity: .5;
-  }
-
-  g:first-child > path.total,
-  g:first-child > path.tot-est,
-  g:first-child > path.annual-est  {
-    fill: lightgreen;
-    opacity: .6;
-  }
-
-  g:first-child > path.dev,
-  g:first-child > path.dev-est  {
-    fill: darkgreen;
-    opacity: .6;
-  }
-
-  g:last-child > path.total,
-  g:last-child > path.tot-est,
-  g:last-child > path.annual-est  {
-    fill: yellow;
-    opacity: .6;
-  }
-
-  g:last-child > path.dev,
-  g:last-child > path.dev-est {
-    fill: orange;
-    opacity: .6;
-  }
+.launch .projection:first-child {
+  shape-rendering: crispEdges;
+  stroke: $black;
+  stroke-width: 1px;
 }
 
-.area2 {
-  path.area {
-    fill: darkgray;
-    opacity: .4;
+.area1 {
+  .area, 
+  .projection {
+    fill: $lightgray;
+    opacity: .3;
   }
 
-  g:first-child > path.area {
-    fill: darkgreen;
-    opacity: .5;
+  .initial > .total,
+  .initial > .tot-est,
+  .initial > .annual-est {
+    fill: $green;
+    opacity: .3;
   }
 
-  g:last-child > path.area {
-    fill: orange;
-    opacity: .7;
+  .initial > .dev,
+  .initial > .dev-est {
+    fill: $green;
+    opacity: .3;
+  }
+
+  .selected > .total,
+  .selected > .tot-est,
+  .selected > .annual-est {
+    fill: $yellow;
+    opacity: .3;
+  }
+
+  .selected > .dev,
+  .selected > .dev-est {
+    fill: $yellow;
+    opacity: .3;
   }
 }
 
