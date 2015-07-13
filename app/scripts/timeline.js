@@ -222,7 +222,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     // add y-axis labels
     this.layer("y-axis-labels", chart.layers.labelsBase, {
-      modes : ["web", "tablet"],
+      // modes : ["web", "tablet"],
       dataBind: function() {
         return this.selectAll(".y.label")
           .data(chart.categories, function (d) { return d; });
@@ -314,7 +314,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     // add x-axis layer 
     this.layer("x-axis", chart.layers.axesBase, {
-      modes : ["web", "tablet"],
+      // modes : ["web", "tablet"],
       dataBind: function(data) {
         return this.selectAll(".x")
           .data([data]);
@@ -354,7 +354,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     // add a circle layer
     this.layer("breach-dots", chart.layers.circlesBase, {
-      modes : ["web", "tablet"],
+      // modes : ["web", "tablet"],
       dataBind: function(data) {
         var chart = this.chart();
 
@@ -670,7 +670,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .text(function (d) { return readableNumbers(d); })
             .style("opacity", 1);
 
-          if ( active.empty() === false && d3.select(".legend-ring").empty() === true) {
+          if ( active.empty() === false && d3.select(".legend-ring").empty() === true && chart.mode() !== "mobile") {
             d3.select(".legend").append("circle")
               .attr("class", "legend-ring")
               .attr("cx", 0)
@@ -707,28 +707,28 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     // });
 
 
-    // for mobile, add a small text layer
-    this.layer("mobile-text", this.base.append("g"), {
-      modes: ["mobile"],
-      dataBind: function(data) {
-        return this.selectAll("text")
-          .data([data.length]);
-      },
+    // // for mobile, add a small text layer
+    // this.layer("mobile-text", this.base.append("g"), {
+    //   modes: ["mobile"],
+    //   dataBind: function(data) {
+    //     return this.selectAll("text")
+    //       .data([data.length]);
+    //   },
 
-      insert: function() {
-        return this.append("text")
-          .style("fill", "blue")
-          .attr("y", "10%")
-          .attr("x", 10);
-      },
-      events: {
-        merge : function() {
-          return this.text(function(d) {
-            return "There are " + d + " items painted on the screen";
-          });
-        }
-      }
-    });
+    //   insert: function() {
+    //     return this.append("text")
+    //       .style("fill", "blue")
+    //       .attr("y", "10%")
+    //       .attr("x", 10);
+    //   },
+    //   events: {
+    //     merge : function() {
+    //       return this.text(function(d) {
+    //         return "There are " + d + " items painted on the screen";
+    //       });
+    //     }
+    //   }
+    // });
   },
 });
 
@@ -744,6 +744,24 @@ d3.csv("timeline-data-6-18.csv", function (data) {
   var width = parWidth - margins.left - margins.right;
   var height = width * 1 / 1.7;
 
+  console.log(parWidth);
+
+  var bubbles = d3.select("#chart")
+    .append("svg")
+    .attr("class", "hidden")
+    .chart("BubbleTimeline")
+    .width(width)
+    .height(height)
+    .margin(margins)
+    .dateParse("iso")
+    .dateDisplay("%B 20%y")
+    .yData("Country")
+    .duration(300);
+
+    // .margins([20,90,70,90])
+
+  console.log(bubbles.mode());
+
   var quantities = [
     {"columnName":"Impact - Qty", "id":"money"},
     {"columnName":"Impact - hours", "id":"time"},
@@ -757,6 +775,16 @@ d3.csv("timeline-data-6-18.csv", function (data) {
   
   var totalCounters = d3.selectAll(".total")
     .data(quantities);
+
+  if ( bubbles.mode() === "mobile" ) {
+    totalCounters
+      .style("width", "100%")
+      .style("margin", "0 0 1em");
+
+    bubbles
+      .width(container.node().parentNode.offsetWidth - 40)
+      .height((container.node().parentNode.offsetWidth - 40) / 1.5);
+  }
 
   totalCounters.select(".number")
     .transition()
@@ -787,20 +815,6 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     .html("Sort by:<br>")
     .append("select")
       .attr("class", "select-category dropdown");
-
-  var bubbles = d3.select("#chart")
-    .append("svg")
-    .attr("class", "hidden")
-    .chart("BubbleTimeline")
-    .width(width)
-    .height(height)
-    .margin(margins)
-    .dateParse("iso")
-    .dateDisplay("%B 20%y")
-    .yData("Country")
-    .duration(300);
-
-    // .margins([20,90,70,90])
 
   selector.selectAll("option")
     .data(categories)
