@@ -33,18 +33,19 @@
 
             <select name="project-selector" id="project-selector" class="project-selector"></select>
             
-            <div class="buttons">
+            <h3 id="chart-title" class="chart-title"></h3>
+
+            <div class="buttons hidden">
               <a class="button inactive" id="reset">Reset Chart</a>
               <a class="button inactive" id="prev">Previous Project Milestone</a>
               <a class="button" id="next">Next Project Milestone</a>
             </div>
-            
-            <h3 id="chart-title" class="chart-title"></h3>
+
+            <div id="chart" class="chart-container" style="min-height:200px;"></div>
 
             <div id="notes" class="notes"></div>
-            <div class="info-box"></div>
-            
-            <div id="chart" class="chart-container"></div>
+            <div class="info-box failure-chart"></div>
+
           </div>
         </article>
       </div>
