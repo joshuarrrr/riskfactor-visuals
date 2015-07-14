@@ -746,6 +746,12 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
   console.log(parWidth);
 
+  var selector = d3.select("#chart").append("div")
+    .attr("class", "category-selection-container hidden")
+    .html("Sort by:<br>")
+    .append("select")
+      .attr("class", "select-category dropdown");
+
   var bubbles = d3.select("#chart")
     .append("svg")
     .attr("class", "hidden")
@@ -810,11 +816,7 @@ d3.csv("timeline-data-6-18.csv", function (data) {
   // var infoBox = d3.select("#chart").append("div")
   //     .attr("class","info-box timeline-chart");
 
-  var selector = d3.select("#chart").append("div")
-    .attr("class", "category-selection-container hidden")
-    .html("Sort by:<br>")
-    .append("select")
-      .attr("class", "select-category dropdown");
+  
 
   selector.selectAll("option")
     .data(categories)
@@ -935,6 +937,8 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     var ring = bubbles.base.select(".legend-ring");
 
     if (selection.classed("selected") !== true) {
+      d3.select(".legend").selectAll("g").remove();
+
       totalCounters.classed("selected", false);
 
       selection.classed("selected", true);
