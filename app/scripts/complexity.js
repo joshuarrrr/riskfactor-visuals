@@ -1,4 +1,4 @@
-/*global d3, pym */
+/*global d3, pym, ga */
 
 d3.chart("MarginChart").extend("SystemsChart", {
 
@@ -13,6 +13,8 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     var chart = this;
     chart.layers = {};
+
+    chart.gaProjectsHovered = 0;
 
     chart.layers.yAxisBase = chart.base.select("g").append("g")
       .classed("axes", true);
@@ -293,6 +295,9 @@ d3.chart("MarginChart").extend("SystemsChart", {
           // brush event to any listeners.
           selection.on("mouseover", function() {
             var el = d3.select(this);
+
+            var gaEventLabel = "complexity-" + el.datum().project;
+
             // el.selectAll("circle.complete")
             //   .style("stroke", function(d) {
             //   if (d[chart.lineData()][1]["systems to replace"] === 0 || null && this.classed("start")) {
@@ -313,6 +318,9 @@ d3.chart("MarginChart").extend("SystemsChart", {
             // });
 
             if ( el.classed("active") !== true ) {
+              ga("send", "event", "datapoint", "hover", gaEventLabel, chart.gaProjectsHovered);
+              chart.gaProjectsHovered++;
+
               d3.selectAll(".active")
                 .classed("active", false)
                 .selectAll("circle")
@@ -662,7 +670,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
 });
 
-d3.csv("systems-to-replace-6-26.csv", function (data) {
+d3.csv("data/complexity.csv", function (data) {
   "use strict";
 
   console.log(data);
