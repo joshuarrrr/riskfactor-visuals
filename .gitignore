@@ -1,6 +1,7 @@
 node_modules
 dist
 rfproject
+rf-project-assets
 .tmp
 .sass-cache
 bower_components
