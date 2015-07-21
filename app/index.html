@@ -11,6 +11,12 @@
     <!-- bower:css -->
     <!-- endbower -->
     <!-- endbuild -->
+
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/style.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/sb.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/slimbox2.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/site420a.css">
+
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
@@ -24,19 +30,98 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container">
+    <div class="container normal">
+      <div class="content-area">
+        <article class="article-detail">
       
-      <h1>Risk Factor Anniversary Project</h1>
-      
-      <p>Welcome to the work in progress! Check out the current state of the visualizations:
-      <ol>
-        <li><a href="timeline.html">Software failures seem to be growing more costly and more frequent</a></li>
-        <li><a href="replacements.html">Software projects are getting bigger and more complex</a></li>
-        <li><a href="failure2.html">Projects are often late and over budget</a></li>
-        <li><a href="blamegame.html">What failed projects have in common</a></li>
-      </ol>
+          <h1>What We’ve Learned from a Decade of Tracking Technology Failures</h1>
 
+          <h2>The takeaways from tracking the tech debacles of the last ten years</h2>
 
+          <figure class="xlrg img">
+            <img src="images/smash.png">
+            <figcaption class="hi-cap">Photo: Getty</figcaption>
+          </figure>
+
+          <p>Software and hardware are built by people, so no technology is immune to human error. When we embrace greater technological capability and complexity, we also increase our vulnerability when those systems fail. Ten years ago, <em>IEEE Spectrum</em> published the&quot;<a href="http://www.google.com/url?q=http%3A%2F%2Fspectrum.ieee.org%2Fcomputing%2Fsoftware%2Fwhy-software-fails&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNF0DzOjC71s2MqVylsXp8cMbYiqLQ">Why Software Fails</a>,&quot; an article that examined the underlying causes of notable project failures. A couple years later, we started the <a href="http://www.google.com/url?q=http%3A%2F%2Fspectrum.ieee.org%2Fblog%2Friskfactor&amp;sa=D&amp;sntz=1&amp;usg=AFQjCNGRarni8VDjrXuSlL2pjVoR6VmIqQ">Risk Factor</a> blog, with the goal of tracking technology failures both large and small.</p>
+          <p>We never ran out of things to write about. In fact, it&#39;s all too easy to get desensitized by constant failure—when multi-million-dollar debacles become commonplace, they lose their ability generate shock or outrage. Indeed, regular Risk Factor readers might wonder if complex software integration projects ever succeed. It&#39;s impossible to say whether IT failures are more frequent now than in the past (after all, the digitization of society has increased over the past decade), but it does seem that the aggregate consequences are worse.</p>
+          <p>To commemorate ten more years of failure, we decided that it was a good time to organize and analyze the data we’ve collected, and look for emerging patterns and lessons.</p>
+
+        </article>          
+
+        <div class="tiles">
+          <article class="item Commentary sml_article">
+            <a href="parent-timeline.html">
+              <figure class="mainImg tag xlrg">
+                <div class="shade"></div>
+                <img src="">
+                <figcaption>Lesson 1</figcaption>
+              </figure>
+
+              <h3>Software Failures Seem to Be Growing More Costly and More Frequent</h3>
+
+              <p></p>
+            </a>
+          </article>
+
+          <article class="item Commentary sml_article">
+            <a href="parent-complexity.html">
+              <figure class="mainImg tag xlrg">
+                <div class="shade"></div>
+                <img src="images/complexity.png">
+                <figcaption>Lesson 2</figcaption>
+              </figure>
+
+              <h3>Software Projects Are Getting Bigger and More Complex</h3>
+
+              <p></p>
+            </a>
+          </article>
+
+          <article class="item Commentary sml_article">
+            <a href="parent-estimates.html">
+              <figure class="mainImg tag xlrg">
+                <div class="shade"></div>
+                <img src="">
+                <figcaption>Lesson 3</figcaption>
+              </figure>
+
+              <h3>Projects Are Often Late and Over Budget</h3>
+
+              <p></p>
+            </a>
+          </article>
+
+          <article class="item Commentary sml_article">
+            <a href="blame.html">
+              <figure class="mainImg tag xlrg">
+                <div class="shade"></div>
+                <img src="">
+                <figcaption>Lesson 4</figcaption>
+              </figure>
+
+              <h3>When Projects Fail, There's Plenty of Blame to Go Around</h3>
+
+              <p></p>
+            </a>
+          </article>
+
+          <article class="item Commentary sml_article">
+            <a href="parent-graveyard.html">
+              <figure class="mainImg tag xlrg">
+                <div class="shade"></div>
+                <img src="">
+                <figcaption>Lesson 5</figcaption>
+              </figure>
+
+              <h3>The IT Industry Runs on Dead Projects</h3>
+
+              <p></p>
+            </a>
+          </article>
+        </div>
+
+      </div>
     </div>
 
 
@@ -53,12 +138,14 @@
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-51335839-1', 'auto');
+      ga('send', 'pageview');
+
     </script>
 
         <!-- build:js({app,.tmp}) scripts/main.js -->

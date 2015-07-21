@@ -33,7 +33,7 @@ $gray: #808080;
 $impact: #ff0500;
 $green: #00bb6a;
 $lightblue: #008db4;
-$deepblue: #006196;
+$violet: #4a0096;
 $yellow: #f8cf04;
 
 // $halfred: rgba(255, 0, 0, .5);
@@ -146,6 +146,16 @@ $border1: $black 2px solid;
   stroke: $medgray;
 }
 
+@media print {
+  .article-detail iframe {
+    display: block !important;
+  }
+
+  .info-box {
+    display: none;
+  }
+}
+
 
 // TIMELINE CHART
 // .label {
@@ -241,19 +251,19 @@ $border1: $black 2px solid;
   }
 
   .people {
-    background: $deepblue;
+    background: $violet;
     // background-image: url('../images/iconmonstr-banknote-5-icon.svg');
     // background-position: center;
     // background-repeat: no-repeat;
     // background-size: contain;
 
     &.selected {
-      outline: 3px $deepblue solid;
+      outline: 3px $violet solid;
       outline-offset: -3px;
     }
 
     &:hover {
-      @include total-button-gradient($deepblue);
+      @include total-button-gradient($violet);
       outline: none;
     }
   }
@@ -299,7 +309,7 @@ p.instructions {
 .people {
   .data-point, 
   .legend-circle {
-    fill: $deepblue;  
+    fill: $violet;  
   }
 }
 
@@ -398,9 +408,15 @@ p.instructions {
 }
 
 
-///////////////////
-// Systems Chart //
-///////////////////
+//////////////////////
+// Complexity Chart //
+//////////////////////
+// #complexity {
+//   background-image: url("../images/complexity.png");
+//   background-repeat: no-repeat;
+//   min-height: 392px;
+// }
+
 
 .marker {
   fill: $impact;
@@ -487,7 +503,8 @@ p.instructions {
 
   .initial > .total,
   .initial > .tot-est,
-  .initial > .annual-est {
+  .initial > .annual-est,
+  .initial > .maint-est {
     fill: $green;
     opacity: .3;
   }
@@ -500,7 +517,8 @@ p.instructions {
 
   .selected > .total,
   .selected > .tot-est,
-  .selected > .annual-est {
+  .selected > .annual-est,
+  .selected > .maint-est {
     fill: $yellow;
     opacity: .3;
   }
@@ -604,6 +622,27 @@ p.instructions {
 .answer.correct .sumtext, 
 .impact-summary.correct {
   background-color: $green;
+}
+
+
+//////////////////
+// Landing Page //
+//////////////////
+
+.tiles {
+  margin: 0 -10px;
+  overflow: auto;
+
+  .item {
+    display: inline;
+    float: left;
+    margin: 0 10px 1em;
+    width: 300px;
+
+    &:nth-child(odd) {
+      clear: both;
+    }
+  }
 }
 
 
