@@ -1,0 +1,104 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>A Decade of Failures</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+    
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/style.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/sb.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/slimbox2.css">
+    <link rel="stylesheet" href="http://spectrum.ieee.org/assets/css/site420a.css">
+    
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/d3.chart/d3.chart.js"></script>
+    <script src="bower_components/d3.chart.base/d3.chart.base.js"></script>
+    <script src="bower_components/d3.chart.plot/d3.chart.plot.js"></script>
+    <script src="bower_components/pym.js/dist/pym.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+  </head>
+  <body class="parent">
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div class="container fake-body">
+      <div class="content-area">
+        <article class="article-detail">
+          <h1>What We've Learned from a Decade of Failures</h1>
+          <h2>The takeaways from tracking the tech debacles of the last ten years</h2>
+          <div id="artBody">
+            <p>Software and hardware are built by people, so no technology is immune to human error. 
+            When we embrace greater technological capability and complexity, we also increase our vulnerability when those systems fail. Ten years ago, <em>IEEE Spectrum</em> published the"<a href="http://spectrum.ieee.org/computing/software/why-software-fails">Why Software Fails</a>," an article that examined the underlying causes of notable project failures. A couple years later, we started the Risk Factor blog, with the goal of tracking technology failures both large and small.</p>
+            <p>We never ran out of things to write about. In fact, it's all too easy to get desensitized by constant failure&mdash;when multi-million-dollar debacles become commonplace, they lose their ability generate shock or outrage. Indeed, regular Risk Factor readers might wonder if complex software integration projects ever succeed. It's impossible to say whether IT failures are more frequent now than in the past (after all, the digitization of society has increased over the past decade), but it does seem that the aggregate consequences are worse.</p>
+            <p>To commemorate ten more years of failure, we decided to take a step back and look at the big picture, by compiling a rogue's-gallery of notable failures from the past decade (choosing approximately two failures per month). Keep in mind that the failures listed here are just the tip of the iceburg: they represent just a small fraction of the stories we've covered in the Risk Factor, which itself is far from comprehensive.</p>
+            <p>Still, the aggregate impact of just this subset of failures is stunning:</p>
+            <div id="timeline">
+              <script>
+                /* global pym */
+                var pymParent = new pym.Parent("timeline", "timeline.html", {});
+              </script>
+              <noscript>
+                <img src="images/timeline.png">
+              </noscript>
+            </div>
+            
+
+            
+          </div>
+        </article>
+      </div>
+
+      <h3>To Do:</h3>
+      <ul>
+        <li><strike>Add legend showing min/max values</strike>, units</li>
+        <ul>
+          <li>Add scale selector/zoom controls</li>
+        </ul>
+        <li><strike>Add theme charts</strike></li>
+        <li><strike>Add dates to infobox</strike></li>
+        <li>Add prev/next controls</li>
+        <li>Add slider for mobile/touch</li>
+        <li>Add image backups</li>
+        <li>Add share tools</li>
+        <li>Update counters to show selection as proportion of total</li>
+        <li>Search box?</li>
+        <li>URL permalinks?</li>
+        <li><strike>Style tooltips</strike></li>
+        <li><strike>Exit data when no category</strike></li>
+        <li><strike>Figure out category ordering</strike></li>
+        <li><strike>Investigate broken transitions (like Waste Management) where y axis changes at start of update transition</strike></li>
+        <li><strike>Clean up Google Docs data for import</strike></li>
+        <ul>
+          <li>Update to proper category labels</li>
+          <li>Correct for inflation</li>
+        </ul>
+        <li><strike>Clean up d3.Chart structure</strike></li>
+        <li><strike>Incorporate real data</strike></li>
+        <li><strike>Add axes</strike></li>
+      </ul>
+
+
+    </div>
+    <footer class="dev-footer"><a href="index.html">Back to viz index</a></footer>
+      
+  </body>
+</html>

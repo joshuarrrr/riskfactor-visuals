@@ -1,4 +1,4 @@
-/*global d3, pym */
+/*global d3, pym, ga */
 d3.chart("MarginChart").extend("BubbleTimeline", {
 
   transform: function(data) {
@@ -90,6 +90,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     var chart = this;
 
     chart.layers = {};
+
+    chart.gaDatapointsClicked = 0;
+    chart.gaCategoriesChanged = 0;
+    chart.gaMetricChanged = 0;
+
+    chart.parentID = d3.select(chart.base.node().parentNode).attr("id");
 
     console.log(chart);
 
@@ -417,6 +423,13 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               var el = d3.select(this);
               var selectedData = el.datum();
               var infoBox = d3.select(chart.base.node().parentNode).select(".info-box");
+
+              var gaEventLabel = chart.parentID + "-" + selectedData.Headline;
+
+              ga("send", "event", "datapoint", "click", gaEventLabel, chart.gaDatapointsClicked);
+              chart.gaDatapointsClicked++;
+              // console.log(chart.gaDatapointsClicked);
+              // console.log(gaEventLabel);
               
               console.log(selectedData);
               // el.selectAll("circle")
@@ -733,7 +746,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 });
 
 
-d3.csv("timeline-data-6-18.csv", function (data) {
+d3.csv("data/timeline.csv", function (data) {
   "use strict";
 
   var pymChild = new pym.Child();
@@ -834,6 +847,8 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     var category = selection.value;
     var activeSelection = bubbles.base.select(".data-point.active");
 
+    var gaEventLabel = bubbles.parentID + ": from " + bubbles.yData() + " to " + category;
+
     console.log(activeSelection);
     console.log(activeSelection.empty());
 
@@ -841,10 +856,14 @@ d3.csv("timeline-data-6-18.csv", function (data) {
 
     if (category !== bubbles.yData()) {
       toFade
-      .transition()
-      .duration(bubbles.duration())
-      .style("opacity", 0)
-      .each("end", fadeIn);
+        .transition()
+        .duration(bubbles.duration())
+        .style("opacity", 0)
+        .each("end", fadeIn);
+
+      ga("send", "event", "dropdown", "change", gaEventLabel, bubbles.gaCategoriesChanged);
+      bubbles.gaCategoriesChanged++;
+
     }
     
     function fadeIn() {
@@ -936,7 +955,13 @@ d3.csv("timeline-data-6-18.csv", function (data) {
     var infoBox = d3.select(bubbles.base.node().parentNode).select(".info-box");
     var ring = bubbles.base.select(".legend-ring");
 
+    var gaEventLabel = bubbles.parentID + ": from " + (d3.select(".selected").empty() ? "initial" : d3.select(".selected").attr("id")) + " to " + selection.attr("id");
+    console.log(gaEventLabel);
+
     if (selection.classed("selected") !== true) {
+      ga("send", "event", "data metric", "change", gaEventLabel, bubbles.gaMetricChanged);
+      bubbles.gaMetricChanged++;
+
       d3.select(".legend").selectAll("g").remove();
 
       totalCounters.classed("selected", false);
@@ -1039,14 +1064,19 @@ d3.csv("timeline-data-6-18.csv", function (data) {
       var category = selection.value;
       var activeSelection = theme.base.select(".data-point.active");
 
+      var gaEventLabel = theme.parentID + ": from " + theme.yData() + " to " + category;
+
       console.log(category);
 
       if (category !== theme.yData()) {
         toFade
-        .transition()
-        .duration(theme.duration())
-        .style("opacity", 0)
-        .each("end", fadeIn);
+          .transition()
+          .duration(theme.duration())
+          .style("opacity", 0)
+          .each("end", fadeIn);
+
+        ga("send", "event", "dropdown", "change", gaEventLabel, theme.gaCategoriesChanged);
+        theme.gaCategoriesChanged++;
       }
       
       function fadeIn() {
