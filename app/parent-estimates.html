@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>Anatomy of a Failed Project</title>
+    <title>Lifecycle of a Failed Project</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -23,64 +23,6 @@
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
-
-  </head>
-  <body class="parent">
-    <!--[if lt IE 10]>
-      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-    <![endif]-->
-
-     <div class="container normal">
-      <div class="content-area">
-        <article class="article-detail">
-          <h1>Anatomy of a Failed Project</h1>
-          <h2>How timelines and budgets grow</h2>
-          <div id="artBody">
-
-            <p>IT Projects rarely fail all at once. Instead, they tend to snowball, growing larger and more hopeless as time goes on. Along the way, the definition of "success" is prone to mutation, as deadlines get pushed back and budgets increase. That's how a project can launch "ahead of schedule" even if it's more than three years late.</p>
-
-            <p>To illustrate this evolution toward catastrophe, we've reconstucted the budget and deadline history of a handful of of the most egregious IT project debacles of the last decade.</p>
-      
-            <div id="main-failure2"></div>
-            <!-- <p><em>If at first you don't suceed, just change your estimates.</em></p> -->
-
-          </div>
-        </article>
-      </div>
-
-      <h3>To Do:</h3>
-      <ul>
-        <li><strike>Add project selector</strike></li>
-        <li><strike>Add reset button to go to initial state</strike><ul>
-          <li>Add initial state chart class</li>
-        </ul></li>
-        <li>Add a legend</li>
-        <li>Add tooltip/values
-          <ul>
-            <li><strike>Spent so far (%)</strike></li>
-            <li><strike>Estimate increase</strike></li>
-            <li>Deadline incease</li>
-          </ul>
-        </li>
-        <li><strike>Clean up unused code</strike></li>
-        <li>Add estimate filter controls</li>
-        <li><strike>Change layer structure to nest by data point, not series</strike></li>
-        <li>Are areas more appropriate than lines?</li>
-        <li><strike>Improve animation</strike>
-          <ul>
-            <li><strike>Break spent area into segments</strike></li>
-          </ul>
-        </li>
-        <li>Add mobile mode</li>
-        <li>Support for launch dates, project status</li>
-        <li>Support for multiple projects at once</li>
-      </ul>
-
-
-    </div>
-    <footer class="dev-footer"><a href="index.html">Back to viz index</a></footer>
-
-
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
@@ -92,20 +34,64 @@
     <!-- endbower -->
     <!-- endbuild -->
 
-    <script>
-      /* global pym */
-      var pymParent = new pym.Parent("main-failure2", "main-failure2.html", {});
-    </script>
+  </head>
+  <body class="parent">
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
 
-    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-    <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
-    </script>
+     <div class="container normal">
+      <div class="content-area">
+        <article class="article-detail">
+          <h1>Lifecycle of a Failed Project</h1>
+          <h2>How timelines and budgets grow</h2>
+          <div id="artBody">
 
-</body>
+            <p>IT Projects rarely fail all at once. Instead, they tend to snowball, growing larger and more hopeless as time goes on. Along the way, the definition of "success" is prone to mutation, as deadlines get pushed back and budgets increase. That's how a project can launch "ahead of schedule" even if it's more than three years late.</p>
+
+            <p>To illustrate this evolution toward catastrophe, we've reconstucted the budget and deadline history of a handful of of the most egregious IT project debacles of the last decade.</p>
+      
+            <div id="estimates">
+              <script>
+                /* global pym */
+                var pymParent = new pym.Parent("estimates", "estimates.html", {});
+              </script>
+              <noscript>
+                <img src="images/estimates.png">
+              </noscript>
+            </div>
+            <!-- <p><em>If at first you don't suceed, just change your estimates.</em></p> -->
+
+          </div>
+        </article>
+      </div>
+
+      <h3>To Do:</h3>
+      <ul>
+        <li>Improve empty chart display (initial state)</li>
+        <li>Make it easier to compare inital estimates vs final cost and time</li>
+        <li>Should we include a legend?</li>
+        <li>Add tooltip/values
+          <ul>
+            <li><strike>Spent so far (%)</strike></li>
+            <li><strike>Estimate increase</strike></li>
+            <li>Deadline incease</li>
+          </ul>
+        </li>
+        <li>Move non-development estimates to subchart</li>
+        <li>Fix button layout for small tablets/mobile</li>
+        <li>Support for launch dates, project status</li>
+        <li>Improve support for multiple projects at once
+          <ul>
+            <li>Figure out how to show spending for each project</li>
+          </ul>
+        </li>
+        <li>Make summary chart</li>
+      </ul>
+
+
+    </div>
+    <footer class="dev-footer"><a href="index.html">Back to viz index</a></footer>
+
+  </body>
 </html>

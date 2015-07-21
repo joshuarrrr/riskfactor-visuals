@@ -1,4 +1,4 @@
-/*global d3, pym */
+/*global d3, pym, ga */
 
 d3.chart("MarginChart").extend("FailureChart", {
 
@@ -8,12 +8,6 @@ d3.chart("MarginChart").extend("FailureChart", {
       var chart = this;
       chart.layers = {};
 
-      chart.layers.yAxisBase = chart.base.select("g").append("g")
-        .classed("axes", true);
-
-      chart.layers.xAxisBase = chart.base.select("g").append("g")
-        .classed("axes", true);
-
       chart.layers.areaBase1 = chart.base.select("g").append("g")
         .classed("area1", true);
 
@@ -22,6 +16,12 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       chart.layers.initLine = chart.base.select("g").append("g")
         .classed("initline", true);
+
+      chart.layers.yAxisBase = chart.base.select("g").append("g")
+        .classed("axes", true);
+
+      chart.layers.xAxisBase = chart.base.select("g").append("g")
+        .classed("axes", true);
 
       chart.layers.ylabels = chart.base.select("g").append("g")
         .classed("y-labels", true);
@@ -34,8 +34,13 @@ d3.chart("MarginChart").extend("FailureChart", {
       chart.layers.defs = chart.base.select("g").append("defs");
 
       // create an xScale
+
+      var parWidth = chart.base.node().parentNode.parentNode.offsetWidth;
+      var margins = {top: 30, bottom: 30, right: 20, left: 100};
+      var width = parWidth - margins.left - margins.right;
+      var height = width * 3.5 / 8;
       this.xScale = d3.time.scale()
-        .range([0, chart.width()]);
+        .range([0, width]);
 
       // when the width changes, update the x scale range
       chart.on("change:width", function(newWidth) {
@@ -44,7 +49,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       // create a yScale
       this.yScale = d3.scale.linear()
-        .range([chart.height(),0]);
+        .range([height,0]);
 
       // when the height changes, update the y scale range
       chart.on("change:height", function(newHeight) {
@@ -59,6 +64,31 @@ d3.chart("MarginChart").extend("FailureChart", {
           .attr("dy", ".3em")
           .attr("dx", ".3em")
           .text("Cost, US$");
+
+      chart.layers.xAxisBase.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")");
+
+      var xAxis = d3.svg.axis()
+        .scale(chart.xScale)
+        .orient("bottom")
+        .ticks(0)
+        .outerTickSize(0);
+
+      chart.base.select(".x.axis")
+        .call(xAxis);
+
+      chart.layers.yAxisBase.append("g")
+            .attr("class", "y axis");
+
+      var yAxis = d3.svg.axis()
+        .scale(chart.yScale)
+        .orient("left")
+        .ticks(0)
+        .outerTickSize(0);
+
+      chart.base.select(".y.axis")
+        .call(yAxis);
 
       // add axes layer 
       this.layer("x-axis", chart.layers.xAxisBase, {
@@ -143,7 +173,11 @@ d3.chart("MarginChart").extend("FailureChart", {
       this.layer("spentMask", chart.layers.defs.append("clipPath").attr("id", "spent-clip"), {
         dataBind: function(data) {
           return this.selectAll("rect")
-            .data([data]);
+            .data([data.filter(function (milestone, index, data) {
+              if ( index === 0 || index === data.length - 1 || milestone.spent.value > data[index - 1].spent.value ) {
+                return milestone;
+              }
+            })]);
         },
 
         insert: function() {
@@ -487,7 +521,13 @@ d3.chart("MarginChart").extend("FailureChart", {
                 }
               })
               .text(function (d) {
-                return chart.formatMoney(d.area[d.area.length-1].y1, chart.data[0].currency);
+                var value = chart.formatMoney(d.area[d.area.length-1].y1, chart.data[0].currency);
+                if ( chart.data[chart.data.length - 1].extrapolated === "yes" ) {
+                  return value + " (extrapolated)";
+                }
+                else {
+                  return value;
+                }
               });
 
             // selection.select(".total-desc")
@@ -521,7 +561,11 @@ d3.chart("MarginChart").extend("FailureChart", {
               .attr("clip-path", "url(#spent-clip)"), {
         dataBind: function(data) {
           return this.selectAll("path.area")
-            .data([data]);
+            .data([data.filter(function (milestone, index, data) {
+              if ( index === 0 || index === data.length - 1 || milestone.spent.value >  data[index - 1].spent.value ) {
+                return milestone;
+              }
+            })]);
                 
         },
 
@@ -547,7 +591,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             //   });
 
             var area = d3.svg.area()
-              .x(function(d) { return chart.xScale(d.dateObject); })
+              .x(function(d) { console.log("unique spent"); return chart.xScale(d.dateObject); })
               .y0(chart.height())
               .y1(function(d) { return chart.yScale(d.spent.value); });
 
@@ -591,8 +635,8 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             selection
               .attr("x1", 0)
-              .attr("y1", chart.yScale(chart.data[0][chart.yData()[2].name]))
-              .attr("y2", chart.yScale(chart.data[0][chart.yData()[2].name]));
+              .attr("y1", chart.yScale(chart.data[0][chart.yData()[3].name]))
+              .attr("y2", chart.yScale(chart.data[0][chart.yData()[3].name]));
 
             selection
               .attr("class", "line");
@@ -604,7 +648,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             var chart = this.chart();
             var selection = this;
 
-            if ( chart.data[0][chart.yData()[2].name] > 0 && chart.data[0].Program !== "California's Unemployment Insurance Modernization" && chart.data.length > 1 && chart.data[chart.data.length - 1][chart.yData()[2].name] / chart.data[0][chart.yData()[2].name] > 1.05) {
+            if ( chart.data[0][chart.yData()[3].name] > 0 && chart.data[0].Program !== "California's Unemployment Insurance Modernization" && chart.data.length > 1 && chart.data[chart.data.length - 1][chart.yData()[3].name] / chart.data[0][chart.yData()[3].name] > 1.05) {
               selection
                 .duration(chart.duration())
                 .attr("x2", chart.width());
@@ -773,7 +817,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
 });
 
-d3.csv("failures-7-13.csv", function (data) {
+d3.csv("data/estimates.csv", function (data) {
   "use strict";
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
@@ -788,9 +832,12 @@ d3.csv("failures-7-13.csv", function (data) {
 
   var potentialSeries = [
     { "name": "Monies Spent to Date", "class": "spent" },
+    { "name": "Total Committed Spending", "class": "spent" },
     { "name": "Total Life Cycle Cost", "class": "tot-est" },
     { "name": "Estimated Cost to Develop", "class": "dev-est" },
-    { "name": "Annual Maintenance & Operational Costs", "class": "annual-est" }
+    { "name": "Payroll Development Cost", "class": "dev-est" },
+    { "name": "Annual Maintenance & Operational Costs", "class": "annual-est" },
+    { "name": "Maintenance & Operational Costs", "class": "maint-est" }
   ];
 
   data = d3.nest()
@@ -828,7 +875,7 @@ d3.csv("failures-7-13.csv", function (data) {
       }
       else {
         cost = {"value":+data[key], "change": null};
-        if (prevValue[0] > 0) {
+        if (prevValue[key] > 0) {
           cost.change = data[key] - prevValue[key];
         }
         prevValue[key] = +data[key];
@@ -841,7 +888,9 @@ d3.csv("failures-7-13.csv", function (data) {
     d.Currency = currency;
 
     d.milestones = d.values.map(function (milestone) { 
-      var dateObject = new Date(milestone.date);
+      var dateFormat = d3.time.format("%Y-%m-%d");
+
+      var dateObject = dateFormat.parse(milestone.date.replace(/T.*Z$/,""));
       var schedObject = new Date(milestone["Estimated Schedule"]);
 
       var estimated = parseCostString(milestone,"Estimated Cost to Develop");
@@ -860,6 +909,8 @@ d3.csv("failures-7-13.csv", function (data) {
         "dateOriginal": milestone.date,
         "formattedDate": formatString(dateObject),
         "dateObject": dateObject,
+
+        "extrapolated": milestone.extrapolated,
 
         "schedOriginal": milestone["Estimated Schedule"],
         "formattedSched": formatString(schedObject),
@@ -893,6 +944,7 @@ d3.csv("failures-7-13.csv", function (data) {
         ],
 
         "projections" :  potentialSeries.filter(function(entry) {
+            // return entry.class === "dev-est" && milestone[entry.name] !== "";
             return entry.class !== "spent" && milestone[entry.name] !== "";
           })
           .map(function(entry) {
@@ -964,6 +1016,8 @@ d3.csv("failures-7-13.csv", function (data) {
   console.log(data);
 
   var projectSelector = d3.select("#project-selector");
+  var gaProjectsViewed = 0;
+  var navButtonsClicked = 0;
 
   projectSelector.append("option")
     .attr("class", "placeholder")
@@ -979,12 +1033,16 @@ d3.csv("failures-7-13.csv", function (data) {
 
   projectSelector.on("change", function() {
     currentProjectID = this.value;
+
+    var gaEventLabel = data[currentProjectID].Program;
+    ga("send", "event", "dropdown", "change", gaEventLabel, gaProjectsViewed);
+    gaProjectsViewed++;
     resetChart(currentProjectID);
   });
 
   var failure = d3.select("#chart")
     .append("svg")
-    .classed("hidden", true)
+    // .classed("hidden", true)
     .chart("FailureChart")
     .duration(300)
     .width(width)
@@ -1017,7 +1075,8 @@ d3.csv("failures-7-13.csv", function (data) {
       .text(data[i].Program);
 
     failure.base
-      .classed("hidden", false);
+      .classed("hidden", false)
+      .classed("reset", true);
 
     d3.select(".buttons")
       .classed("hidden", false);
@@ -1047,6 +1106,11 @@ d3.csv("failures-7-13.csv", function (data) {
     var currentMilestone;
 
     if ( button.classed("inactive") !== true ) {
+      var gaEventLabel = data[currentProjectID].Program + "-" + button.attr("id");
+
+      ga("send", "event", "buttons", "click", gaEventLabel, navButtonsClicked);
+      navButtonsClicked++;
+
       if ( button.attr("id") === "reset" ) {
         milestone = 1;
       }
@@ -1079,9 +1143,13 @@ d3.csv("failures-7-13.csv", function (data) {
 
       if ( milestone > 1 ) {
         buttons.classed("inactive", false);
+        failure.base
+          .classed("reset", false);
       }
       else {
         buttons.classed("inactive", true);
+        failure.base
+          .classed("reset", true);
       }
 
       if ( milestone < data[currentProjectID].milestones.length ) {
