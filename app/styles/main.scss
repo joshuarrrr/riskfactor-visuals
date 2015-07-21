@@ -501,30 +501,30 @@ p.instructions {
     opacity: .3;
   }
 
-  .initial > .total,
-  .initial > .tot-est,
-  .initial > .annual-est,
-  .initial > .maint-est {
+  .initial .total,
+  .initial .tot-est,
+  .initial .annual-est,
+  .initial .maint-est {
     fill: $green;
     opacity: .3;
   }
 
-  .initial > .dev,
-  .initial > .dev-est {
+  .initial .dev,
+  .initial .dev-est {
     fill: $green;
     opacity: .3;
   }
 
-  .selected > .total,
-  .selected > .tot-est,
-  .selected > .annual-est,
-  .selected > .maint-est {
+  .selected .total,
+  .selected .tot-est,
+  .selected .annual-est,
+  .selected .maint-est {
     fill: $yellow;
     opacity: .3;
   }
 
-  .selected > .dev,
-  .selected > .dev-est {
+  .selected .dev,
+  .selected .dev-est {
     fill: $yellow;
     opacity: .3;
   }
@@ -769,6 +769,10 @@ p.instructions {
   &:hover {
     background: linear-gradient(to top, $base-color 40%, $start-color);
   }
+}
+
+a.button {
+  @include button-gradient($spectrumblue);
 }
 
 .button.inactive {
