@@ -74,16 +74,14 @@
 
     </div>
 
-    <div class="hidden">
+    <div class="incidents hidden">
 
-      <div class="sumtext">He said the problems were related to <span class="cause">training issues</span> and, yes, the ""normal"" start-up problems of a new, major IT system.<span class="effect">40% of state employees said they disliked the system, while 58% said it was worse that the old system</span>
+      <div class="sumtext">He said the problems were related to <span class="cause">training issues</span> and, yes, the &ldquo;normal&rdquo; start-up problems of a new, major IT system. <span class="effect">40% of state employees said they disliked the system, while 58% said it was worse that the old system.</span>
       </div>
-
-      <div class="sumtext">Update 6 May 2014 : U-2 did indeed cause the LA-area ATC problem The FAA admitted late yesterday that a U-2 did, in fact, trigger the problems last week with the LA-area ERAM system.</div>
 
       <div class="sumtext">The AP reported that an airport spokesperson said there was a <span class="cause">&ldquo;connectivity issue&rdquo;</span> that &ldquo;started early Wednesday morning in a computer system at a ticketing counter.<span class="effect">57 Flights cancelled, 250 others grounded</span></div>
 
-      <div class="sumtext">The Telegraph afternoon's article says that the LSE blamed the problem on a <span class="cause">"real time data dissemination issue."</span><span class="effect">London Stock Exchange New Trading Platform Goes Dark for 4 Hours</span></div>
+      <div class="sumtext">The LSE blamed the problem on a <span class="cause">&ldquo;real time data dissemination issue.&rdquo;</span><span class="effect">London Stock Exchange New Trading Platform Goes Dark for 4 Hours</span></div>
 
       <div class="sumtext">The story goes on, ""The writ says the problems could be traced back to 2002, when Centrica engaged Accenture to provide a new IT system.</div>
 
@@ -242,16 +240,18 @@
 
     <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
     <script>
-      (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-      function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-      e.src='//www.google-analytics.com/analytics.js';
-      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-      ga('create','UA-XXXXX-X');ga('send','pageview');
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-51335839-1', 'auto');
+      ga('send', 'pageview');
+
     </script>
 
-    <!-- build:js({app,.tmp}) scripts/blamegame.js -->
-    <script src="scripts/blamegame.js"></script>
+    <!-- build:js({app,.tmp}) scripts/blame.js -->
+    <script src="scripts/blame.js"></script>
     <!-- endbuild -->
   </body>
 </html>
