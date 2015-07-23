@@ -354,12 +354,48 @@ p.instructions {
       margin-left: 20px;
     }
 
-    .fail-stat {
+    .fail-stats {
       position: absolute;
       right: 0;
       text-align: left;
       top: 134px;
       width: 220px;
+    }
+  }
+
+  &.timeline-chart {
+    overflow: auto;
+
+    .legend-base {
+      float: right;
+      height: 150px;
+      width: 220px;
+    }
+
+    .fail-stats {
+      float: right;
+      height: 150px;
+      margin-top: 0;
+      position: static;
+      text-align: right;
+    }
+
+    .fail-stat {
+      color: $black;
+      font-family: "Theinhardt-Medium", Helvetica, Arial, sans-serif; 
+      font-size: 18px;
+      text-transform: none;
+    }
+
+    .current {
+      color: $impact;
+      font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
+      font-size: 2em;
+      margin: .7em 0;
+    }
+
+    .description {
+      margin: 0 0 0 20px;
     }
   }
 
@@ -375,12 +411,41 @@ p.instructions {
   }
 }
 
+.mobile-view .timeline-chart {
+  .legend-base {
+    display: none;
+  }
+  .fail-stats {
+    float: none;
+    height: auto;
+    margin: 0 auto;
+    position: static;
+    text-align: left;
+    width: auto;
+  }
+}
+
+.nav-buttons {
+  margin-left: 20px;
+
+  .button {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    padding: 0 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}
+
 // .number {
 //   font-size: 1.45em;
 // }
 
 // Selection Buttons
 .category-selection-container {
+  clear: both;
   left: 20px;
   position: absolute; 
 }
