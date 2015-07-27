@@ -38,12 +38,15 @@ Graveyard page:
 		styles/graveyard.css (will most likely be merged into main stylesheet)
 
 To embed any of the pages, follow this example:
-<div id="timeline">
+<div id="PAGE_NAME">
+  <script src="PATH_TO_PROJECT_DIR_ON_NETSTORAGE/pym/pym.min.js"></script>
   <script>
     /* global pym */
-    var pymParent = new pym.Parent("timeline", "timeline.html", {});
+    var pymParent = new pym.Parent("PAGE_NAME", "PATH_TO_PROJECT_DIR_ON_NETSTORAGE/PAGE_NAME.html", {});
   </script>
   <noscript>
-    <img src="/images/timeline.png">
+    <img src="/images/PAGE_NAME.png">
   </noscript>
 </div>
+
+PATH_TO_PROJECT_DIR_ON_NETSTORAGE is the path the the uploaded project directory and PAGE_NAME is the slug of the page you want to embed ("timeline" in the case of timeline.html).

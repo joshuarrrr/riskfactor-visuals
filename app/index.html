@@ -20,6 +20,24 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- endbuild -->
 
+    <style type="text/css">
+      .tiles {
+        margin: 0 -10px;
+        overflow: auto;
+      }
+
+      .tiles .item {
+        display: inline;
+        float: left;
+        margin: 0 10px 1em;
+        width: 300px;
+      }
+
+      .tiles .item:nth-child(odd) {
+        clear: both;
+      }
+    </style>
+
     <!-- build:js scripts/vendor/modernizr.js -->
     <script src="bower_components/modernizr/modernizr.js"></script>
     <!-- endbuild -->
@@ -30,7 +48,7 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
-    <div class="container normal">
+    <div class="container fake-body normal">
       <div class="content-area">
         <article class="article-detail">
       

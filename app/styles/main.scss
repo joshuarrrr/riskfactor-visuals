@@ -49,7 +49,7 @@ $border1: $black 2px solid;
 /////////////////////
 // Dev-Only Styles //
 /////////////////////
-.container {
+.fake-body {
   margin: 0 auto;
   max-width: $containerwidth;
 
@@ -292,6 +292,10 @@ p.instructions {
   fill-opacity: .2;  
 }
 
+.too-big {
+  cursor: default;
+}
+
 .money {
   .data-point, 
   .legend-circle {
@@ -375,7 +379,7 @@ p.instructions {
     .fail-stats {
       float: right;
       height: 150px;
-      margin-top: 0;
+      margin-top: -42px;
       position: static;
       text-align: right;
     }
@@ -436,6 +440,16 @@ p.instructions {
     &:last-child {
       margin-right: 0;
     }
+  }
+}
+
+.zoom-controls {
+  .zoom {
+    cursor: pointer;
+  }
+
+  .inactive {
+    opacity: 0;
   }
 }
 
@@ -687,27 +701,6 @@ p.instructions {
 .answer.correct .sumtext, 
 .impact-summary.correct {
   background-color: $green;
-}
-
-
-//////////////////
-// Landing Page //
-//////////////////
-
-.tiles {
-  margin: 0 -10px;
-  overflow: auto;
-
-  .item {
-    display: inline;
-    float: left;
-    margin: 0 10px 1em;
-    width: 300px;
-
-    &:nth-child(odd) {
-      clear: both;
-    }
-  }
 }
 
 
