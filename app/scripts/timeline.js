@@ -5,7 +5,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     "use strict";
     var chart = this;
 
-    // chart.data = data;
+    chart.data = data;
 
     // console.log(data);
 
@@ -44,17 +44,17 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.xScale.domain(d3.extent(data, function(d) { return d.dateObject; })).nice();
 
     //update r scale domain
-    var min = d3.min(data, function(d) { 
+    chart.min = d3.min(data, function(d) { 
       if (d[chart.rData()] > 0) {
         return d[chart.rData()]; 
       }
     });
-    var max = d3.max(data, function(d) { return d[chart.rData()]; });
+    chart.max = d3.max(data, function(d) { return d[chart.rData()]; });
 
-    console.log(min);
-    console.log(max);
+    console.log(chart.min);
+    console.log(chart.max);
 
-    chart.rScale.domain([0, max]);
+    chart.rScale.domain([0, chart.max]);
 
     chart.dateIndexMax = d3.max(data, function(d) {
       return d.dateIndex;
@@ -73,6 +73,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.gaDatapointsClicked = 0;
     chart.gaCategoriesChanged = 0;
     chart.gaMetricChanged = 0;
+
+    chart.maxBubbleSize = 70;
 
     chart.parentID = d3.select(chart.base.node().parentNode).attr("id");
 
@@ -137,7 +139,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       
     // create a rScale
     chart.rScale = d3.scale.sqrt()
-      .range([0, 70]);
+      .range([0, chart.maxBubbleSize]);
 
     // // when the r data changes, update r scale domain
     // chart.on("change:rData", function(newRData) {
@@ -162,6 +164,27 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       .attr("class", "next button")
       .attr("href", "#")
       .text("Next");
+
+
+    var zoomControls = chart.layers.legendBase.append("g")
+      .attr("class", "zoom-controls");
+
+    zoomControls.append("text")
+      .attr("class", "zoom in")
+      .attr("x", -chart.maxBubbleSize)
+      .attr("dx", "0")
+      .attr("dy", ".5em")
+      .attr("y", -chart.maxBubbleSize)
+      .text("zoom in");
+
+    zoomControls.append("text")
+      .attr("class", "zoom out inactive")
+      .attr("x", chart.maxBubbleSize)
+      .attr("dx", "0")
+      .attr("dy", ".5em")
+      .attr("y", -chart.maxBubbleSize)
+      .attr("text-anchor", "end")
+      .text("zoom out");
 
 
     // add lines layer
@@ -436,7 +459,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               console.log(selectedData);
               // el.selectAll("circle")
 
-              if ( el.classed("active") !== true ) {
+              if ( !el.classed("active") && !el.classed("too-big") ) {
                 chart.base.selectAll(".active")
                   .classed("active", false);
 
@@ -545,16 +568,21 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       modes: ["web", "tablet"],
       dataBind: function(data) {
         var chart = this.chart();
-        var min = d3.min(data, function(d) { 
-          if (d[chart.rData()] > 0) {
-            return d[chart.rData()]; 
-          }
-        });
-        var max = d3.max(data, function(d) { return d[chart.rData()]; });
+        // var min = d3.min(data, function(d) { 
+        //   if (d[chart.rData()] > 0) {
+        //     return d[chart.rData()]; 
+        //   }
+        // });
+        // var max = d3.max(data, function(d) { return d[chart.rData()]; });
         var intervals = [];
 
-        for (var i = 1; i < max; i = i*10) {
-          if ( i > min ) {
+        // console.log(chart.rScale.domain()[1]);
+        // if ( chart.max > chart.rScale.domain()[1]) {
+        //   chart.max = chart.rScale.domain()[1];
+        // }
+
+        for (var i = 1; i <= chart.max; i = i*10) {
+          if ( i > chart.min ) {
             intervals.unshift(i);
           }
         }
@@ -573,14 +601,15 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         chart.layers.infoBoxBase.select(".legend")
           .attr("transform", "translate(75,75)");
 
-        return this.selectAll("g")
-          .data(intervals.slice(0,4), function (d) { return d; } );
+        return this.selectAll(".legend-step")
+          .data(intervals.slice(0,4), function (d) { console.log(readableNumbers(d)); return d; } );
       },
 
       insert: function() {
-        var selection =  this.append("g");
+        var selection =  this.append("g")
+          .attr("class", "legend-step");
 
-        // console.log(this);
+        console.log("insert legend steps");
 
         selection
           .append("circle")
@@ -604,11 +633,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         "enter" : function() {
           var chart = this.chart();
           var selection = this;
-          // var el = d3.select(this);
 
           selection.selectAll(".legend-circle")
             .attr("cx", 0)
-            .attr("cy", 0);
+            .attr("cy", 0)
+            .attr("r", function(d) { return chart.rScale(d); })
+            .style("opacity", 0);
 
           selection.selectAll(".legend-line")
             .attr("x1", 0)
@@ -619,62 +649,47 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .attr("stroke-width", 1);
 
           selection.selectAll(".legend-text")
-            .attr("x", 70)
+            .attr("x", chart.maxBubbleSize)
             .attr("dx", "0")
             .attr("dy", "0")
             .attr("y", function (d) { return chart.rScale(d); })
             .style("opacity", 0);
 
-          var last = chart.layers.legendBase.select("g:last-child");
+          // var last = chart.layers.legendBase.select("g:last-child");
 
-          last.select(".legend-line")
-            .attr("y1", function(d) { return - chart.rScale(d); })
-            .attr("y2", function(d) { return - chart.rScale(d); });
+          // last.select(".legend-line")
+          //   .attr("y1", function(d) { return - chart.rScale(d); })
+          //   .attr("y2", function(d) { return - chart.rScale(d); });
 
-          last.select(".legend-text")
-            .attr("y", function (d) { return - chart.rScale(d); });
-
-          chart.layers.legendBase.select(".legend-heading").remove();
-
-          chart.layers.legendBase.append("text")
-            .attr("class", "legend-heading")
-            .attr("x", 70)
-            .attr("dx", "0")
-            .attr("dy", ".5em")
-            .attr("y", -35)
-            .style("opacity", 0)
-            .style("font-style", "italic");
+          // last.select(".legend-text")
+          //   .attr("y", function (d) { return - chart.rScale(d); });
 
           return selection;
         },
 
-        "exit" : function() {
-          this.remove();
-          chart.layers.legendBase.select(".legend-heading").remove();
-        },
- 
-        "merge:transition": function() {
+        "merge" : function() {
           var chart = this.chart();
           var selection = this;
-          var active = d3.select(".data-point.active");
+          // var el = d3.select(this);
 
-          selection.selectAll(".legend-circle")
-            .duration(1000)
-            .attr("r", function(d) { return chart.rScale(d); });
+          selection
+            .sort(function(a,b){
+              return b - a;
+            });
 
-          selection.selectAll(".legend-line")
-            .delay(1000)
-            .duration(300)
-            .attr("x2", 70);
+          var legendHeading = chart.layers.legendBase.selectAll(".legend-heading");
 
-          selection.selectAll(".legend-text")
-            .delay(1300)
-            .text(function (d) { return readableNumbers(d); })
-            .style("opacity", 1);
-
-          chart.layers.legendBase.selectAll(".legend-heading")
-            .transition()
-            .delay(1300)
+          legendHeading
+            .data([chart.rData()])
+            .enter()
+          .append("text")
+            .attr("class", "legend-heading")
+            .attr("x", chart.maxBubbleSize)
+            .attr("dx", "0")
+            .attr("dy", ".5em")
+            .attr("y", -chart.maxBubbleSize / 2)
+            .style("opacity", 0)
+            .style("font-style", "italic")
             .text(function() {
               var svg = d3.select(chart.layers.legendBase.node().parentNode);
 
@@ -689,7 +704,184 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               }
 
             })
+            .style("opacity", 0)
+            .transition()
+            .delay(1300)
             .style("opacity", 1);
+
+          legendHeading
+            .text(function() {
+              var svg = d3.select(chart.layers.legendBase.node().parentNode);
+
+              if ( svg.classed("money") ) {
+                return "Cost, US$:";
+              }
+              else if ( svg.classed("time") ) {
+                return "Hours:";
+              }
+              else if ( svg.classed("people") ) {
+                return "People:";
+              }
+
+            })
+            .style("opacity", 0)
+            .transition()
+            .delay(1300)
+            .style("opacity", 1);
+
+          var zoomControls = chart.layers.legendBase.selectAll(".zoom");
+
+          console.log(chart.min + " " + (chart.max / 100));
+
+          if ( selection.size() < 4 ) {
+            chart.layers.legendBase.select(".zoom-controls .in")
+              .classed("inactive", true);
+          }
+          else {
+            chart.layers.legendBase.select(".zoom-controls .in")
+              .classed("inactive", false);
+          }
+
+          zoomControls.on("click", function() {
+            chart.layers.legendBase.selectAll(".legend-step")
+              .sort(function(a,b){
+                return a - b;
+              });
+
+            console.log(readableNumbers(d3.select(selection[0][0]).datum()));
+            console.log(selection.size());
+            // var limit = chart.layers.legendBase.select(".legend-step").datum();
+
+            // TODO: Add analytics to zoom
+
+            var limit = d3.select(selection[0][0]).datum();
+
+            if ( d3.select(this).classed("in") ) {
+              if ( selection.size() < 4 ) {
+                return;
+              }
+              else if ( limit === chart.rScale.domain()[1] ) {
+                limit = limit / 10;
+                chart.max = limit;
+              }
+            }
+            else if ( d3.select(this).classed("out") ) {
+              if ( chart.base.selectAll(".too-big").empty() ) {
+
+                return;
+              }
+              else {
+                console.log(readableNumbers(limit));
+                console.log("zoom out");
+                limit = limit * 10;
+                chart.max = limit;
+              }
+            }
+            
+            console.log(readableNumbers(limit));
+
+            chart.rScale.domain([0,limit]);
+
+            chart.layer("bubbles").draw(chart.data);
+
+            chart.base.selectAll(".too-big")
+              .filter(function (d) {
+                if (d[chart.rData()] < limit) {
+                  return d;
+                } 
+              })
+              .classed("too-big", false)
+              .style("fill-opacity", null);
+              // .transition()
+              // .delay(1000)
+              // .duration(chart.duration())
+              // .style("fill-opacity", 0.2);
+
+            chart.base.selectAll(":not(.too-big).data-point")
+              .filter(function (d) {
+                if (d[chart.rData()] > limit ) {
+                  return d;
+                } 
+              })
+              .classed("too-big", true)
+              .style("fill-opacity", 0.2)
+              .transition()
+              .delay(1000)
+              .duration(chart.duration())
+              .style("fill-opacity", 0);
+
+            if ( chart.base.selectAll(".too-big").empty() ) {
+              chart.layers.legendBase.select(".zoom-controls .out")
+                .classed("inactive", true);
+            }
+            else {
+              chart.layers.legendBase.select(".zoom-controls .out")
+                .classed("inactive", false);
+            }
+
+            if ( chart.min >= limit / 100) {
+              chart.layers.legendBase.select(".zoom-controls .in")
+                .classed("inactive", true);
+            }
+            else {
+              chart.layers.legendBase.select(".zoom-controls .in")
+                .classed("inactive", false);
+            }
+
+            var active = chart.base.select(".active");
+            if ( active.classed("too-big") ) {
+              active.classed("active", false);
+            }
+
+            chart.layers.legendBase.select(".legend-ring")
+              .transition()
+              .duration(1000)
+              .attr("r", function(d) { return chart.rScale(d[chart.rData()]); })
+              .each("end", function() { return chart.layer("info-box").draw(); });
+
+            // chart.layer("info-box").draw();
+            chart.layer("legend").draw();
+
+          });
+
+          return selection;
+        },
+
+        "exit" : function() {
+          this.remove();
+          // chart.layers.legendBase.select(".legend-heading").remove();
+        },
+ 
+        "update:transition" : function() {
+          var chart = this.chart();
+          var selection = this;
+          // var active = d3.select(".data-point.active");
+
+          selection.selectAll(".legend-circle")
+            .duration(1000)
+            .attr("r", function(d) { return chart.rScale(d); });
+
+          selection.selectAll(".legend-line")
+            .duration(1000)
+            .attr("y1", function(d) { return chart.rScale(d); })
+            .attr("y2", function(d) { return chart.rScale(d); });
+
+          selection.selectAll(".legend-text")
+            .duration(1000)
+            .attr("y", function(d) { return chart.rScale(d); });
+
+          // var last = chart.layers.legendBase.select("g:last-child");
+
+          // last.select(".legend-line")
+          //   .duration(1000)
+          //   .attr("y1", function(d) { return - chart.rScale(d); })
+          //   .attr("y2", function(d) { return - chart.rScale(d); });
+
+          // last.select(".legend-text")
+          //   .duration(1000)
+          //   .attr("y", function (d) { return - chart.rScale(d); });
+
+          
 
           // if ( active.empty() === false && chart.layers.legendBase.select(".legend-ring").empty() === true && chart.mode() !== "mobile") {
           //   chart.layers.legendBase.append("circle")
@@ -706,6 +898,25 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               
 
           // }
+        },
+
+        "enter:transition" : function() {
+          // var chart = this.chart();
+          var selection = this;
+
+          selection.selectAll(".legend-circle")
+            .duration(1300)
+            .style("opacity", 1);
+
+          selection.selectAll(".legend-line")
+            .delay(1000)
+            .duration(300)
+            .attr("x2", chart.maxBubbleSize);
+
+          selection.selectAll(".legend-text")
+            .text(function (d) { return readableNumbers(d); })
+            .delay(1300)
+            .style("opacity", 1);
         }
       }
 
@@ -751,59 +962,67 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
             event.preventDefault();
 
-            console.log("clicked");
+            if ( !el.empty() ) {
 
-            do {
-              if ( d3.select(this).classed("prev") ) {
-                if ( dateIndex === 0 ) {
-                  dateIndex = chart.dateIndexMax;
+              console.log("clicked");
+
+              do {
+                if ( d3.select(this).classed("prev") ) {
+                  if ( dateIndex === 0 ) {
+                    dateIndex = chart.dateIndexMax;
+                  }
+                  else {
+                    dateIndex--;
+                  }
                 }
-                else {
-                  dateIndex--;
+                else if ( d3.select(this).classed("next") ) {
+                  if ( dateIndex >= chart.dateIndexMax ) {
+                    console.log("maxed");
+                    dateIndex = 0;
+                  }
+                  else {
+                    dateIndex++;
+                  }
                 }
-              }
-              else if ( d3.select(this).classed("next") ) {
-                if ( dateIndex >= chart.dateIndexMax ) {
-                  console.log("maxed");
-                  dateIndex = 0;
-                }
-                else {
-                  dateIndex++;
-                }
-              }
-              console.log(dateIndex);
-            } while (chart.base.select("[data-date-index=\"" + dateIndex + "\"]").empty() || chart.base.select("[data-date-index=\"" + dateIndex + "\"]").datum()[chart.rData()] === 0);
+                console.log(dateIndex);
+              } while (chart.base.select("[data-date-index=\"" + dateIndex + "\"]").empty() || 
+                chart.base.select("[data-date-index=\"" + dateIndex + "\"]").datum()[chart.rData()] === 0 ||
+                chart.base.select("[data-date-index=\"" + dateIndex + "\"]").classed("too-big"));
 
-            var next = chart.base.select("[data-date-index=\"" + dateIndex + "\"]");
-            var gaEventLabel = chart.parentID + "-" + next.datum().Headline;
+              var next = chart.base.select("[data-date-index=\"" + dateIndex + "\"]");
+              var gaEventLabel = chart.parentID + "-" + next.datum().Headline;
 
-            ga("send", "event", "datapoint", "click", gaEventLabel, chart.gaDatapointsClicked);
-            chart.gaDatapointsClicked++;
+              ga("send", "event", "datapoint", "click", gaEventLabel, chart.gaDatapointsClicked);
+              chart.gaDatapointsClicked++;
 
-            chart.base.selectAll(".active")
-              .classed("active", false);
+              chart.base.selectAll(".active")
+                .classed("active", false);
 
-            next
-              .classed("active", true);
+              next
+                .classed("active", true);
 
-            chart.layer("info-box").draw();
+              chart.layer("info-box").draw();
 
-            chart.trigger("selection change", el);
+              chart.trigger("selection change", el);
+
+            }
 
           });
 
           chart.layers.legendBase.select(".legend-ring").remove();
 
-          chart.layers.legendBase.selectAll(".legend-ring")
+          var ring = chart.layers.legendBase.selectAll(".legend-ring")
             .data([selection.datum()]).enter()
           .append("circle")
             .attr("class", "legend-ring")
             .attr("cx", 0)
             .attr("cy", 0)
-            .attr("r", function(d) { return chart.rScale(d[chart.rData()]); })
             .attr("stroke-width", 2)
             .attr("fill", "none")
             .style("stroke", "red");
+          
+          ring
+            .attr("r", function(d) { return chart.rScale(d[chart.rData()]); });
 
           selection.selectAll("*").remove();
             
@@ -891,7 +1110,7 @@ d3.csv("data/timeline.csv", function (data) {
   console.log(bubbles.mode());
 
   var quantities = [
-    {"columnName":"Impact - Qty", "id":"money"},
+    {"columnName":"Impact - USD", "id":"money"},
     {"columnName":"Impact - hours", "id":"time"},
     {"columnName":"Impact - customers affected", "id":"people"}
   ];
@@ -1018,9 +1237,10 @@ d3.csv("data/timeline.csv", function (data) {
     if ( activeSelection.empty() === false ){
 
       if ( activeSelection.datum()[category] === "" ) {
-        d3.select(bubbles.base.node().parentNode).select(".info-box").selectAll("div").remove();
-        d3.select(bubbles.base.node().parentNode).select(".legend-ring").remove();
+        // d3.select(bubbles.base.node().parentNode).select(".info-box").selectAll("div").remove();
+        // d3.select(bubbles.base.node().parentNode).select(".legend-ring").remove();
         activeSelection.classed("active", false);
+        bubbles.layer("info-box").draw();
       }
 
     }
@@ -1104,7 +1324,7 @@ d3.csv("data/timeline.csv", function (data) {
       ga("send", "event", "data metric", "change", gaEventLabel, bubbles.gaMetricChanged);
       bubbles.gaMetricChanged++;
 
-      d3.select(".legend").selectAll("g").remove();
+      // d3.select(".legend").selectAll(".legend-step").remove();
 
       totalCounters.classed("selected", false);
 
@@ -1247,9 +1467,105 @@ d3.csv("data/timeline.csv", function (data) {
     });
   }
 
+  // var sharing = new Share();
+
   pymChild.sendHeight();
   
 });
+
+// var Share = function() {
+//   "use strict";
+    
+//   // var fbInitialized = false;
+  
+//   function shareData() {
+//     var data = {
+//       title: $("meta[property='og:title']").attr('content'),
+//       longTitle: "",
+//       url: $("meta[property='og:url']").attr('content'),
+//       image: $("meta[property='og:image']").attr('content'),
+//       description: $("meta[property='og:description']").attr('content')
+//     };
+//     return data;
+//   }
+
+//   function track(label) {
+//     return;
+//     //MCP.share(label);
+//   }
+
+
+//   var that = {
+
+//     assignButtons: function() {
+//       $('#share-fb').on('click',that.postToFacebook)
+//       $('#share-twtr').on('click',that.postToTwitter)
+//       $('#share-email').on('click',that.emailLink)
+//       $('#share-gpls').on('click',that.postToGooglePlus)
+//       $('#share-lin').on('click',that.postToLinkedIn)
+//     },
+    
+//     postToFacebook: function() {
+//       var data = shareData();
+//       var obj = {
+//         app_id: "172525162793917",
+//         method: 'feed',
+//         name: data.longTitle,
+//         link: window.location.href,
+//         picture: data.image,
+//         description: data.description
+//       };
+//       FB.ui(obj, function(response) {
+//         track("Facebook");
+//       });
+//     },
+    
+//     centerPopup: function(width, height) {
+//       var wLeft = window.screenLeft ? window.screenLeft : window.screenX;
+//       var wTop = window.screenTop ? window.screenTop : window.screenY;
+//       var left = wLeft + (window.innerWidth / 2) - (width / 2);
+//       var top = wTop + (window.innerHeight / 2) - (height / 2);
+//       return 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
+//     },
+    
+//     postToTwitter: function() {
+//       var data = shareData();
+//       var tweetUrl = "https://twitter.com/share?url=" + encodeURIComponent(data.url) + "&text=" + encodeURIComponent(data.description);
+//       var opts = that.centerPopup(820, 440) + "scrollbars=1";
+//       track("Twitter");
+//       window.open(tweetUrl, 'twitter', opts);
+//     },
+    
+//     emailLink: function() {
+//       var data = shareData();
+//       var mailto = "mailto:?subject=" + encodeURIComponent(data.longTitle) + "&body=" + encodeURIComponent(data.description + "\n\n" + window.location.href);
+//       track('Email');
+//       window.location.href = mailto;
+//     },
+    
+//     postToGooglePlus: function() {
+//       var url = encodeURIComponent(window.location.href);
+//       var gPlusUrl ="https://plus.google.com/share?url={" + url + "}"; 
+//       track('Google');
+//       var opts = that.centerPopup(800, 480) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+//       window.open(gPlusUrl, '', opts);
+//     },
+    
+//     postToLinkedIn: function() {
+//       // This doesn't work when served up with a port
+//       var data = shareData();
+//       var url = encodeURIComponent(window.location.href);
+//       var linkedInUrl ="http://www.linkedin.com/shareArticle?mini=true&url=" + url
+//         + "&title=" + encodeURIComponent(data.longTitle) + "&summary=" + encodeURIComponent(data.description); 
+//       track('LinkedIn');
+//       var opts = that.centerPopup(880, 460) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+//       window.open(linkedInUrl, '', opts);
+//     }
+//   };
+
+//   that.assignButtons()
+//   return that;
+// };
 
 
 function readableNumbers (n) {
@@ -1334,7 +1650,7 @@ function displayStat (chart, d) {
       num = fullNum.split(" ")[0];
       post = fullNum.split(" ")[1] || "";
 
-      if (quant.columnName === chart.rData() ) {
+      if ( chart.base.classed(quant.id) ) {
         elemClass += " current";
       }
 
@@ -1347,7 +1663,7 @@ function displayStat (chart, d) {
         num = readableNumbers(d["Impact - duration"]).split(" "[0]);
         post = d["Impact - duration unit"];
         console.log(d["Impact - duration"]);
-        if (d["Impact - duration"] == 1) {
+        if (+d["Impact - duration"] === 1) {
           console.log("singular");
           post = post.replace(/s$/,"");
         }
