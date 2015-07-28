@@ -443,13 +443,34 @@ p.instructions {
   }
 }
 
+// @mixin middle-gradient($base-color: $spectrumblue) {
+//   $color-diff: #181818;
+//   $mid-color: $base-color - $color-diff;
+//   background: linear-gradient(to right, $base-color, $mid-color 50%, $base-color);
+//   background-color: $base-color;
+// }
+
 .zoom-controls {
+  // .zoom-bg {
+  //   // fill: $lightgray;
+  //   @include middle-gradient($lightgray);
+  // }
+  
+  .zoom-bg {
+    fill-opacity: .8;
+  }
+
   .zoom {
     cursor: pointer;
   }
 
+  text {
+    fill: $white;
+  }
+
   .inactive {
-    opacity: 0;
+    cursor: default;
+    opacity: .3;
   }
 }
 

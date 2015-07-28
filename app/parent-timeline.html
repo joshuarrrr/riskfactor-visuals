@@ -5,6 +5,8 @@
     <title>A Decade of Failures</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
+    <!-- <meta property="og:title" content="A Decade of Failures">
+    <meta property="og:url" content="http://www.joshromero.com/rfproject/parent-timeline.html"> -->
     <link rel="shortcut icon" href="/favicon.ico">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
     <!-- build:css(.) styles/vendor.css -->
@@ -40,6 +42,24 @@
       <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
     <![endif]-->
 
+<!--     <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '172525162793917',
+          xfbml      : true,
+          version    : 'v2.4'
+        });
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script> -->
+
     <div class="container fake-body">
       <div class="content-area">
         <article class="article-detail">
@@ -53,8 +73,29 @@
             <p>Still, the aggregate impact of just this subset of failures is stunning:</p>
             <div id="timeline">
               <script>
-                /* global pym */
+                /* global pym, $*/
                 var pymParent = new pym.Parent("timeline", "timeline.html", {});
+
+                // $( document ).ready(function() {
+                //   "use strict";
+                //   // pymParent.sendMessage('share', $("meta[property='og:title']").attr('content'));
+
+                //   pymParent.onMessage("shareFB", function (data) {
+                //     var parsedData = JSON.parse(data);
+
+                //     // parsedData.link = window.location.href;
+                //     parsedData.link = "http://spectrum.ieee.org/riskfactor/computing/it/it-hiccups-of-the-week-ohio-bank-blames-gps-for-wrong-house-repossession";
+
+                //     console.log(parsedData);
+
+                //     /*global FB*/
+                //     FB.ui({
+                //       method: 'feed',
+                //       link: 'https://developers.facebook.com/docs/',
+                //       caption: 'An example caption',
+                //     }, function(response){});
+                //   });
+                // });
               </script>
               <noscript>
                 <img src="images/timeline.png">

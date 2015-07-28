@@ -7,7 +7,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     chart.data = data;
 
-    // console.log(data);
+    console.log(data);
 
     //get an array of unique values for a given key
     chart.categories = d3.set(data
@@ -103,7 +103,13 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.layers.legendBase = chart.layers.infoBoxBase.append("svg")
       .classed("legend-base", true)
       .append("g")
-        .classed("legend", true);
+        .classed("legend", true)
+      .append("g")
+        .classed("legend-inner", true);
+
+    chart.layers.legendOuter = chart.layers.infoBoxBase.select(".legend")
+      .append("g")
+        .classed("legend-outer", true);
 
 
     // create an xScale
@@ -165,26 +171,59 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       .attr("href", "#")
       .text("Next");
 
+    var defs = chart.layers.legendOuter.append("defs");
 
-    var zoomControls = chart.layers.legendBase.append("g")
+    var grad = defs.append("linearGradient")
+      .attr("id", "mid-grad");
+
+    grad.append("stop")
+      .attr("offset", "10%")
+      .attr("stop-color", "#bbb");
+
+    grad.append("stop")
+      .attr("offset", "50%")
+      .attr("stop-color", "#888");
+
+    grad.append("stop")
+      .attr("offset", "90%")
+      .attr("stop-color", "#bbb");
+
+    var zoomControls = chart.layers.legendOuter.append("g")
       .attr("class", "zoom-controls");
 
-    zoomControls.append("text")
-      .attr("class", "zoom in")
+    zoomControls.append("rect")
+      .attr("class", "zoom-bg")
       .attr("x", -chart.maxBubbleSize)
-      .attr("dx", "0")
-      .attr("dy", ".5em")
       .attr("y", -chart.maxBubbleSize)
-      .text("zoom in");
+      .attr("width", 2 * chart.maxBubbleSize)
+      .attr("height", 20)
+      .attr("fill", "url(#mid-grad)");
 
     zoomControls.append("text")
       .attr("class", "zoom out inactive")
-      .attr("x", chart.maxBubbleSize)
+      .attr("x", -chart.maxBubbleSize)
+      .attr("dx", ".5em")
+      .attr("dy", "1em")
+      .attr("y", -chart.maxBubbleSize)
+      .text("-");
+
+    zoomControls.append("text")
+      .attr("class", "")
+      .attr("x", 0)
       .attr("dx", "0")
-      .attr("dy", ".5em")
+      .attr("dy", "1em")
+      .attr("y", -chart.maxBubbleSize)
+      .attr("text-anchor", "middle")
+      .text("zoom");
+
+    zoomControls.append("text")
+      .attr("class", "zoom in")
+      .attr("x", chart.maxBubbleSize)
+      .attr("dx", "-.5em")
+      .attr("dy", "1em")
       .attr("y", -chart.maxBubbleSize)
       .attr("text-anchor", "end")
-      .text("zoom out");
+      .text("+");
 
 
     // add lines layer
@@ -494,10 +533,10 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 //     .attr("color", "red")
                 //     .text(function(d) {
                 //       if ( d[chart.rData()] >= 1e9 ) {
-                //         return ("$ " + d[chart.rData()] / 1e9) + " Billion";
+                //         return ("$ " + d[chart.rData()] / 1e9) + " billion";
                 //       }
                 //       else if (d[chart.rData()] >= 1e6) {
-                //         return ("$ " + d[chart.rData()] / 1e6) + " Million";
+                //         return ("$ " + d[chart.rData()] / 1e6) + " million";
                 //       }
                 //     });
 
@@ -691,7 +730,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .style("opacity", 0)
             .style("font-style", "italic")
             .text(function() {
-              var svg = d3.select(chart.layers.legendBase.node().parentNode);
+              var svg = d3.select(chart.layers.legendBase.node().parentNode.parentNode);
 
               if ( svg.classed("money") ) {
                 return "Cost, US$:";
@@ -711,7 +750,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           legendHeading
             .text(function() {
-              var svg = d3.select(chart.layers.legendBase.node().parentNode);
+              var svg = d3.select(chart.layers.legendBase.node().parentNode.parentNode);
 
               if ( svg.classed("money") ) {
                 return "Cost, US$:";
@@ -729,28 +768,33 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .delay(1300)
             .style("opacity", 1);
 
-          var zoomControls = chart.layers.legendBase.selectAll(".zoom");
+          var zoomControls = chart.layers.legendOuter.selectAll(".zoom");
 
           console.log(chart.min + " " + (chart.max / 100));
 
           if ( selection.size() < 4 ) {
-            chart.layers.legendBase.select(".zoom-controls .in")
+            chart.layers.legendOuter.select(".zoom-controls .in")
               .classed("inactive", true);
           }
           else {
-            chart.layers.legendBase.select(".zoom-controls .in")
+            chart.layers.legendOuter.select(".zoom-controls .in")
               .classed("inactive", false);
           }
 
+          if ( chart.layers.legendOuter.select(".zoom-controls .in").classed("inactive") &&
+            chart.layers.legendOuter.select(".zoom-controls .out").classed("inactive") ) {
+            chart.layers.legendOuter.select(".zoom-controls").classed("hidden", true);
+          }
+
           zoomControls.on("click", function() {
-            chart.layers.legendBase.selectAll(".legend-step")
+            chart.layers.legendOuter.selectAll(".legend-step")
               .sort(function(a,b){
                 return a - b;
               });
 
             console.log(readableNumbers(d3.select(selection[0][0]).datum()));
             console.log(selection.size());
-            // var limit = chart.layers.legendBase.select(".legend-step").datum();
+            // var limit = chart.layers.legendOuter.select(".legend-step").datum();
 
             // TODO: Add analytics to zoom
 
@@ -767,7 +811,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             }
             else if ( d3.select(this).classed("out") ) {
               if ( chart.base.selectAll(".too-big").empty() ) {
-
                 return;
               }
               else {
@@ -783,6 +826,9 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             chart.rScale.domain([0,limit]);
 
             chart.layer("bubbles").draw(chart.data);
+
+            chart.base.selectAll(".too-big")
+              .style("fill-opacity", 0);
 
             chart.base.selectAll(".too-big")
               .filter(function (d) {
@@ -811,20 +857,20 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               .style("fill-opacity", 0);
 
             if ( chart.base.selectAll(".too-big").empty() ) {
-              chart.layers.legendBase.select(".zoom-controls .out")
+              chart.layers.legendOuter.select(".zoom-controls .out")
                 .classed("inactive", true);
             }
             else {
-              chart.layers.legendBase.select(".zoom-controls .out")
+              chart.layers.legendOuter.select(".zoom-controls .out")
                 .classed("inactive", false);
             }
 
             if ( chart.min >= limit / 100) {
-              chart.layers.legendBase.select(".zoom-controls .in")
+              chart.layers.legendOuter.select(".zoom-controls .in")
                 .classed("inactive", true);
             }
             else {
-              chart.layers.legendBase.select(".zoom-controls .in")
+              chart.layers.legendOuter.select(".zoom-controls .in")
                 .classed("inactive", false);
             }
 
@@ -954,6 +1000,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           var selection = this;
           var chart = this.chart();
 
+          chart.layers.infoBoxBase.select(".nav-buttons").classed("hidden", false);
+
           var buttons = chart.layers.infoBoxBase.select(".nav-buttons").selectAll(".button");
 
           buttons.on("click", function () {
@@ -987,7 +1035,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 console.log(dateIndex);
               } while (chart.base.select("[data-date-index=\"" + dateIndex + "\"]").empty() || 
                 chart.base.select("[data-date-index=\"" + dateIndex + "\"]").datum()[chart.rData()] === 0 ||
-                chart.base.select("[data-date-index=\"" + dateIndex + "\"]").classed("too-big"));
+                chart.base.select("[data-date-index=\"" + dateIndex + "\"]").classed("too-big") ||
+                chart.base.select("[data-date-index=\"" + dateIndex + "\"]").datum()[chart.yData()] === "");
 
               var next = chart.base.select("[data-date-index=\"" + dateIndex + "\"]");
               var gaEventLabel = chart.parentID + "-" + next.datum().Headline;
@@ -1036,7 +1085,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           selection
             .append("a")
-            .attr("href", function(d) { return d.url; })
+            .attr("href", function(d) { return d.url.split("; ")[0]; })
             .attr("target", "_blank")
             .append("h3")
             .attr("class", "fail-hed")
@@ -1046,9 +1095,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .append("p")
             .attr("class", "fail-impact")
             .text(function(d) { return d["Impact - Raw"]; })
-            .append("a")
+            .selectAll(".readmore")
+              .data(function(d) { return d.url.split("; "); })
+            .enter().append("a")
             .attr("class", "readmore")
-            .attr("href", function(d) { return d.url; })
+            .attr("href", function(d) { return d; })
             .attr("target", "_blank")
             .html("Read&nbsp;More");
 
@@ -1061,6 +1112,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           selection.selectAll("*").remove();
 
           chart.layers.legendBase.select(".legend-ring").remove();
+
+          chart.layers.infoBoxBase.select(".nav-buttons").classed("hidden", true);
         }
       }
 
@@ -1380,13 +1433,6 @@ d3.csv("data/timeline.csv", function (data) {
     .append("select")
       .attr("class", "select-category dropdown");
 
-    selector.selectAll("option")
-      .data(categories)
-      .enter()
-    .append("option")
-      .attr("value", function(d) { return d; })
-      .text(function(d) { return d.replace("Government", "Gov"); });
-
     var theme = d3.select(id)
       .append("svg")
       .attr("class", impact.id)
@@ -1415,10 +1461,21 @@ d3.csv("data/timeline.csv", function (data) {
 
     var themeData = data.filter(function (d) {
       // filter out data that has no set value (category)
-      if (d.Theme.indexOf(filter) !== -1 ) {
+      if (d.Theme.indexOf(filter) !== -1 && d[impact.columnName] !== 0) {
         return d;
       } 
     });
+
+    selector.selectAll("option")
+      .data(categories.filter(function (cat) {
+        return themeData.some(function (d) {
+          return d[cat] !== ""; 
+        });
+      }))
+      .enter()
+    .append("option")
+      .attr("value", function(d) { return d; })
+      .text(function(d) { return d.replace("Government", "Gov"); });
 
     theme.draw(themeData);
 
@@ -1467,105 +1524,118 @@ d3.csv("data/timeline.csv", function (data) {
     });
   }
 
+  // var Share = function() {
+  //   // var fbInitialized = false;
+    
+  //   function shareData() {
+  //     var data = {
+  //       // title: $("meta[property='og:title']").attr('content'),
+  //       // longTitle: "",
+  //       // url: $("meta[property='og:url']").attr('content'),
+  //       // image: $("meta[property='og:image']").attr('content'),
+  //       // description: $("meta[property='og:description']").attr('content')
+  //       title: "Timeline",
+  //       longTitle: "",
+  //       url: "http://www.joshromero.com/rfproject/parent-timeline.html",
+  //       image: "",
+  //       description: "This is awesome!"
+  //     };
+
+  //     // pymChild.onMessage("share", function (title) {
+  //     //   data.title = title;
+  //     //   console.log("message sent!");
+  //     // });
+  //     return data;
+  //   }
+
+  //   function track(label) {
+  //     return;
+  //     //MCP.share(label);
+  //   }
+
+
+  //   var that = {
+
+  //     assignButtons: function() {
+  //       $('#share-fb').on('click',that.postToFacebook)
+  //       $('#share-twtr').on('click',that.postToTwitter)
+  //       $('#share-email').on('click',that.emailLink)
+  //       $('#share-gpls').on('click',that.postToGooglePlus)
+  //       $('#share-lin').on('click',that.postToLinkedIn)
+  //     },
+      
+  //     postToFacebook: function() {
+  //       var data = shareData();
+  //       var obj = {
+  //         app_id: "172525162793917",
+  //         method: "share",
+  //         // name: data.longTitle,
+  //         link: window.location.href,
+  //         // picture: data.image,
+  //         description: data.description
+  //       };
+  //       // FB.ui(obj, function(response) {
+  //       //   track("Facebook");
+  //       // });
+  //       pymChild.sendMessage("shareFB", JSON.stringify(obj));
+  //     },
+      
+  //     centerPopup: function(width, height) {
+  //       var wLeft = window.screenLeft ? window.screenLeft : window.screenX;
+  //       var wTop = window.screenTop ? window.screenTop : window.screenY;
+  //       var left = wLeft + (window.innerWidth / 2) - (width / 2);
+  //       var top = wTop + (window.innerHeight / 2) - (height / 2);
+  //       return 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
+  //     },
+      
+  //     postToTwitter: function() {
+  //       var data = shareData();
+  //       var tweetUrl = "https://twitter.com/share?url=" + encodeURIComponent(data.url) + "&text=" + encodeURIComponent(data.title);
+  //       var opts = that.centerPopup(820, 440) + "scrollbars=1";
+  //       track("Twitter");
+  //       window.open(tweetUrl, 'twitter', opts);
+  //     },
+      
+  //     emailLink: function() {
+  //       var data = shareData();
+  //       var mailto = "mailto:?subject=" + encodeURIComponent(data.longTitle) + "&body=" + encodeURIComponent(data.description + "\n\n" + window.location.href);
+  //       track('Email');
+  //       window.location.href = mailto;
+  //     },
+      
+  //     postToGooglePlus: function() {
+  //       var url = encodeURIComponent(window.location.href);
+  //       var gPlusUrl ="https://plus.google.com/share?url={" + url + "}"; 
+  //       track('Google');
+  //       var opts = that.centerPopup(800, 480) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+  //       window.open(gPlusUrl, '', opts);
+  //     },
+      
+  //     postToLinkedIn: function() {
+  //       // This doesn't work when served up with a port
+  //       var data = shareData();
+  //       var url = encodeURIComponent(window.location.href);
+  //       var linkedInUrl ="http://www.linkedin.com/shareArticle?mini=true&url=" + url
+  //         + "&title=" + encodeURIComponent(data.longTitle) + "&summary=" + encodeURIComponent(data.description); 
+  //       track('LinkedIn');
+  //       var opts = that.centerPopup(880, 460) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+  //       window.open(linkedInUrl, '', opts);
+  //     }
+  //   };
+
+  //   that.assignButtons()
+  //   return that;
+  // };
+
   // var sharing = new Share();
+
+
 
   pymChild.sendHeight();
   
 });
 
-// var Share = function() {
-//   "use strict";
-    
-//   // var fbInitialized = false;
-  
-//   function shareData() {
-//     var data = {
-//       title: $("meta[property='og:title']").attr('content'),
-//       longTitle: "",
-//       url: $("meta[property='og:url']").attr('content'),
-//       image: $("meta[property='og:image']").attr('content'),
-//       description: $("meta[property='og:description']").attr('content')
-//     };
-//     return data;
-//   }
 
-//   function track(label) {
-//     return;
-//     //MCP.share(label);
-//   }
-
-
-//   var that = {
-
-//     assignButtons: function() {
-//       $('#share-fb').on('click',that.postToFacebook)
-//       $('#share-twtr').on('click',that.postToTwitter)
-//       $('#share-email').on('click',that.emailLink)
-//       $('#share-gpls').on('click',that.postToGooglePlus)
-//       $('#share-lin').on('click',that.postToLinkedIn)
-//     },
-    
-//     postToFacebook: function() {
-//       var data = shareData();
-//       var obj = {
-//         app_id: "172525162793917",
-//         method: 'feed',
-//         name: data.longTitle,
-//         link: window.location.href,
-//         picture: data.image,
-//         description: data.description
-//       };
-//       FB.ui(obj, function(response) {
-//         track("Facebook");
-//       });
-//     },
-    
-//     centerPopup: function(width, height) {
-//       var wLeft = window.screenLeft ? window.screenLeft : window.screenX;
-//       var wTop = window.screenTop ? window.screenTop : window.screenY;
-//       var left = wLeft + (window.innerWidth / 2) - (width / 2);
-//       var top = wTop + (window.innerHeight / 2) - (height / 2);
-//       return 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
-//     },
-    
-//     postToTwitter: function() {
-//       var data = shareData();
-//       var tweetUrl = "https://twitter.com/share?url=" + encodeURIComponent(data.url) + "&text=" + encodeURIComponent(data.description);
-//       var opts = that.centerPopup(820, 440) + "scrollbars=1";
-//       track("Twitter");
-//       window.open(tweetUrl, 'twitter', opts);
-//     },
-    
-//     emailLink: function() {
-//       var data = shareData();
-//       var mailto = "mailto:?subject=" + encodeURIComponent(data.longTitle) + "&body=" + encodeURIComponent(data.description + "\n\n" + window.location.href);
-//       track('Email');
-//       window.location.href = mailto;
-//     },
-    
-//     postToGooglePlus: function() {
-//       var url = encodeURIComponent(window.location.href);
-//       var gPlusUrl ="https://plus.google.com/share?url={" + url + "}"; 
-//       track('Google');
-//       var opts = that.centerPopup(800, 480) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
-//       window.open(gPlusUrl, '', opts);
-//     },
-    
-//     postToLinkedIn: function() {
-//       // This doesn't work when served up with a port
-//       var data = shareData();
-//       var url = encodeURIComponent(window.location.href);
-//       var linkedInUrl ="http://www.linkedin.com/shareArticle?mini=true&url=" + url
-//         + "&title=" + encodeURIComponent(data.longTitle) + "&summary=" + encodeURIComponent(data.description); 
-//       track('LinkedIn');
-//       var opts = that.centerPopup(880, 460) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
-//       window.open(linkedInUrl, '', opts);
-//     }
-//   };
-
-//   that.assignButtons()
-//   return that;
-// };
 
 
 function readableNumbers (n) {
@@ -1586,11 +1656,11 @@ function readableNumbers (n) {
   }
   else if ( n < 1e9 ) {
     // console.log("under 1B")
-    // console.log(bigNumbers(n / 1e6) + " Million");
-    return bigNumbers(n / 1e6) + " Million";
+    // console.log(bigNumbers(n / 1e6) + " million");
+    return bigNumbers(n / 1e6) + " million";
   }
   else {
-    return bigNumbers(n / 1e9) + " Billion";
+    return bigNumbers(n / 1e9) + " billion";
   }
 }
 
@@ -1609,10 +1679,10 @@ function formatNumber(amount) {
   }
 
   if ( amount >= 1e9 ) {
-    formatted += (amount / 1e9).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " Billion";
+    formatted += (amount / 1e9).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " billion";
   }
   else if ( amount >= 1e6 ) {
-    formatted += (amount / 1e6).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " Million";
+    formatted += (amount / 1e6).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " million";
   }
   else {
     formatted += comma(amount);
@@ -1657,7 +1727,12 @@ function displayStat (chart, d) {
       elemClass += " " + quant.id;
 
       if ( quant.id === "money" ) {
-        pre = d["Currency Symbol"];
+        if ( d["Currency Symbol"] === "$" ) {
+          pre = d["Impact - Currency"].slice(0,2) + d["Currency Symbol"];
+        }
+        else {
+          pre = d["Currency Symbol"];
+        }
       }
       else if ( quant.id === "time" ) {
         num = readableNumbers(d["Impact - duration"]).split(" "[0]);
@@ -1671,7 +1746,7 @@ function displayStat (chart, d) {
       else if ( quant.id === "people" ) {
         post += " people";
       }
-      elem +="<p class=\"" + elemClass + "\">" + pre + " <span class=\"number\">" + num + "</span> " + post + "</p>";
+      elem +="<p class=\"" + elemClass + "\">" + pre + "<span class=\"number\">" + num + "</span> " + post + "</p>";
       console.log(elem); 
     }
   });
