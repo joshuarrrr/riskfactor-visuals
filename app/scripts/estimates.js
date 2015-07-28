@@ -539,10 +539,10 @@ d3.chart("MarginChart").extend("FailureChart", {
             //   .text(function (d) {
             //     var cost = d[0][chart.yData()[2]];
             //     if ( cost >= 1e9 ) {
-            //       return (cost / 1e9) + " Billion";
+            //       return (cost / 1e9) + " billion";
             //     }
             //     else if (cost > 1e6) {
-            //       return (cost / 1e6) + " Million";
+            //       return (cost / 1e6) + " million";
             //     }
             //     else {
             //       return cost;
@@ -803,10 +803,10 @@ d3.chart("MarginChart").extend("FailureChart", {
       }
 
       if ( amount >= 1e9 ) {
-        formatted += (amount / 1e9).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " Billion";
+        formatted += (amount / 1e9).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " billion";
       }
       else if ( amount >= 1e6 ) {
-        formatted += (amount / 1e6).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " Million";
+        formatted += (amount / 1e6).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " million";
       }
       else {
         formatted += amount;

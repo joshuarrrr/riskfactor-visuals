@@ -157,10 +157,10 @@ d3.chart("MarginChart").extend("SystemsChart", {
             .ticks(5)
             .outerTickSize(0).tickFormat(chart._yformat || function(d) {
               if ( d >= 1e9 ) {
-                return (d / 1e9) + " Billion";
+                return (d / 1e9) + " billion";
               }
               else if (d >= 1e6) {
-                return (d / 1e6) + " Million";
+                return (d / 1e6) + " million";
               }
               else {
                 return "";
