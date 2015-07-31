@@ -27,11 +27,11 @@ d3.csv("data/timeline.csv", function (data) {
     d.month = d.dateObject.getMonth();
 
     //coerce to number
-    if (d["Impact - Qty"] === null) {
-      d["Impact - Qty"] = 0;
+    if (d["Impact - USD"] === null) {
+      d["Impact - USD"] = 0;
     }
     else {
-      d["Impact - Qty"] = +d["Impact - Qty"];
+      d["Impact - USD"] = +d["Impact - USD"];
     }
     
 
@@ -48,11 +48,11 @@ d3.csv("data/timeline.csv", function (data) {
 
   var sizer = d3.scale.sqrt()
     .range([0, 610])
-    .domain([0,d3.max(data, function(d) { return d["Impact - Qty"]; })]);
+    .domain([0,d3.max(data, function(d) { return d["Impact - USD"]; })]);
 
   var fontScale = d3.scale.sqrt()
     .range([0, 120])
-    .domain([0,d3.max(data, function(d) { return d["Impact - Qty"]; })]);
+    .domain([0,d3.max(data, function(d) { return d["Impact - USD"]; })]);
 
   // var linFontScale = d3.scale.linear()
   //   .range([0, 120])
@@ -67,17 +67,17 @@ d3.csv("data/timeline.csv", function (data) {
   .enter().append("div")
     .attr("class", "cancelled-project")
     .style("margin", "5px")
-    .style("width", function(d) { return sizer(d["Impact - Qty"]) + "px"; })
-    .style("height", function(d) { return sizer(d["Impact - Qty"]) + "px"; })
+    .style("width", function(d) { return sizer(d["Impact - USD"]) + "px"; })
+    .style("height", function(d) { return sizer(d["Impact - USD"]) + "px"; })
     // .style("background", "url(\"images/cgbug_Halloween_Rounded_Tombstone.svg\")")
     // .style("background-size", "100% 100%")
     // .style("background-repeat", "no-repeat")
     // .style("background-position", "center")
     .style("text-align", "center");
 
-  projects.filter(function(d) { return d["Impact - Qty"] >= 2e+7; })
+  projects.filter(function(d) { return d["Impact - USD"] >= 2e+7; })
     .append("h3")
-    .style("font-size", function (d) { return fontScale(d["Impact - Qty"]) + "px"; })
+    .style("font-size", function (d) { return fontScale(d["Impact - USD"]) + "px"; })
     .style("position", "relative")
     .style("line-height", "1em")
     .style("left", "5%")
@@ -115,7 +115,7 @@ d3.csv("data/timeline.csv", function (data) {
       // .style("left", "50%")
       // .style("transform", "translate(-50%, 0)")
       .style("top", selection.style("top")) 
-      .style("left", (280 - 150) + "px")
+      .style("left", (298) + "px")
       // .style("left", function() { 
       //   var position = selection.style("left").replace("px","");
       //   console.log(position);

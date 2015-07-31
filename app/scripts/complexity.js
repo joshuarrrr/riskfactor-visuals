@@ -29,7 +29,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     chart.layers.legendBase = chart.base.append("g")
       .classed("legend-base", true)
-      .attr("transform", "translate(0, 354)");
+      .attr("transform", "translate(560, 26)");
 
 
     // create an xScale
@@ -57,17 +57,30 @@ d3.chart("MarginChart").extend("SystemsChart", {
     .enter().append("g")
       .classed("legend-item", true);
 
+    // legendItem.append("circle")
+    //   .attr("cx", function (d,i) { return 14 + (i * 70) - ((7 - (i > 0 ? legendValues[i-1].length : 7)) * 5); })
+    //   .attr("cy", 5)
+    //   .attr("r", 5)
+    //   .attr("class", function(d) { return d.replace(" ", "-"); });
+
+    // legendItem.append("text")
+    //   .attr("x", function (d,i) { return i * 70 - ((7 - (i > 0 ? legendValues[i-1].length : 7)) * 5); })
+    //   .attr("y", 0)
+    //   .attr("dx", 24)
+    //   .attr("dy", ".65em")
+    //   .text(function (d) { return d; });
+
     legendItem.append("circle")
-      .attr("cx", function (d,i) { return 14 + (i * 70) - ((7 - (i > 0 ? legendValues[i-1].length : 7)) * 5); })
-      .attr("cy", 5)
+      .attr("cx", 0)
+      .attr("cy", function (d,i) { return (i * 1.5) + "em"; })
       .attr("r", 5)
       .attr("class", function(d) { return d.replace(" ", "-"); });
 
     legendItem.append("text")
-      .attr("x", function (d,i) { return i * 70 - ((7 - (i > 0 ? legendValues[i-1].length : 7)) * 5); })
-      .attr("y", 0)
-      .attr("dx", 24)
-      .attr("dy", ".65em")
+      .attr("x", 0)
+      .attr("y", function (d,i) { return (i * 1.5) + "em"; }) 
+      .attr("dx", 15)
+      .attr("dy", ".35em")
       .text(function (d) { return d; });
   
     // add axes layer 
@@ -435,7 +448,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
         var selection = this.append("div")
           .attr("class", "info-box replacements-chart")
           .append("div")
-            .attr("class", "isotope-item");
+            .attr("class", "isotope-item description");
 
         return selection;
       },
@@ -444,7 +457,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
         "merge": function() {
           var selection = this;
           var chart = this.chart();
-          var infoBoxContent = selection.select(".isotope-item");
+          var infoBoxContent = selection.select(".description");
 
           infoBoxContent.selectAll("*").remove();
 
@@ -462,19 +475,24 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
           infoBoxContent.append("p")
             .attr("class", "fail-stat small")
-            .html(function (d) { return chart.displayStat(d); });
+            .html(function (d) { return chart.displayStat(d); })
+            .append("a")
+              .attr("class", "readmore")
+              .attr("href", function(d) { return d.url; })
+              .attr("target", "_blank")
+              .html("Read More&hellip;");
 
           // infoBoxContent
           //   .append("p")
           //   .attr("class", "fail-impact")
           //   .text(function(d) { return d["Impact - Raw"]; });
 
-          infoBoxContent
-            .append("a")
-            .attr("class", "readmore")
-            .attr("href", function(d) { return d.url; })
-            .attr("target", "_blank")
-            .text("Read More");
+          // infoBoxContent
+          //   .append("a")
+          //   .attr("class", "readmore")
+          //   .attr("href", function(d) { return d.url; })
+          //   .attr("target", "_blank")
+          //   .text("Read More");
 
           return selection;
         } 
@@ -767,15 +785,12 @@ d3.csv("data/complexity.csv", function (data) {
 
   defs.append("marker")
     .attr("id", "markerExplodeToDate")
-    .attr("markerWidth", 17)
-    .attr("markerHeight", 17)
+    .attr("markerWidth", 10)
+    .attr("markerHeight", 10)
     .attr("refX", 5)
     .attr("refY", 5)
-    .append("polygon")
-      .attr("xmlns", "http://www.w3.org/2000/svg")
-      .attr("id", "explode")
-      .attr("points", "3308.65 2406.83 3327.34 2456.77 3401.65 2434.83 3364.77 2484.77 3458.88 2534.32 3357.97 2557.89 3371.65 2610.83 3325.65 2580.06 3299.85 2650.38 3273.45 2573.91 3188.36 2600.69 3244.87 2545.09 3178.65 2504.83 3257.59 2483.83 3214.65 2425.55 3271.59 2447.03")
-      .attr("transform", "translate(-143.5,-108.3) scale(.045)")
+    .append("use")
+      .attr("xlink:href", "#circle-base")
       .attr("class", "marker to-date");
 
   defs.append("marker")

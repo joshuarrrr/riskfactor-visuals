@@ -359,6 +359,7 @@ p.instructions {
     }
 
     .fail-stats {
+      font-family: "Theinhardt-Medium", Helvetica, Arial, sans-serif; 
       position: absolute;
       right: 0;
       text-align: left;
@@ -404,10 +405,32 @@ p.instructions {
   }
 
   &.replacements-chart {
+    left: 160px;
     position: absolute;
-    right: 60px;
-    top: 0;
+    top: 26px;
     width: 380px;
+    
+    .description {
+      margin: 0;
+    }
+
+    .fail-stat {
+      color: $black;
+      font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif; 
+      font-size: 18px;
+      text-transform: none;
+    }
+
+    .fail-hed, 
+    .number {
+      font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif;
+      font-weight: bold;
+    }
+
+    .readmore {
+      display: inline;
+      font-size: 1em;
+    }
   }
 
   &.failure-chart {
@@ -527,9 +550,13 @@ p.instructions {
 }
 
 .datapoint {
+  opacity: .4;
+
   &.active {
+    opacity: 1;
+
     .line {
-      stroke: $gray;
+      stroke: $black;
       stroke-width: 3px;
     }
   }
