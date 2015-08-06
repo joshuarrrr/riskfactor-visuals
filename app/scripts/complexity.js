@@ -85,7 +85,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
   
     // add axes layer 
     this.layer("x-axis", chart.layers.xAxisBase, {
-      modes : ["web", "tablet"],
+      // modes : ["web", "tablet"],
       dataBind: function(data) {
         return this.selectAll(".x")
           .data([data]);
@@ -134,7 +134,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
     });
 
     this.layer("y-axis", chart.layers.yAxisBase, {
-      modes : ["web", "tablet"],
+      // modes : ["web", "tablet"],
       dataBind: function(data) {
         return this.selectAll(".y")
           .data([data]);
@@ -179,6 +179,33 @@ d3.chart("MarginChart").extend("SystemsChart", {
                 return "";
               }
             });
+
+          if ( chart.mode() === "mobile" ) {
+            if ( chart.yScale.domain()[1] >= 1e9 ) {
+              selection.select(".y.axis-label text")
+                .attr("x", - chart.margin().left)
+                .attr("text-anchor", "start")
+                .text("Cost, US$ billion");
+
+              yAxis.tickFormat(function(d) {
+                return d > 0 ? (d / 1e9) : "";
+              });
+              
+            }
+            else if ( chart.yScale.domain()[1] >= 1e6) {
+              selection.select(".y.axis-label text")
+                .text("Cost, US$ million");
+
+              yAxis.tickFormat(function(d) {
+                return d > 0 ? (d / 1e6) : "";
+              });
+            }
+            else {
+              yAxis.tickFormat(function(d) {
+                return d > 0 ? d : "";
+              });
+            }
+          }
 
           chart.base.select(".y.axis")
           .transition()
@@ -750,6 +777,25 @@ d3.csv("data/complexity.csv", function (data) {
     .yData("cost")
     .dataLabel("milestone");
 
+  if ( systems.mode() === "mobile" ) {
+    var mobMargins = margins;
+    mobMargins.left = mobMargins.right * 2;
+
+    // TODO: remove 1px currently needed to force recalc
+    var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+
+    d3.select("body").classed("mobile-view", true);
+
+    systems
+      .width(mobWidth)
+      .height(mobWidth * 9 / 16)
+      .margin(mobMargins);
+
+    // systems
+    //   .width(container.node().parentNode.offsetWidth - 40)
+    //   .height((container.node().parentNode.offsetWidth - 40) * 9 / 6);
+  }
+
   var defs = container.select("svg")
     .append("defs");
 
@@ -812,5 +858,9 @@ d3.csv("data/complexity.csv", function (data) {
 
   var pymChild = new pym.Child();
   pymChild.sendHeight();
+
+  systems.on("brush", function() {
+    pymChild.sendHeight();
+  });
 
 });

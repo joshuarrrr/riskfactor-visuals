@@ -438,17 +438,27 @@ p.instructions {
   }
 }
 
-.mobile-view .timeline-chart {
-  .legend-base {
-    display: none;
-  }
-  .fail-stats {
-    float: none;
-    height: auto;
-    margin: 0 auto;
+.mobile-view {
+  .replacements-chart.info-box {
+    left: default;
     position: static;
-    text-align: left;
-    width: auto;
+    top: default;
+    width: 100%; 
+  }
+
+  .timeline-chart {
+    .legend-base {
+      display: none;
+    }
+
+    .fail-stats {
+      float: none;
+      height: auto;
+      margin: 0 auto;
+      position: static;
+      text-align: left;
+      width: auto;
+    }
   }
 }
 
