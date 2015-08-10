@@ -153,7 +153,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
               .attr("dy", -20)
               .attr("dx", 0)
               .attr("text-anchor", "end")
-              .text("Cost, US$");
+              .text("US $");
 
         return selection;
       },
@@ -185,7 +185,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
               selection.select(".y.axis-label text")
                 .attr("x", - chart.margin().left)
                 .attr("text-anchor", "start")
-                .text("Cost, US$ billion");
+                .text("US $, billions");
 
               yAxis.tickFormat(function(d) {
                 return d > 0 ? (d / 1e9) : "";
@@ -194,7 +194,9 @@ d3.chart("MarginChart").extend("SystemsChart", {
             }
             else if ( chart.yScale.domain()[1] >= 1e6) {
               selection.select(".y.axis-label text")
-                .text("Cost, US$ million");
+                .attr("x", - chart.margin().left)
+                .attr("text-anchor", "start")
+                .text("US $, millions");
 
               yAxis.tickFormat(function(d) {
                 return d > 0 ? (d / 1e6) : "";
@@ -794,6 +796,13 @@ d3.csv("data/complexity.csv", function (data) {
     // systems
     //   .width(container.node().parentNode.offsetWidth - 40)
     //   .height((container.node().parentNode.offsetWidth - 40) * 9 / 6);
+  }
+
+  if ( Modernizr.mq("only print") ) {
+    systems
+      .width(parWidth)
+      .height(height)
+      .margin({left: 0, right: 0, top: 35, bottom: 70 });
   }
 
   var defs = container.select("svg")

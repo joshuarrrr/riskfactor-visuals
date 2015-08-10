@@ -63,7 +63,7 @@ d3.chart("MarginChart").extend("FailureChart", {
           .attr("x",0)
           .attr("dy", ".3em")
           .attr("dx", ".3em")
-          .text("Cost, US$");
+          .text("US $");
 
       chart.layers.xAxisBase.append("g")
         .attr("class", "x axis")
@@ -94,7 +94,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       this.layer("x-axis", chart.layers.xAxisBase, {
         // modes : ["web", "tablet"],
         dataBind: function(data) {
-          return this.selectAll(".x")
+          return this.selectAll(".x.axis")
             .data([data]);
         },
 
@@ -102,8 +102,7 @@ d3.chart("MarginChart").extend("FailureChart", {
         insert: function() {
           var chart = this.chart();
           var selection = this.append("g")
-            .attr("class", "x axis")
-            .attr("transform", "translate(0," + chart.height() + ")");
+            .attr("class", "x axis");
 
           return selection;
         },
@@ -112,12 +111,19 @@ d3.chart("MarginChart").extend("FailureChart", {
           "merge" : function() {
             var chart = this.chart();
             var selection = this;
+
+            selection.attr("transform", "translate(0," + chart.height() + ")");
+
             // draw xaxis
             var xAxis = d3.svg.axis()
               .scale(chart.xScale)
               .orient("bottom")
               .ticks(5)
               .outerTickSize(0);
+
+            if ( chart.mode() === "mobile" ) {
+              xAxis.ticks(3);
+            }
 
             chart.base.select(".x.axis")
             .transition()
@@ -131,7 +137,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       });
 
       this.layer("y-axis", chart.layers.yAxisBase, {
-        modes : ["web", "tablet"],
+        // modes : ["web", "tablet"],
         dataBind: function(data) {
           return this.selectAll(".y")
             .data([data]);
@@ -153,11 +159,42 @@ d3.chart("MarginChart").extend("FailureChart", {
             var yAxis = d3.svg.axis()
               .scale(chart.yScale)
               .orient("left")
-              .ticks(5)
+              .ticks(4)
               .outerTickSize(0)
               .tickFormat(function(d) { 
                 return chart.formatMoney(d);
               });
+
+            if ( chart.mode() === "mobile" ) {
+              if ( chart.yScale.domain()[1] >= 1e9 ) {
+                chart.layers.ylabels.select(".y.axis-label text")
+                  .attr("x", - chart.margin().left)
+                  .attr("y", "-1em")
+                  .attr("text-anchor", "start")
+                  .text(chart.data[0].currency + ", billions");
+
+                yAxis.tickFormat(function(d) {
+                  return d > 0 ? (d / 1e9) : "";
+                });
+                
+              }
+              else if ( chart.yScale.domain()[1] >= 1e6) {
+                chart.layers.ylabels.select(".y.axis-label text")
+                  .attr("x", - chart.margin().left)
+                  .attr("y", "-1em")
+                  .attr("text-anchor", "start")
+                  .text(chart.data[0].currency + ", millions");
+
+                yAxis.tickFormat(function(d) {
+                  return d > 0 ? (d / 1e6) : "";
+                });
+              }
+              else {
+                yAxis.tickFormat(function(d) {
+                  return d > 0 ? d : "";
+                });
+              }
+            }
 
             chart.base.select(".y.axis")
             .transition()
@@ -786,6 +823,9 @@ d3.chart("MarginChart").extend("FailureChart", {
       //update y scale domain
       chart.yScale.domain([0,maxCost]);
 
+      chart.layers.ylabels.select(".y.axis-label text")
+        .text(data[0].currency);
+
       return data;
     },
 
@@ -1058,12 +1098,23 @@ d3.csv("data/estimates.csv", function (data) {
       .style("margin", "0 0 1em")
       .style("padding", 0);
 
-    margins.left = 20;
+    var mobMargins = margins;
+    mobMargins.left = mobMargins.right * 2;
+
+    // TODO: remove 1px currently needed to force recalc
+    var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+
+    d3.select("body").classed("mobile-view", true);
 
     failure
-      .margin(margins)
-      .width(container.node().parentNode.offsetWidth - 40)
-      .height((container.node().parentNode.offsetWidth - 40) / 1.5);
+      .width(mobWidth)
+      .height(mobWidth / 1.5)
+      .margin(mobMargins);
+
+    // failure
+    //   .margin(margins)
+    //   .width(container.node().parentNode.offsetWidth - 40)
+    //   .height((container.node().parentNode.offsetWidth - 40) / 1.5);
   }
 
   var pymChild = new pym.Child();

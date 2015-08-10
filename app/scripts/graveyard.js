@@ -1,10 +1,11 @@
-/*global d3, pym, Isotope, ga */
+/*global d3, pym, Isotope, Modernizr, ga */
 
 d3.csv("data/timeline.csv", function (data) {
   "use strict";
 
   console.log(data);
   var container = d3.select("#chart");
+  var width = container.node().parentNode.offsetWidth;
 
   var format = d3.time.format("%B 20%y");
   var formatString = d3.time.format.iso;
@@ -46,12 +47,17 @@ d3.csv("data/timeline.csv", function (data) {
 
   console.log(data);
 
+  var isMobile = /ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent);
+
+  var maxSize = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? width - 10 : 610;
+  var ttWidth = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? (width - 40 - 4 - 20) : 300; 
+
   var sizer = d3.scale.sqrt()
-    .range([0, 610])
+    .range([0, maxSize])
     .domain([0,d3.max(data, function(d) { return d["Impact - USD"]; })]);
 
   var fontScale = d3.scale.sqrt()
-    .range([0, 120])
+    .range([0, maxSize / 5.1])
     .domain([0,d3.max(data, function(d) { return d["Impact - USD"]; })]);
 
   // var linFontScale = d3.scale.linear()
@@ -108,14 +114,27 @@ d3.csv("data/timeline.csv", function (data) {
 
     var el = container.append("div")
       .attr("class", "tooltip")
-      .style("width", "300px")
+      .style("width", ttWidth + "px")
       .style("position", "absolute")
       .style("padding", "20px")
       // .style("top", "200px")
       // .style("left", "50%")
       // .style("transform", "translate(-50%, 0)")
-      .style("top", selection.style("top")) 
-      .style("left", (298) + "px")
+      .style("top", function () {
+        var top = selection.style("top");
+        var height = container.style("height");
+        console.log(top);
+        console.log(height);
+
+        if (parseInt(height, 10) - parseInt(top, 10) < 300) {
+          console.log("move it!");
+          return (parseInt(top, 10) - 300) + "px";
+        }
+        else {
+          return top;
+        }
+      }) 
+      .style("left", ((width - ttWidth - 40 - 4) / 2) + "px")
       // .style("left", function() { 
       //   var position = selection.style("left").replace("px","");
       //   console.log(position);

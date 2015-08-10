@@ -122,6 +122,7 @@ $border1: $black 2px solid;
 .chart-container {
   font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
   font-size: .9em;
+  max-width: 100%;
   position: relative;
 }
 
@@ -152,7 +153,7 @@ $border1: $black 2px solid;
   }
 
   .info-box {
-    display: none;
+    display: static;
   }
 }
 
@@ -326,6 +327,10 @@ p.instructions {
   fill-opacity: .8;
   stroke: $impact;
   stroke-width: 2;
+}
+
+.data-point.hovered {
+  fill-opacity: .5;
 }
 
 // Info Box Area

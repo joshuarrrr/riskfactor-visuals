@@ -478,6 +478,14 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             selection
               .classed("active", function(d, i) { return i === 0; });
           }
+
+          selection.on("mouseover", function () {
+            d3.select(this).classed("hovered", true);
+          });
+
+          selection.on("mouseout", function () {
+            d3.select(this).classed("hovered", false);
+          });
           
           // add a mouseover listener to our circles
           // and change their color and broadcast a chart
@@ -733,7 +741,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               var svg = d3.select(chart.layers.legendBase.node().parentNode.parentNode);
 
               if ( svg.classed("money") ) {
-                return "Cost, US$:";
+                return "Cost, US $:";
               }
               else if ( svg.classed("time") ) {
                 return "Hours:";
@@ -753,7 +761,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               var svg = d3.select(chart.layers.legendBase.node().parentNode.parentNode);
 
               if ( svg.classed("money") ) {
-                return "Cost, US$:";
+                return "Cost, US $:";
               }
               else if ( svg.classed("time") ) {
                 return "Hours:";
@@ -1728,7 +1736,7 @@ function displayStat (chart, d) {
 
       if ( quant.id === "money" ) {
         if ( d["Currency Symbol"] === "$" ) {
-          pre = d["Impact - Currency"].slice(0,2) + d["Currency Symbol"];
+          pre = d["Impact - Currency"].slice(0,2) + " " + d["Currency Symbol"];
         }
         else {
           pre = d["Currency Symbol"];
