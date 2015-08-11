@@ -158,18 +158,24 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     // });
 
-    var buttons = chart.layers.infoBoxBase.append("div")
-      .attr("class", "nav-buttons");
+    var instructions = chart.layers.infoBoxBase.append("div")
+      .attr("class", "instructions")
+    .append("p")
+      .attr("class", "instructions")
+      .text("Click on any of the circles below for more info.");
 
-    buttons.append("a")
-      .attr("class", "prev button")
-      .attr("href", "#")
-      .text("Previous");
+    // var buttons = chart.layers.infoBoxBase.append("div")
+    //   .attr("class", "nav-buttons");
 
-    buttons.append("a")
-      .attr("class", "next button")
-      .attr("href", "#")
-      .text("Next");
+    // buttons.append("a")
+    //   .attr("class", "prev button")
+    //   .attr("href", "#")
+    //   .text("← Earlier");
+
+    // buttons.append("a")
+    //   .attr("class", "next button")
+    //   .attr("href", "#")
+    //   .text("Later →");
 
     var defs = chart.layers.legendOuter.append("defs");
 
@@ -474,10 +480,10 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           selection.order();
 
-          if ( chart.layers.circlesBase.select(".active").empty() ) {
-            selection
-              .classed("active", function(d, i) { return i === 0; });
-          }
+          // if ( chart.layers.circlesBase.select(".active").empty() ) {
+          //   selection
+          //     .classed("active", function(d, i) { return i === 0; });
+          // }
 
           selection.on("mouseover", function () {
             d3.select(this).classed("hovered", true);
@@ -1008,9 +1014,69 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           var selection = this;
           var chart = this.chart();
 
-          chart.layers.infoBoxBase.select(".nav-buttons").classed("hidden", false);
+          // chart.layers.infoBoxBase.select(".nav-buttons").classed("hidden", false);
 
-          var buttons = chart.layers.infoBoxBase.select(".nav-buttons").selectAll(".button");
+          chart.layers.legendBase.select(".legend-ring").remove();
+
+          chart.layers.infoBoxBase.select(".instructions").classed("hidden", true);
+
+          var ring = chart.layers.legendBase.selectAll(".legend-ring")
+            .data([selection.datum()]).enter()
+          .append("circle")
+            .attr("class", "legend-ring")
+            .attr("cx", 0)
+            .attr("cy", 0)
+            .attr("stroke-width", 2)
+            .attr("fill", "none")
+            .style("stroke", "red");
+          
+          ring
+            .attr("r", function(d) { return chart.rScale(d[chart.rData()]); });
+
+          selection.selectAll("*").remove();
+            
+          selection.append("div")
+            .attr("class", "fail-stats")
+            .html(function (d) { return displayStat(chart, d); });
+
+          var timeContainer = selection.append("div")
+            .classed("times", true);
+
+          timeContainer.append("a")
+            .attr("class", "prev button")
+            .attr("href", "#")
+            .text("← Earlier");
+
+          timeContainer.append("time")
+            .attr("class", "date")
+            .text(function (d) { return d.date; });
+
+          timeContainer.append("a")
+            .attr("class", "next button")
+            .attr("href", "#")
+            .text("Later →");
+
+          selection
+            .append("a")
+            .attr("href", function(d) { return d.url.split("; ")[0]; })
+            .attr("target", "_blank")
+            .append("h3")
+            .attr("class", "fail-hed")
+            .text(function (d) { return d.Headline; });
+
+          selection
+            .append("p")
+            .attr("class", "fail-impact")
+            .text(function(d) { return d["Impact - Raw"]; })
+            .selectAll(".readmore")
+              .data(function(d) { return d.url.split("; "); })
+            .enter().append("a")
+            .attr("class", "readmore")
+            .attr("href", function(d) { return d; })
+            .attr("target", "_blank")
+            .html(" Read&nbsp;More");
+
+          var buttons = chart.layers.infoBoxBase.select(".times").selectAll(".button");
 
           buttons.on("click", function () {
             var el = chart.base.select(".active");
@@ -1066,51 +1132,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           });
 
-          chart.layers.legendBase.select(".legend-ring").remove();
-
-          var ring = chart.layers.legendBase.selectAll(".legend-ring")
-            .data([selection.datum()]).enter()
-          .append("circle")
-            .attr("class", "legend-ring")
-            .attr("cx", 0)
-            .attr("cy", 0)
-            .attr("stroke-width", 2)
-            .attr("fill", "none")
-            .style("stroke", "red");
-          
-          ring
-            .attr("r", function(d) { return chart.rScale(d[chart.rData()]); });
-
-          selection.selectAll("*").remove();
-            
-          selection.append("div")
-            .attr("class", "fail-stats")
-            .html(function (d) { return displayStat(chart, d); });
-
-          selection.append("time")
-            .attr("class", "date")
-            .text(function (d) { return d.date; });
-
-          selection
-            .append("a")
-            .attr("href", function(d) { return d.url.split("; ")[0]; })
-            .attr("target", "_blank")
-            .append("h3")
-            .attr("class", "fail-hed")
-            .text(function (d) { return d.Headline; });
-
-          selection
-            .append("p")
-            .attr("class", "fail-impact")
-            .text(function(d) { return d["Impact - Raw"]; })
-            .selectAll(".readmore")
-              .data(function(d) { return d.url.split("; "); })
-            .enter().append("a")
-            .attr("class", "readmore")
-            .attr("href", function(d) { return d; })
-            .attr("target", "_blank")
-            .html("Read&nbsp;More");
-
         },
 
         "exit" : function() {
@@ -1121,7 +1142,9 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           chart.layers.legendBase.select(".legend-ring").remove();
 
-          chart.layers.infoBoxBase.select(".nav-buttons").classed("hidden", true);
+          chart.layers.infoBoxBase.select(".instructions").classed("hidden", false);
+
+          // chart.layers.infoBoxBase.select(".nav-buttons").classed("hidden", true);
         }
       }
 
@@ -1153,6 +1176,12 @@ d3.csv("data/timeline.csv", function (data) {
     .append("select")
       .attr("class", "select-category dropdown");
 
+  var sizeSelector = d3.select("#chart").append("div")
+    .attr("class", "size-selection-container")
+    .html("Size by:<br>")
+    .append("select")
+      .attr("class", "select-size dropdown");
+
   var bubbles = d3.select("#chart")
     .append("svg")
     .attr("class", "hidden")
@@ -1171,9 +1200,9 @@ d3.csv("data/timeline.csv", function (data) {
   console.log(bubbles.mode());
 
   var quantities = [
-    {"columnName":"Impact - USD", "id":"money"},
-    {"columnName":"Impact - hours", "id":"time"},
-    {"columnName":"Impact - customers affected", "id":"people"}
+    {"columnName":"Impact - USD", "id":"money", "label":"Monetary Cost" },
+    {"columnName":"Impact - hours", "id":"time", "label":"Impact Duration"},
+    {"columnName":"Impact - customers affected", "id":"people", "label":"# People Affected" }
   ];
 
   quantities.forEach(function (quantity) {
@@ -1233,6 +1262,10 @@ d3.csv("data/timeline.csv", function (data) {
     d.dateObject = new Date(d.date);
     d.date = format(d.dateObject);
     d.month = d.dateObject.getMonth();
+
+    if (d["Impact - customers affected"] === "" && d["Impact - units recalled"] !== "") {
+      d["Impact - customers affected"] = d["Impact - units recalled"];
+    }
 
     quantities.forEach(function (quantity) {
       //coerce to number
@@ -1306,6 +1339,16 @@ d3.csv("data/timeline.csv", function (data) {
 
     }
   });
+
+  sizeSelector.selectAll("option")
+    .data(quantities)
+    .enter()
+    .append("option")
+      .attr("value", function(d) { return d.id; })
+      .text(function(d) { return d.label; });
+
+  sizeSelector.select("option")
+    .property("selected", true);
 
   // var buttons = d3.select("#chart").append("div")
   //   .attr("class", "select-category buttons hidden")
@@ -1421,7 +1464,18 @@ d3.csv("data/timeline.csv", function (data) {
       pymChild.sendHeight();
     });
 
-  // bubbles.draw(data);
+
+  bubbles.rData(quantities[0].columnName);
+  d3.selectAll("#chart-svg").classed("hidden", false);
+  // d3.select(".buttons").classed("hidden", false);
+  d3.select(".category-selection-container").classed("hidden", false);
+  d3.select(".info-box").classed("hidden", false);
+  d3.select(".totals-intro").classed("hidden", true);
+
+  d3.select("#chart-svg").attr("class", quantities[0].id);
+  d3.select("#chart .legend-base").attr("class", "legend-base");
+  d3.select("#chart .legend-base").classed(quantities[0].id, true);
+  bubbles.draw(data);
 
   makeThemeChart("#modernization-chart","project termination/cancellation",quantities[0]);
   makeThemeChart("#health-chart","health",quantities[0]);

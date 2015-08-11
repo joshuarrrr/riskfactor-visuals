@@ -281,9 +281,13 @@ p.instructions {
   font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
 }
 
+.instructions {
+  margin: 0 0 0 20px;
+}
+
 // Totals Intro
 .totals-intro {
-  padding: .5em 0 1em;
+  // padding: .5em 0 1em;
 }
 
 // Chart Area
@@ -348,6 +352,7 @@ p.instructions {
   .readmore {
     margin-left: 1em;
     margin-top: 0;
+    padding: 0;
   }
 
   // &.timeline-chart {
@@ -385,7 +390,8 @@ p.instructions {
     .fail-stats {
       float: right;
       height: 150px;
-      margin-top: -42px;
+      // margin-top: -42px;
+      margin-top: 0;
       position: static;
       text-align: right;
     }
@@ -467,6 +473,25 @@ p.instructions {
   }
 }
 
+.times {
+  margin-bottom: .5em;
+
+  a.button {
+    display: inline;
+    font-size: 13px;
+    padding: .5em .7em;
+  }
+
+  .date {
+    background-color: $lightgray;
+    color: $black;
+    display: inline;
+    // min-width: 115px;
+    padding: .5em .7em;
+    // text-align: center;
+  }
+}
+
 .nav-buttons {
   margin-left: 20px;
 
@@ -544,6 +569,15 @@ p.instructions {
 .button {
   cursor: pointer;
 }
+
+// Selection Sizes
+.size-selection-container {
+  clear: both;
+  position: absolute;
+  right: 20px;
+  text-align: right;
+}
+
 
 
 //////////////////////
