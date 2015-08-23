@@ -63,6 +63,7 @@ $border1: $black 2px solid;
 }
 
 .dev-footer {
+  background: $black;
   text-align: center;
 
   a, 
@@ -425,7 +426,7 @@ p.instructions {
   &.replacements-chart {
     left: 160px;
     position: absolute;
-    top: 26px;
+    top: 45px;
     width: 380px;
     
     .description {
@@ -604,6 +605,9 @@ p.instructions {
 //   min-height: 392px;
 // }
 
+.complexity-chart .axis-label {
+  font-size: 1.2em;
+}
 
 .marker {
   fill: $impact;

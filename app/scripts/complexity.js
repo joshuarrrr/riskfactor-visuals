@@ -29,7 +29,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     chart.layers.legendBase = chart.base.append("g")
       .classed("legend-base", true)
-      .attr("transform", "translate(560, 26)");
+      .attr("transform", "translate(560, 55)");
 
 
     // create an xScale
@@ -102,8 +102,8 @@ d3.chart("MarginChart").extend("SystemsChart", {
           .attr("class", "x axis-label")
           .append("text")
             .attr("y", 0)
-            .attr("x", chart.width())
-            .attr("text-anchor", "end")
+            .attr("x", chart.width() / 2)
+            .attr("text-anchor", "middle")
             .attr("dy", "3em")
             .attr("dx", "0")
             .text("Number of Legacy Systems to Replace");
@@ -180,6 +180,39 @@ d3.chart("MarginChart").extend("SystemsChart", {
               }
             });
 
+          if ( chart.yScale.domain()[1] >= 1e9 ) {
+            selection.select(".y.axis-label text")
+              .attr("dy", -35)
+              .text("US dollars,");
+
+            selection.select(".y.axis-label").append("text")
+              .attr("y", 0)
+              .attr("x", -9)
+              .attr("dy", -15)
+              .attr("dx", 0)
+              .attr("text-anchor", "end")
+              .text("billions");
+
+            yAxis.tickFormat(function(d) {
+              return d > 0 ? (d / 1e9).toFixed(1) : "";
+            });
+            
+          }
+          else if ( chart.yScale.domain()[1] >= 1e6) {
+            selection.select(".y.axis-label text")
+              .text("US $, millions");
+
+            yAxis.tickFormat(function(d) {
+              return d > 0 ? (d / 1e6) : "";
+            });
+          }
+          else {
+            yAxis.tickFormat(function(d) {
+              return d > 0 ? d : "";
+            });
+          }
+
+          // if ( chart.mode() === "mobile" ) {
           if ( chart.mode() === "mobile" ) {
             if ( chart.yScale.domain()[1] >= 1e9 ) {
               selection.select(".y.axis-label text")
@@ -392,10 +425,11 @@ d3.chart("MarginChart").extend("SystemsChart", {
                 .attr("marker-end", function(d) {
                   if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
                     if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
-                      return "url(#markerExplodeEnd)";
+                      // return "url(#markerExplodeEnd)";
+                      return "url(#markerCircle)";
                     }
                     else {
-                      return "url(#markerExplodeToDate)";
+                      return "url(#markerCircleToDate)";
                     }
                   }
                   else{
@@ -447,10 +481,11 @@ d3.chart("MarginChart").extend("SystemsChart", {
             .attr("marker-end", function(d) {
               if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
                 if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
-                  return "url(#markerExplodeEnd)";
+                  // return "url(#markerExplodeEnd)";
+                  return "url(#markerCircle)";
                 }
                 else {
-                  return "url(#markerExplodeToDate)";
+                  return "url(#markerCircleToDate)";
                 }
               }
               else{
@@ -723,7 +758,7 @@ d3.csv("data/complexity.csv", function (data) {
   console.log(data);
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
-  var margins = {top: 35, bottom: 70, right: 20, left: 100};
+  var margins = {top: 50, bottom: 70, right: 20, left: 90};
   var width = parWidth - margins.left - margins.right;
   var height = width * 9 / 16;
 
@@ -825,21 +860,21 @@ d3.csv("data/complexity.csv", function (data) {
       .attr("xlink:href", "#circle-base")
       .attr("class", "marker");
 
-  defs.append("marker")
-    .attr("id", "markerExplodeEnd")
-    .attr("markerWidth", 17)
-    .attr("markerHeight", 17)
-    .attr("refX", 5)
-    .attr("refY", 5)
-    .append("polygon")
-      .attr("xmlns", "http://www.w3.org/2000/svg")
-      .attr("id", "explode")
-      .attr("points", "3308.65 2406.83 3327.34 2456.77 3401.65 2434.83 3364.77 2484.77 3458.88 2534.32 3357.97 2557.89 3371.65 2610.83 3325.65 2580.06 3299.85 2650.38 3273.45 2573.91 3188.36 2600.69 3244.87 2545.09 3178.65 2504.83 3257.59 2483.83 3214.65 2425.55 3271.59 2447.03")
-      .attr("transform", "translate(-143.5,-108.3) scale(.045)")
-      .attr("class", "marker end");
+  // defs.append("marker")
+  //   .attr("id", "markerExplodeEnd")
+  //   .attr("markerWidth", 17)
+  //   .attr("markerHeight", 17)
+  //   .attr("refX", 5)
+  //   .attr("refY", 5)
+  //   .append("polygon")
+  //     .attr("xmlns", "http://www.w3.org/2000/svg")
+  //     .attr("id", "explode")
+  //     .attr("points", "3308.65 2406.83 3327.34 2456.77 3401.65 2434.83 3364.77 2484.77 3458.88 2534.32 3357.97 2557.89 3371.65 2610.83 3325.65 2580.06 3299.85 2650.38 3273.45 2573.91 3188.36 2600.69 3244.87 2545.09 3178.65 2504.83 3257.59 2483.83 3214.65 2425.55 3271.59 2447.03")
+  //     .attr("transform", "translate(-143.5,-108.3) scale(.045)")
+  //     .attr("class", "marker end");
 
   defs.append("marker")
-    .attr("id", "markerExplodeToDate")
+    .attr("id", "markerCircleToDate")
     .attr("markerWidth", 10)
     .attr("markerHeight", 10)
     .attr("refX", 5)
