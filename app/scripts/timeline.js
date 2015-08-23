@@ -7,7 +7,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     chart.data = data;
 
-    console.log(data);
+    // console.log(data);
 
     //get an array of unique values for a given key
     chart.categories = d3.set(data
@@ -50,6 +50,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       }
     });
     chart.max = d3.max(data, function(d) { return d[chart.rData()]; });
+
+    chart.minVisible = 0;
 
     console.log(chart.min);
     console.log(chart.max);
@@ -833,7 +835,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       insert: function() {
         var selection =  this.append("circle");
 
-        console.log(selection.data());
+        // console.log(selection.data());
         selection
           .classed("data-point", true)
           .attr("r", 0)
@@ -1111,7 +1113,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
         return this.selectAll(".current-status")
           .data([chart.data
             .filter(function(d) {
-              console.log(d[chart.yData()]);
+              // console.log(d[chart.yData()]);
               return d[chart.yData()] !== "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
             })]);
       },
@@ -1921,7 +1923,7 @@ d3.csv("data/timeline.csv", function (data) {
 
   var mapped = d3.map(quantities, function(d) { return d.id; });
 
-  console.log(mapped);
+  // console.log(mapped);
 
   var categories = [
     "Region",
@@ -2025,7 +2027,7 @@ d3.csv("data/timeline.csv", function (data) {
       var interp = d3.interpolateRound(0, d.sum);
       return function(t) {
         this.textContent = readableNumbers(interp(t));
-        console.log(this.textContent);
+        // console.log(this.textContent);
       };
     });
 
@@ -2294,11 +2296,14 @@ d3.csv("data/timeline.csv", function (data) {
     var infoBox = d3.select(id).append("div")
       .attr("class","info-box timeline-chart");
 
-    var selector = d3.select(id).append("div")
+    var selectors = d3.select(id).append("div")
+      .attr("class","selectors");
+
+    var selector = selectors.append("div")
       .attr("class", "category-selection-container")
       .html("Sort by:<br>")
-    .append("select")
-      .attr("class", "select-category dropdown");
+      .append("select")
+        .attr("class", "select-category dropdown");
 
     var theme = d3.select(id)
       .append("svg")
@@ -2338,6 +2343,14 @@ d3.csv("data/timeline.csv", function (data) {
       } 
     });
 
+    theme.sortables = categories.filter(function (cat) {
+        return themeData.some(function (d) {
+          return d[cat] !== ""; 
+        });
+      });
+
+    
+
     // selector.selectAll("option")
     //   .data(categories.filter(function (cat) {
     //     return themeData.some(function (d) {
@@ -2349,7 +2362,7 @@ d3.csv("data/timeline.csv", function (data) {
     //   .attr("value", function(d) { return d; })
     //   .text(function(d) { return d.replace("Government", "Gov"); });
 
-    // theme.draw(themeData);
+    theme.draw(themeData);
 
     // selector.on("change", function() {
     //   var selection = this;
