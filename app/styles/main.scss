@@ -323,6 +323,7 @@ p.instructions {
 }
 
 .legend-circle {
+  cursor: default;
   stroke: $medgray;
   stroke-width: 1;
 }
@@ -353,6 +354,12 @@ p.instructions {
     margin-left: 1em;
     margin-top: 0;
     padding: 0;
+  }
+
+  .sources { 
+    font-family: "Theinhardt-Regular", sans-serif;
+    font-style: italic;
+    // margin-left: 1em;
   }
 
   // &.timeline-chart {
@@ -577,6 +584,14 @@ p.instructions {
   right: 20px;
   text-align: right;
 }
+
+.range-selection-container {
+  clear: both;
+  position: absolute;
+  right: 200px;
+  text-align: right;
+}
+
 
 
 
