@@ -1,4 +1,5 @@
 /*global d3, pym, ga */
+var pymChild = new pym.Child();
 
 d3.chart("MarginChart").extend("SystemsChart", {
 
@@ -22,7 +23,11 @@ d3.chart("MarginChart").extend("SystemsChart", {
     chart.layers.xAxisBase = chart.base.select("g").append("g")
       .classed("axes", true);
 
-    chart.layers.infoBoxBase = d3.select(".circle-info-box");
+    chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).insert("div")
+      .attr("class", "circle-info-box");
+
+    chart.layers.lineBase = chart.base.select("g").append("g")
+      .classed("data-series", true);
 
     chart.layers.datapointBase = chart.base.select("g").append("g")
       .classed("data-series", true);
@@ -31,10 +36,19 @@ d3.chart("MarginChart").extend("SystemsChart", {
       .classed("legend-base", true)
       .attr("transform", "translate(560, 55)");
 
+    chart.layers.defs = chart.base.select("g").append("defs");
+
 
     // create an xScale
-    this.xScale = d3.scale.linear()
-      .range([0, chart.width()]);
+    if ( chart.xScaleType === "date" ) {
+      this.xScale = d3.time.scale()
+        .range([0, chart.width()]);
+    }
+    else {
+      this.xScale = d3.scale.linear()
+        .range([0, chart.width()]);
+    }
+    
 
     // when the width changes, update the x scale range
     chart.on("change:width", function(newWidth) {
@@ -98,15 +112,17 @@ d3.chart("MarginChart").extend("SystemsChart", {
           .attr("class", "x axis")
           .attr("transform", "translate(0," + chart.height() + ")");
 
-        selection.append("g")
-          .attr("class", "x axis-label")
-          .append("text")
-            .attr("y", 0)
-            .attr("x", chart.width() / 2)
-            .attr("text-anchor", "middle")
-            .attr("dy", "3em")
-            .attr("dx", "0")
-            .text("Number of Legacy Systems to Replace");
+        if ( chart.xScaleType !== "date") {  
+          selection.append("g")
+            .attr("class", "x axis-label")
+            .append("text")
+              .attr("y", 0)
+              .attr("x", chart.width() / 2)
+              .attr("text-anchor", "middle")
+              .attr("dy", "3em")
+              .attr("dx", "0")
+              .text("Number of Legacy Systems to Replace");
+        }
 
         return selection;
       },
@@ -121,6 +137,17 @@ d3.chart("MarginChart").extend("SystemsChart", {
             .orient("bottom")
             .ticks(5)
             .outerTickSize(0);
+
+          if ( chart.xScaleType === "date" ) {  
+            xAxis
+              .tickFormat(d3.time.format("%Y"))
+              .ticks(10);
+
+            if ( chart.mode() === "mobile" ) {
+              xAxis
+                .ticks(5);
+            }
+          }
 
           chart.base.select(".x.axis")
           .transition()
@@ -145,15 +172,29 @@ d3.chart("MarginChart").extend("SystemsChart", {
         var selection = this.append("g")
           .attr("class", "y axis");
 
-        selection.append("g")
-            .attr("class", "y axis-label")
-            .append("text")
-              .attr("y", 0)
-              .attr("x", -9)
-              .attr("dy", -20)
-              .attr("dx", 0)
-              .attr("text-anchor", "end")
-              .text("US $");
+        if ( chart.xScaleType !== "date" ) {  
+          selection.append("g")
+              .attr("class", "y axis-label")
+              .append("text")
+                .attr("y", 0)
+                .attr("x", -9)
+                .attr("dy", -20)
+                .attr("dx", 0)
+                .attr("text-anchor", "end")
+                .text("US $");
+        }
+        else if ( chart.mode() !== "mobile" ) {
+          selection.append("g")
+              .attr("class", "y axis-label")
+              .append("text")
+                .attr("transform", "translate(-55," + chart.height() / 2 + ")rotate(-90)")
+                .attr("y", 0)
+                .attr("x", 0)
+                .attr("dy", 0)
+                .attr("dx", 0)
+                .attr("text-anchor", "middle")
+                .text("Number of Legacy Systems to Replace");
+        }
 
         return selection;
       },
@@ -219,6 +260,8 @@ d3.chart("MarginChart").extend("SystemsChart", {
                 .attr("x", - chart.margin().left)
                 .attr("text-anchor", "start")
                 .text("US $, billions");
+
+              selection.select(".y.axis-label text:last-child").remove();
 
               yAxis.tickFormat(function(d) {
                 return d > 0 ? (d / 1e9) : "";
@@ -296,73 +339,85 @@ d3.chart("MarginChart").extend("SystemsChart", {
           //   .attr("stroke", "black")
           // .transition().duration(1000)
           //   .attr("d", function(d) { return line(d); });
-
-          selection.append("line")
-            .attr("x1", function(d) {
-              return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-            })
-            .attr("y1", function(d) {
-              return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-            })
-            .attr("x2", function(d) {
-              return chart.xScale(d[chart.lineData()][1][chart.xData()]);
-            })
-            .attr("y2", function(d) {
-              return chart.yScale(d[chart.lineData()][1][chart.yData()]);
-            })
-            .attr("class", "invisible-line")
-            .attr("stroke", "black")
-            .attr("stroke-width", 15)
-            .style("opacity", 0);
-
-
-          selection.append("line")
-            .attr("x1", function(d) {
-              return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-            })
-            .attr("y1", function(d) {
-              return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-            })
-            .attr("x2", function(d) {
-              return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-            })
-            .attr("y2", function(d) {
-              return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-            })
-            .attr("class", "line");
-
-          
-
-          // selection.append("circle")
-          //   .attr("cx", function(d) {
-          //     console.log(d[chart.lineData()][1][chart.xData()]);
-          //     console.log(chart.xScale(0));
-          //     return chart.xScale(d[chart.lineData()][1][chart.xData()]);
-          //   })
-          //   .attr("cy", function(d) {
-          //     var systems;
-          //     if ( d[chart.lineData()][1].cost !== null ) {
-          //       return chart.yScale(d[chart.lineData()][1].cost);
-          //     }
-          //     else {
-          //       return chart.yScale(d[chart.lineData()][0].cost);
-          //     }
-          //   })
-          //   .attr("r", 0)
-          //   .attr("class", function(d) { return d[chart.lineData()][1].milestone; })
-          //   .style("fill", "red");
+         if ( chart.xScaleType !== "date" ) { 
+            selection.append("line")
+              .attr("x1", function(d) {
+                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+              })
+              .attr("y1", function(d) {
+                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+              })
+              .attr("x2", function(d) {
+                return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+              })
+              .attr("y2", function(d) {
+                return chart.yScale(d[chart.lineData()][1][chart.yData()]);
+              })
+              .attr("class", "invisible-line")
+              .attr("stroke", "black")
+              .attr("stroke-width", 15)
+              .style("opacity", 0);
 
 
-          selection.append("circle")
-            .attr("cx", function(d) {
-              return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-            })
-            .attr("cy", function(d) {
-              return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-            })
-            .attr("r", 0)
-            .attr("class", function(d) { return d[chart.lineData()][0].milestone; });
+            selection.append("line")
+              .attr("x1", function(d) {
+                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+              })
+              .attr("y1", function(d) {
+                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+              })
+              .attr("x2", function(d) {
+                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+              })
+              .attr("y2", function(d) {
+                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+              })
+              .attr("class", "line");
 
+            
+
+            // selection.append("circle")
+            //   .attr("cx", function(d) {
+            //     console.log(d[chart.lineData()][1][chart.xData()]);
+            //     console.log(chart.xScale(0));
+            //     return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+            //   })
+            //   .attr("cy", function(d) {
+            //     var systems;
+            //     if ( d[chart.lineData()][1].cost !== null ) {
+            //       return chart.yScale(d[chart.lineData()][1].cost);
+            //     }
+            //     else {
+            //       return chart.yScale(d[chart.lineData()][0].cost);
+            //     }
+            //   })
+            //   .attr("r", 0)
+            //   .attr("class", function(d) { return d[chart.lineData()][1].milestone; })
+            //   .style("fill", "red");
+
+
+            selection.append("circle")
+              .attr("cx", function(d) {
+                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+              })
+              .attr("cy", function(d) {
+                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+              })
+              .attr("r", 0)
+              .attr("class", function(d) { return d[chart.lineData()][0].milestone; });
+          }
+          else {
+            selection.append("circle")
+              .attr("cx", function(d) {
+                return chart.xScale(d[chart.xData()]);
+              })
+              .attr("cy", function(d) {
+                return chart.yScale(d[chart.yData()]);
+              })
+              .attr("r", 0)
+              .attr("class", "point")
+              .attr("clip-path", "url(#line-clip)");
+          }
           
 
           // add a mouseover listener to our groups
@@ -464,34 +519,41 @@ d3.chart("MarginChart").extend("SystemsChart", {
         // their fill to blue
         "enter:transition": function() {
           var chart = this.chart();
-          this.selectAll("circle.start").transition().duration(500)
-            .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
 
-          this.selectAll(".line")
-            .attr("stroke-width", 2)
-            .attr("marker-end", "")
-          .transition().delay(500).duration(1000)
-            .attr("x2", function(d) {
-                return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+          if ( chart.xScaleType !== "date" ) { 
+            this.selectAll("circle.start").transition().duration(500)
+              .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
+
+            this.selectAll(".line")
+              .attr("stroke-width", 2)
+              .attr("marker-end", "")
+            .transition().delay(500).duration(1000)
+              .attr("x2", function(d) {
+                  return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+                })
+              .attr("y2", function(d) {
+                return chart.yScale(d[chart.lineData()][1][chart.yData()]);
               })
-            .attr("y2", function(d) {
-              return chart.yScale(d[chart.lineData()][1][chart.yData()]);
-            })
-          .transition().duration(1000)
-            .attr("marker-end", function(d) {
-              if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
-                if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
-                  // return "url(#markerExplodeEnd)";
+            .transition().duration(1000)
+              .attr("marker-end", function(d) {
+                if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
+                  if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
+                    // return "url(#markerExplodeEnd)";
+                    return "url(#markerCircle)";
+                  }
+                  else {
+                    return "url(#markerCircleToDate)";
+                  }
+                }
+                else{
                   return "url(#markerCircle)";
                 }
-                else {
-                  return "url(#markerCircleToDate)";
-                }
-              }
-              else{
-                return "url(#markerCircle)";
-              }
-            });
+              });
+          }
+          else {
+            this.selectAll("circle.point").transition().duration(500)
+              .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
+          }
 
 
           // this.selectAll("circle.complete").delay(1500)
@@ -501,11 +563,334 @@ d3.chart("MarginChart").extend("SystemsChart", {
       }
     });
 
+    this.layer("bars-chart", d3.select("#bars-chart").append("svg").attr("width", 940).attr("height", 200), {
+
+      // select the elements we wish to bind to and
+      // bind the data to them.
+      dataBind: function(data) {
+        if ( chart.xScaleType !== "date" ) { 
+          return this.selectAll("g.datapoint")
+            .data(data.sort(function(a,b) {
+              var firstSort = (b[chart.lineData()][1][chart.xData()] / b[chart.lineData()][0][chart.xData()]) / (b[chart.lineData()][1][chart.yData()] / b[chart.lineData()][0][chart.yData()]) - (a[chart.lineData()][1][chart.xData()] / a[chart.lineData()][0][chart.xData()]) / (a[chart.lineData()][1][chart.yData()] / a[chart.lineData()][0][chart.yData()]);
+              var secondSort = a[chart.lineData()][1][chart.yData()] / a[chart.lineData()][0][chart.yData()] - b[chart.lineData()][1][chart.yData()] / b[chart.lineData()][0][chart.yData()];
+              return firstSort !== 0 ? firstSort : secondSort;
+            }));
+          }
+        else {
+          return this.style("display", "none").selectAll("g.datapoint").data([]);
+        }
+      },
+
+      // insert actual circles
+      insert: function() {
+        return this.append("g")
+          .attr("transform", "translate(730,5)");
+      },
+
+      // define lifecycle events
+      events: {
+
+        // paint new elements, but set their radius to 0
+        // and make them red
+        "enter": function() {
+          var chart = this.chart();
+          var selection = this;
+
+          var xLeftMax, xBarScaleLeft, xBarScaleRight, yBarScale;
+
+
+
+         if ( chart.xScaleType !== "date" ) { 
+            xLeftMax = d3.max(chart.data, function(d) { return d[chart.lineData()][1][chart.yData()] / d[chart.lineData()][0][chart.yData()]; });
+
+            xBarScaleLeft = d3.scale.linear()
+              .range([0, - ( 800 * xLeftMax / (xLeftMax + 1))])
+              .domain([0, xLeftMax]);
+
+            xBarScaleRight = d3.scale.linear()
+              .range([0, 800 / (xLeftMax + 1)])
+              .domain([0,1]);
+
+            selection.append("rect")
+              .attr("x", 0)
+              .attr("y", function(d,i) {
+                return i * 20;
+              })
+              .attr("height", 15)
+              .attr("width", 0)
+              .attr("class", "functionality")
+              .attr("stroke", "black")
+              .attr("fill", "#00bb6a")
+              .attr("stroke-width", 0)
+              .transition()
+              .delay(function(d,i) { return i * chart.duration(); })
+              .duration(chart.duration())
+              .attr("width", function(d) {
+                return xBarScaleRight(d[chart.lineData()][1][chart.xData()] / d[chart.lineData()][0][chart.xData()]);
+              });
+
+            selection.append("rect")
+              .attr("x", 0)
+              .attr("y", function(d,i) {
+                return (i * 20);
+              })
+              .attr("width", 0)
+              .attr("height", 15)
+              .attr("class", "functionality")
+              .attr("stroke", "black")
+              .attr("fill", "#ff0500")
+              .attr("stroke-width", 0).transition()
+              .delay(function(d,i) { return i * chart.duration(); })
+              .duration(chart.duration())
+              .attr("x", function(d) {
+                return xBarScaleLeft(d[chart.lineData()][1][chart.yData()] / d[chart.lineData()][0][chart.yData()]);
+              })
+              .attr("width", function(d) {
+                return - xBarScaleLeft(d[chart.lineData()][1][chart.yData()] / d[chart.lineData()][0][chart.yData()]);
+              });
+
+            selection.append("rect")
+              .attr("x", 0)
+              .attr("y", function(d,i) {
+                return i * 20;
+              })
+              .attr("width", function(d) {
+                return xBarScaleRight(1);
+              })
+              .attr("height", 15)
+              .attr("class", "functionality")
+              .attr("stroke", "black")
+              .attr("fill", "none")
+              .attr("stroke-width", 1);
+
+            selection.append("rect")
+              .attr("x", function(d) {
+                return xBarScaleLeft(1);
+              })
+              .attr("y", function(d,i) {
+                return i * 20;
+              })
+              .attr("width", function(d) {
+                return - xBarScaleLeft(1);
+              })
+              .attr("height", 15)
+              .attr("class", "functionality")
+              .attr("stroke", "black")
+              .attr("fill", "none")
+              .attr("stroke-width", 1);
+
+            // selection.on("mouseover", function() {
+              
+            // });
+
+
+
+            // selection.append("rect")
+            //   .attr("x1", function(d) {
+            //     return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+            //   })
+            //   .attr("y1", function(d) {
+            //     return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+            //   })
+            //   .attr("x2", function(d) {
+            //     return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+            //   })
+            //   .attr("y2", function(d) {
+            //     return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+            //   })
+            //   .attr("class", "line");
+
+          }
+
+        },
+        // then transition them to a radius of 5 and change
+        // their fill to blue
+        // "enter:transition": function() {
+        //   var chart = this.chart();
+
+        //   if ( chart.xScaleType !== "date" ) { 
+        //     this.selectAll("circle.start").transition().duration(500)
+        //       .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
+
+        //     this.selectAll(".line")
+        //       .attr("stroke-width", 2)
+        //       .attr("marker-end", "")
+        //     .transition().delay(500).duration(1000)
+        //       .attr("x2", function(d) {
+        //           return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+        //         })
+        //       .attr("y2", function(d) {
+        //         return chart.yScale(d[chart.lineData()][1][chart.yData()]);
+        //       })
+        //     .transition().duration(1000)
+        //       .attr("marker-end", function(d) {
+        //         if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
+        //           if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
+        //             // return "url(#markerExplodeEnd)";
+        //             return "url(#markerCircle)";
+        //           }
+        //           else {
+        //             return "url(#markerCircleToDate)";
+        //           }
+        //         }
+        //         else{
+        //           return "url(#markerCircle)";
+        //         }
+        //       });
+        //   }
+        //   else {
+        //     this.selectAll("circle.point").transition().duration(500)
+        //       .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
+        //   }
+
+
+        //   // this.selectAll("circle.complete").delay(1500)
+        //   //   .attr("r", 5);
+
+        // }
+      }
+    });
+
+    this.layer("projectedMask", chart.layers.defs.append("clipPath"), {
+      dataBind: function(data) {
+        if ( chart.xScaleType === "date" ) {
+          return this.attr("id", "line-clip").selectAll("rect")
+            .data([data]);
+        }
+        else {
+          return this.selectAll("rect")
+            .data([]);
+        }
+      },
+
+      insert: function() {
+        var selection = this
+          .append("rect");
+
+        return selection;
+      },
+
+      events: {
+        "merge" : function() {
+          var chart = this.chart();
+          var selection = this;
+
+          selection
+            .attr("x", 0)
+            .attr("y", -10)
+            .attr("width", 0)
+            .attr("height", chart.height() + 10);
+
+          d3.select("#replay").on("click", function() {
+            event.preventDefault();
+
+            chart.layer("projectedMask").draw();
+          });
+        },
+
+        "merge:transition" : function() {
+          var chart = this.chart();
+          var selection = this;
+
+          selection
+            .duration(chart.duration()*5)
+            .ease("linear")
+            .attr("width", chart.width());
+        } 
+      }
+    });
+
+    this.layer("linepoints", chart.layers.lineBase, {
+
+      // select the elements we wish to bind to and
+      // bind the data to them.
+      dataBind: function(data) {
+        if ( chart.xScaleType === "date" ) {
+          return this.selectAll("g.line")
+            .data([data]);
+        }
+        else {
+          return this.selectAll("g.line")
+            .data([]);
+        }
+      },
+
+      // insert actual circles
+      insert: function() {
+        return this.append("g").classed("line", true).append("path");
+      },
+
+      // define lifecycle events
+      events: {
+
+        // paint new elements, but set their radius to 0
+        // and make them red
+        "enter": function() {
+          var chart = this.chart();
+          var selection = this;
+          var line = d3.svg.area()
+            .x(function(d) { return chart.xScale(d[chart.xData()]); })
+            .y(function(d) { return chart.yScale(d[chart.yData()]); });
+
+          // selection
+          //   .attr("clip-path", function (d,i) {
+          //     return i === chart.data.length - 1 ? "url(#project-clip)" : null; 
+          //   });
+
+          selection
+            .attr("clip-path", "url(#line-clip)")
+            .attr("stroke", "black")
+            .attr("stroke-width", 2)
+            .attr("d", function (d) { return line(d); });
+
+
+        },
+        // // then transition them to a radius of 5 and change
+        // // their fill to blue
+        // "enter:transition": function() {
+        //   var chart = this.chart();
+        //   this.selectAll("circle.start").transition().duration(500)
+        //     .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
+
+        //   this.selectAll(".line")
+        //     .attr("stroke-width", 2)
+        //     .attr("marker-end", "")
+        //   .transition().delay(500).duration(1000)
+        //     .attr("x2", function(d) {
+        //         return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+        //       })
+        //     .attr("y2", function(d) {
+        //       return chart.yScale(d[chart.lineData()][1][chart.yData()]);
+        //     })
+        //   .transition().duration(1000)
+        //     .attr("marker-end", function(d) {
+        //       if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
+        //         if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
+        //           // return "url(#markerExplodeEnd)";
+        //           return "url(#markerCircle)";
+        //         }
+        //         else {
+        //           return "url(#markerCircleToDate)";
+        //         }
+        //       }
+        //       else{
+        //         return "url(#markerCircle)";
+        //       }
+        //     });
+
+
+        //   // this.selectAll("circle.complete").delay(1500)
+        //   //   .attr("r", 5);
+
+        // }
+      }
+    });
+
     this.layer("info-box", chart.layers.infoBoxBase, {
       dataBind: function() {
-        console.log([d3.select(".active").datum()]);
+        console.log([chart.layers.datapointBase.select(".active").datum()]);
         return this.selectAll(".info-box")
-          .data([d3.select(".active").datum()]);
+          .data([chart.layers.datapointBase.select(".active").datum()]);
       },
 
       insert: function() {
@@ -529,22 +914,43 @@ d3.chart("MarginChart").extend("SystemsChart", {
           //   .attr("class", "date")
           //   .text(function (d) { return d.date; });
 
-          infoBoxContent
-            .append("a")
-            .attr("href", function(d) { return d.url; })
-            .attr("target", "_blank")
-            .append("h3")
-            .attr("class", "fail-hed")
-            .text(function (d) { return d.project; });
+          if ( chart.xScaleType === "date" ) {
+            chart.layers.infoBoxBase.select(".info-box")
+              .attr("style", "left: initial; right: 160px;");
 
-          infoBoxContent.append("p")
-            .attr("class", "fail-stat small")
-            .html(function (d) { return chart.displayStat(d); })
-            .append("a")
-              .attr("class", "readmore")
+            infoBoxContent
+              .append("p")
+              .attr("class", "fail-stat small")
+              .html(function (d) { return d.date; });
+
+            infoBoxContent.append("p")
+              .attr("class", "fail-stat small")
+              .html(function (d) { return "&ldquo;" + d.description + "&rdquo;"; })
+              .append("a")
+                .attr("class", "readmore")
+                .attr("href", function(d) { return d.url; })
+                .attr("target", "_blank")
+                .html("Read More");
+          }
+          else {
+
+            infoBoxContent
+              .append("a")
               .attr("href", function(d) { return d.url; })
               .attr("target", "_blank")
-              .html("Read More&hellip;");
+              .append("h3")
+              .attr("class", "fail-hed")
+              .text(function (d) { return d.project; });
+
+            infoBoxContent.append("p")
+              .attr("class", "fail-stat small")
+              .html(function (d) { return chart.displayStat(d); })
+              .append("a")
+                .attr("class", "readmore")
+                .attr("href", function(d) { return d.url; })
+                .attr("target", "_blank")
+                .html("Read More");
+          }
 
           // infoBoxContent
           //   .append("p")
@@ -622,7 +1028,21 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     //update x scale domain
     //chart.xScale.domain([mindate,maxdate]);
-    chart.xScale.domain([d3.max(data, function (d) {
+    console.log(chart.xScaleType);
+    if ( chart.xScaleType === "date" ) {
+      chart.xScale = d3.time.scale()
+        .range([0, chart.width()]);
+
+      chart.xScale.domain(d3.extent(data, function(d) { return d[chart.xData()]; })).nice();
+      console.log(chart.xScale.domain());
+
+      chart.yScale.domain([0,d3.max(data, function(d) { return d[chart.yData()]; })]).nice();
+      console.log(chart.yScale.domain());
+
+      chart.layers.legendBase.selectAll(".legend-item").remove();
+    }
+    else {
+      chart.xScale.domain([d3.max(data, function (d) {
         console.log(chart);
         console.log(chart.lineData());
         var maxX = d[chart.lineData()].reduce(function (a,b) {
@@ -632,16 +1052,18 @@ d3.chart("MarginChart").extend("SystemsChart", {
       }),0])
       .nice();
 
-    //update y scale domain
-    chart.yScale.domain([0,d3.max(data, function (d) {
-        var maxY = d[chart.lineData()].reduce(function (a,b) {
-          return d3.max([a[chart.yData()],b[chart.yData()]]);
-        });
-        return maxY;
-      })])
-      .nice(6);
+      //update y scale domain
+      chart.yScale.domain([0,d3.max(data, function (d) {
+          var maxY = d[chart.lineData()].reduce(function (a,b) {
+            return d3.max([a[chart.yData()],b[chart.yData()]]);
+          });
+          return maxY;
+        })])
+        .nice(6);
+    }
 
     return data;
+    
   },
 
   lineData: function(newLineData) {
@@ -800,8 +1222,8 @@ d3.csv("data/complexity.csv", function (data) {
 
   console.log(data);  
 
-  container.append("div")
-    .attr("class", "circle-info-box");
+  // container.append("div")
+  //   .attr("class", "circle-info-box");
 
   var systems = container
     .append("svg")
@@ -900,11 +1322,66 @@ d3.csv("data/complexity.csv", function (data) {
     }
   ));
 
-  var pymChild = new pym.Child();
+  
   pymChild.sendHeight();
 
   systems.on("brush", function() {
     pymChild.sendHeight();
   });
 
+});
+
+d3.csv("data/ECSS-systems.csv", function (data) {
+  "use strict";
+
+  console.log(data);
+  var container = d3.select("#ECSS-chart");
+  var parWidth = container.node().parentNode.offsetWidth;
+  var margins = {top: 50, bottom: 30, right: 20, left: 90};
+  var width = parWidth - margins.left - margins.right;
+  var height = width * 9 / 16;
+
+  var formatString = "%m/%e/%y";
+  var format = d3.time.format("%B 20%y");
+
+  data.forEach(function(d) {
+    d.dateOriginal = d.date;
+    d.formattedDate = d3.time.format(formatString).parse(d.date);
+    d.dateObject = new Date(d.date);
+    d.date = format(d.dateObject);
+    d.month = d.dateObject.getMonth();
+  });
+
+  var estimates = container
+    .append("svg")
+    .chart("SystemsChart")
+    .width(parWidth - margins.left - margins.right)
+    .height(height)
+    .margin(margins)
+    .xData("dateObject")
+    .yData("systems");
+
+  estimates.xScaleType = "date";
+
+  if ( estimates.mode() === "mobile" ) {
+    var mobMargins = margins;
+    mobMargins.left = mobMargins.right * 2;
+
+    // TODO: remove 1px currently needed to force recalc
+    var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+
+    d3.select("body").classed("mobile-view", true);
+
+    estimates
+      .width(mobWidth)
+      .height(mobWidth * 9 / 16)
+      .margin(mobMargins);
+
+    // systems
+    //   .width(container.node().parentNode.offsetWidth - 40)
+    //   .height((container.node().parentNode.offsetWidth - 40) * 9 / 6);
+  }
+
+  estimates.draw(data);
+  pymChild.sendHeight();
 });
