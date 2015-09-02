@@ -1,0 +1,89 @@
+<!doctype html>
+<html class="no-js">
+  <head>
+    <meta charset="utf-8">
+    <title>The Blame Game</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css(.) styles/vendor.css -->
+    <!-- bower:css -->
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- build:css(.tmp) styles/main.css -->
+    <link rel="stylesheet" href="styles/spectrum_cached_styles/style.css">
+    <link rel="stylesheet" href="styles/spectrum_cached_styles/sb.css">
+    <link rel="stylesheet" href="styles/spectrum_cached_styles/slimbox2.css">
+    <link rel="stylesheet" href="styles/spectrum_cached_styles/site420a.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+
+    <!-- build:js scripts/vendor/modernizr.js -->
+    <script src="bower_components/modernizr/modernizr.js"></script>
+    <!-- endbuild -->
+
+  </head>
+  <body>
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+
+    <div class="container normal">
+      <div class="content-area">
+        <article class="article-detail">
+          <div id="artBody"> 
+            <div class="quiz">
+              <div class="quiz-header">
+                <div class="instructions">When technology fails, bad things happen. See if you can match each outcome to its reported cause.</div>
+                <div class="quiz-controls">
+                  <div class="score"></div>
+                  <a class="next-question button primary">Next Question</a>
+                </div>
+              </div>
+              <div class="impact">
+                <p>Viewing Question: <span class="question-counter"></span></p>
+                <h2 class="quiz-heading">Impact:</h2>
+                <div class="impact-summary"></div>
+              </div>
+              <div class="causes">
+                <h2 class="quiz-heading">was caused by:</h2>
+                <ul class="answers">
+                </ul>
+              </div>
+              <div class="wrong"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <!-- build:js(.) scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
+    <script src="bower_components/d3.chart/d3.chart.js"></script>
+    <script src="bower_components/d3.chart.base/d3.chart.base.js"></script>
+    <script src="bower_components/d3.chart.plot/d3.chart.plot.js"></script>
+    <script src="bower_components/pym.js/dist/pym.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-29195620-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+    <!-- build:js({app,.tmp}) scripts/quiz.js -->
+    <script src="scripts/quiz.js"></script>
+    <!-- endbuild -->
+  </body>
+</html>
