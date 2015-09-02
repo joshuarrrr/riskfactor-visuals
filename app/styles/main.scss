@@ -33,6 +33,7 @@ $gray: #808080;
 $impact: #ff0500;
 $green: #00bb6a;
 $lightblue: #008db4;
+$turquoise: #0fb3ff;
 $violet: #4a0096;
 $yellow: #f8cf04;
 
@@ -278,7 +279,8 @@ p.fail-stat {
   text-transform: uppercase;
 }
 
-p.instructions {
+p.instructions, 
+.instructions {
   font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
 }
 
@@ -449,6 +451,13 @@ p.instructions {
     .readmore {
       display: inline;
       font-size: 1em;
+    }
+
+    .source {
+      display: block;
+      font-size: .9em;
+      font-style: italic;
+      margin: 0;
     }
   }
 
@@ -654,12 +663,20 @@ p.instructions {
 // Failures Charts //
 /////////////////////
 .project-selector {
-  display: block;
+  // display: block;
   margin: 0 auto;
   max-width: 100%;
 
   .placeholder {
     display: none;
+  }
+}
+
+.project-switch {
+  text-align: center;
+
+  .instructions {
+    margin: 0;
   }
 }
 
@@ -679,7 +696,8 @@ p.instructions {
   }
 }
 
-.area-labels {
+.area-labels,
+.spent-labels {
   text-anchor: end;
 }
 
@@ -714,13 +732,13 @@ p.instructions {
   .selected .tot-est,
   .selected .annual-est,
   .selected .maint-est {
-    fill: $yellow;
+    fill: $turquoise;
     opacity: .3;
   }
 
   .selected .dev,
   .selected .dev-est {
-    fill: $yellow;
+    fill: $turquoise;
     opacity: .3;
   }
 }
@@ -735,14 +753,15 @@ p.instructions {
 
   .instructions {
     float: left;
+    margin-left: 0;
     margin-right: 20px;
-    width: 380px;
+    max-width: 620px;
   }
 
   .quiz-controls {
     float: left;
     text-align: right;
-    width: 220px;
+    width: 300px;
   }
 
   .quiz-header {
@@ -794,10 +813,17 @@ p.instructions {
 }
 
 .impact-summary {
+  border: 0;
+  box-sizing: initial;
   display: block;
   margin: 10px 0;
   padding: 20px;
   text-align: center;
+
+  &.correct {
+    border: 3px solid $black;
+    box-sizing: border-box;
+  }
 }
 
 .clickable {
@@ -807,6 +833,14 @@ p.instructions {
 .sumtext>.cause {
   background: $yellow;
   display: inline;
+}
+
+.sumtext a.readmore {
+  color: $lightgray !important;
+  display: inline;
+  font-size: 1em;
+  margin-left: 1em;
+  padding: 0;
 }
 
 .hidden,
