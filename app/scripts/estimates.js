@@ -29,6 +29,9 @@ d3.chart("MarginChart").extend("FailureChart", {
       chart.layers.labelsBase = chart.base.select("g").append("g")
         .classed("area-label-base", true);
 
+      chart.layers.spentLabelsBase = chart.base.select("g").append("g")
+        .classed("spent-label-base", true);
+
       chart.layers.infoBoxBase = d3.select(".info-box");
 
       chart.layers.defs = chart.base.select("g").append("defs");
@@ -404,7 +407,7 @@ d3.chart("MarginChart").extend("FailureChart", {
               .classed("launch", function(d) { console.log(d.launch); return d.launch; });
 
             var projections = selection.selectAll("path.projection")
-              .data(function(d) { return d.projections; })
+              .data(function(d) { console.log(d); return d.projections; })
               .attr("class", function(d) { return "projection " + d.class; })
               .attr("d", function(d) { return area(d.area); });
 
@@ -648,21 +651,28 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       });
 
-
-      // add initial estimate line
-      this.layer("initline", chart.layers.initLine, {
-        modes : ["web", "tablet"],
+      // add spent labels
+      this.layer("spentlables", chart.layers.spentLabelsBase, {
         dataBind: function(data) {
-          return this.selectAll("line.line")
-            .data([data]);
-                
+          if (data.length > 1) {
+            return this.selectAll(".spent-labels")
+              .data([data[data.length - 1]], function(d) { return d.spent.value; });
+          }
+          else {
+            return this.selectAll(".spent-labels")
+              .data([]);
+          }
+          
         },
 
-        // insert line
         insert: function() {
-          var selection = this.append("svg:line");
+          var selection = this
+            .append("g");
 
-          return selection;
+          return selection
+            .attr("class", "spent-labels")
+            .append("text")
+              .attr("class", "label spent");
         },
 
         events: {
@@ -670,34 +680,97 @@ d3.chart("MarginChart").extend("FailureChart", {
             var chart = this.chart();
             var selection = this;
 
-            selection
-              .attr("x1", 0)
-              .attr("y1", chart.yScale(chart.data[0][chart.yData()[3].name]))
-              .attr("y2", chart.yScale(chart.data[0][chart.yData()[3].name]));
+            var labels = selection.selectAll("text");
 
-            selection
-              .attr("class", "line");
-              
-            return selection;
+            labels.selectAll("tspan").remove();
+
+            labels.append("tspan")
+              .attr("x", function(d) { console.log(d); return chart.xScale(d.dateObject); })
+              .attr("y", function(d) { return chart.yScale(d.spent.value); })
+              .attr("dy", "-1em")
+              .attr("class", "desc")
+              .text("");
+
+            labels.append("tspan")
+              .attr("x", function(d) { return chart.xScale(d.dateObject); })
+              .attr("y", function(d) { return chart.yScale(d.spent.value); })
+              .attr("dy", 0)
+              .attr("class", "num")
+              .text("");
           },
 
           "merge:transition" : function() {
             var chart = this.chart();
             var selection = this;
 
-            if ( chart.data[0][chart.yData()[3].name] > 0 && chart.data[0].Program !== "California's Unemployment Insurance Modernization" && chart.data.length > 1 && chart.data[chart.data.length - 1][chart.yData()[3].name] / chart.data[0][chart.yData()[3].name] > 1.05) {
-              selection
-                .duration(chart.duration())
-                .attr("x2", chart.width());
-            }
-            else {
-              selection
-                .attr("x2", 0);
-            }
-            
+            selection.selectAll(".desc")
+              .delay(chart.duration()*3)
+              .text("Spent so far:");
+
+            selection.selectAll(".num")
+              .delay(chart.duration()*3)
+              .text(function (d) {
+                return chart.formatMoney(d.spent.value, d.currency);
+              });
+          },
+
+          "exit" : function() {
+            this.remove();
           }
-        },
+        }
+
       });
+
+
+      // // add initial estimate line
+      // this.layer("initline", chart.layers.initLine, {
+      //   modes : ["web", "tablet"],
+      //   dataBind: function(data) {
+      //     return this.selectAll("line.line")
+      //       .data([data]);
+                
+      //   },
+
+      //   // insert line
+      //   insert: function() {
+      //     var selection = this.append("svg:line");
+
+      //     return selection;
+      //   },
+
+      //   events: {
+      //     "merge" : function() {
+      //       var chart = this.chart();
+      //       var selection = this;
+
+      //       selection
+      //         .attr("x1", 0)
+      //         .attr("y1", chart.yScale(chart.data[0][chart.yData()[3].name]))
+      //         .attr("y2", chart.yScale(chart.data[0][chart.yData()[3].name]));
+
+      //       selection
+      //         .attr("class", "line");
+              
+      //       return selection;
+      //     },
+
+      //     "merge:transition" : function() {
+      //       var chart = this.chart();
+      //       var selection = this;
+
+      //       if ( chart.data[0][chart.yData()[3].name] > 0 && chart.data[0].Program !== "California's Unemployment Insurance Modernization" && chart.data.length > 1 && chart.data[chart.data.length - 1][chart.yData()[3].name] / chart.data[0][chart.yData()[3].name] > 1.05) {
+      //         selection
+      //           .duration(chart.duration())
+      //           .attr("x2", chart.width());
+      //       }
+      //       else {
+      //         selection
+      //           .attr("x2", 0);
+      //       }
+            
+      //     }
+      //   },
+      // });
 
       this.layer("info-box", chart.layers.infoBoxBase, {
         dataBind: function(data) {
@@ -872,12 +945,12 @@ d3.csv("data/estimates.csv", function (data) {
 
   var potentialSeries = [
     { "name": "Monies Spent to Date", "class": "spent" },
-    { "name": "Total Committed Spending", "class": "spent" },
-    { "name": "Total Life Cycle Cost", "class": "tot-est" },
+    // { "name": "Total Committed Spending", "class": "spent" },
+    // { "name": "Total Life Cycle Cost", "class": "tot-est" },
     { "name": "Estimated Cost to Develop", "class": "dev-est" },
-    { "name": "Payroll Development Cost", "class": "dev-est" },
-    { "name": "Annual Maintenance & Operational Costs", "class": "annual-est" },
-    { "name": "Maintenance & Operational Costs", "class": "maint-est" }
+    // { "name": "Payroll Development Cost", "class": "dev-est" },
+    // { "name": "Annual Maintenance & Operational Costs", "class": "annual-est" },
+    // { "name": "Maintenance & Operational Costs", "class": "maint-est" }
   ];
 
   data = d3.nest()
@@ -1059,11 +1132,11 @@ d3.csv("data/estimates.csv", function (data) {
   var gaProjectsViewed = 0;
   var navButtonsClicked = 0;
 
-  projectSelector.append("option")
-    .attr("class", "placeholder")
-    .property("selected", true)
-    .property("disabled", true)
-    .text("Choose a project…");
+  // projectSelector.append("option")
+  //   .attr("class", "placeholder")
+  //   .property("selected", true)
+  //   .property("disabled", true)
+  //   .text("Choose a project…");
 
   projectSelector.selectAll("option:not(.placeholder)")
     .data(data)
@@ -1214,7 +1287,7 @@ d3.csv("data/estimates.csv", function (data) {
   });
 
   
-
-  // resetChart(currentProjectID);
+  projectSelector.node().selectedIndex = currentProjectID;
+  resetChart(currentProjectID);
 
 });
