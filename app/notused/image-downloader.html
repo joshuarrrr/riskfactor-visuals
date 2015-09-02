@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<canvas width="940" height="400"></canvas>
+<style>
+@font-face {
+  font-family: "Theinhardt-Regular";
+  font-style: normal;
+  font-weight: normal;
+  src: url("styles/fonts/Theinhardt/Theinhardt-Regular.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Regular";
+  font-style: italic;
+  font-weight: normal;
+  src: url("styles/fonts/Theinhardt/Theinhardt-RegularIta.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Medium";
+  font-style: normal;
+  font-weight: normal;
+  src: url("styles/fonts/Theinhardt/Theinhardt-Medium.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Medium";
+  font-style: italic;
+  font-weight: normal;
+  src: url("styles/fonts/Theinhardt/Theinhardt-MediumIta.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Bold";
+  font-style: normal;
+  font-weight: normal;
+  src: url("styles/fonts/Theinhardt/Theinhardt-Bold.otf");
+}
+
+@font-face {
+  font-family: "Theinhardt-Bold";
+  font-style: italic;
+  font-weight: normal;
+  src: url("styles/fonts/Theinhardt/Theinhardt-BoldIta.otf");
+}
+</style>
+<script>
+
+var canvas = document.querySelector("canvas"),
+    context = canvas.getContext("2d");
+
+var image = new Image;
+image.src = "/images/fallbacks/main-timeline.svg";
+
+
+image.onload = function() {
+  context.drawImage(image, 0, 0);
+
+  var a = document.createElement("a");
+  a.download = "main-timeline.png";
+  a.href = canvas.toDataURL("image/png");
+  a.click();
+};
+
+</script>

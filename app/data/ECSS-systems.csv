@@ -1,14 +1,17 @@
-date,description,systems
-2/1/2005,over 500 legacy systems,500
-9/1/2005,over 700 legacy systems,700
-3/1/2006,over 500 legacy systems,500
-5/1/2006,over 700 legacy systems,700
-9/1/2006,over 400 legacy systems,400
-9/1/2007,over 400 legacy systems,400
-9/1/2007,235 legacy systems,235
-11/1/2007,250 legacy systems,250
-2/1/2008,over 500 legacy systems,500
-9/1/2010,240 legacy systems,240
-2/1/2011,179 legacy systems,179
-6/1/2011,240 legacy systems,240
-7/1/2014,214 legacy systems,214
+date,description,systems,source,url,remove?
+2/1/2005,more than 500 legacy information technology systems,500,USAF Fiscal Year 2006/2007 Budget Estimates (pdf),http://www.saffm.hq.af.mil/shared/media/document/AFD-070221-103.pdf,
+9/1/2005,over 700 legacy Air Force information technology systems,700,USAF ECSS Fact Sheet (pdf),http://www.creech.af.mil/shared/media/document/AFD-060831-042.pdf,
+3/28/2006,500+ systems,500,USAF ECSS Briefing (pdf),http://www.ncms.org/wp-content/NCMS_files/CTMA/symposium2006/presentations/2006%20Presentations/plenarySession/kincaid.pdf,
+5/11/2006,over 700 legacy systems,700,Washington Technology Article on ECSS Bid ,http://washingtontechnology.com/Articles/2006/05/11/No-17-IBM-Corp-steps-up-as-a-subcontractor.aspx,yes
+9/11/2006,more than 400 legacy information systems,400,Computer Sciences Corporation press release announcing ECSS contract win,http://www.prnewswire.com/news-releases/csc-wins-628-million-us-air-force-expeditionary-combat-support-system-task-order-55997397.html,
+5/1/2007,420 logistics legacy systems,420,USAF Depot Maintenance Fact Sheet (pdf),http://www.safie.hq.af.mil/shared/media/document/AFD-070524-018.pdf,
+9/1/2007,over 400 legacy systems,400,USAF Article on ECSS,http://www.afmc.af.mil/news/story.asp?id=12307428,
+11/13/2007,~250 systems,250,USAF ECSS Briefing (pdf),http://www.sae.org/events/dod/presentations/2007russalford.pdf,
+2/4/2008,over 500 legacy Air Force information technology systems,500,USAF Fiscal Year 2009 Budget Estimates (pdf),http://www.saffm.hq.af.mil/shared/media/document/AFD-080204-086.pdf,
+3/1/2008,approximately 250 legacy logistics systems,250,USAF ECSS Fact Sheet (pdf),https://acc.dau.mil/adl/en-US/32784/file/34339/ECSS-FactSheet%20(Mar%2008).pdf,
+5/18/2010,426 legacy systems,426,USAF Logistics Briefing,http://slidegur.com/doc/1155895/air-force-101,
+8/4/2010,"more than 240 Cold War-era stand alone, or ""stove-piped,"" systems",240,USAF Public Affairs Article,http://www.hanscom.af.mil/news/story.asp?id=123216231,
+2/1/2011,179 legacy information technology systems,179,USAF Working Capital Fund Document (pdf),http://www.saffm.hq.af.mil/shared/media/document/AFD-110209-040.pdf,
+6/20/2011,240 legacy systems,240,Brig. Gen. Kenneth Moran (Defense News article),http://defensesystems.com/articles/2011/06/08/defense-it-1-erp-systems-implementation.aspx,
+11/1/2013,420 legacy systems,420,Reuters Article on DoD Accounting Systems,http://in.reuters.com/article/2013/12/23/usa-pentagon-brokenfixes-special-re-idINL3N0JY36S20131223,yes
+7/1/2014,214 different logistics systems,214,Brig Gen Kathryn Johnson (USAF Logistics article),http://issuu.com/teamloa/docs/summer_2014_edition,
