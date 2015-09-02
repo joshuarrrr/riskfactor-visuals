@@ -919,18 +919,18 @@ d3.chart("MarginChart").extend("SystemsChart", {
               .attr("style", "left: initial; right: 160px;");
 
             infoBoxContent
-              .append("p")
-              .attr("class", "fail-stat small")
+              .append("time")
+              .attr("class", "date")
               .html(function (d) { return d.date; });
 
             infoBoxContent.append("p")
               .attr("class", "fail-stat small")
               .html(function (d) { return "&ldquo;" + d.description + "&rdquo;"; })
               .append("a")
-                .attr("class", "readmore")
+                .attr("class", "readmore source")
                 .attr("href", function(d) { return d.url; })
                 .attr("target", "_blank")
-                .html("Read More");
+                .html(function (d) { return "&mdash; " + d.source; });
           }
           else {
 
@@ -1350,12 +1350,18 @@ d3.csv("data/ECSS-systems.csv", function (data) {
     d.dateObject = new Date(d.date);
     d.date = format(d.dateObject);
     d.month = d.dateObject.getMonth();
+
+    console.log(d.description);
+    d.description = d.description.replace(/((approximately |more than |over )?[0-9~\+]+)/, "<span class=\"number\">$1</span>");
+    console.log(d.description);
+
   });
 
   var estimates = container
     .append("svg")
     .chart("SystemsChart")
     .width(parWidth - margins.left - margins.right)
+    // .height((parWidth - margins.left - margins.right) * 3 / 4)
     .height(height)
     .margin(margins)
     .xData("dateObject")
@@ -1382,6 +1388,6 @@ d3.csv("data/ECSS-systems.csv", function (data) {
     //   .height((container.node().parentNode.offsetWidth - 40) * 9 / 6);
   }
 
-  estimates.draw(data);
+  estimates.draw(data.filter(function (d) { return d["remove?"] !== "yes"; }));
   pymChild.sendHeight();
 });
