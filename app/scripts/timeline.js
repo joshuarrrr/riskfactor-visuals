@@ -2016,7 +2016,8 @@ d3.csv("data/timeline.csv", function (data) {
 
     bubbles
       .width(container.node().parentNode.offsetWidth - 40)
-      .height((container.node().parentNode.offsetWidth - 40) / 1.5);
+      // .height((container.node().parentNode.offsetWidth - 40) / 1.5);
+      .height((container.node().parentNode.offsetWidth - 40) * 3 / 4);
   }
 
   totalCounters.select(".number")
@@ -2280,6 +2281,7 @@ d3.csv("data/timeline.csv", function (data) {
   d3.select("#chart-svg").attr("class", quantities[0].id);
   d3.select("#chart .legend-base").attr("class", "legend-base");
   d3.select("#chart .legend-base").classed(quantities[0].id, true);
+  d3.select(".fallback").remove();
   bubbles.draw(data);
 
   console.log(data.length);
