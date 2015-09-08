@@ -636,10 +636,10 @@ d3.chart("MarginChart").extend("FailureChart", {
               .y1(function(d) { return chart.yScale(d.spent.value); });
 
 
-            selection
-              .style("fill", "red")
-              .style("opacity", ".7")
-              .style("stroke", "none");
+            // selection
+            //   .style("fill", "red")
+            //   .style("opacity", ".6")
+            //   .style("stroke", "none");
 
             selection
               .attr("class", "area spent")
@@ -654,7 +654,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       // add spent labels
       this.layer("spentlables", chart.layers.spentLabelsBase, {
         dataBind: function(data) {
-          if (data.length > 1) {
+          if (data.length > 1  && data[data.length - 1].spent.value > 0) {
             return this.selectAll(".spent-labels")
               .data([data[data.length - 1]], function(d) { return d.spent.value; });
           }
