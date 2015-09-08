@@ -916,7 +916,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
           if ( chart.xScaleType === "date" ) {
             chart.layers.infoBoxBase.select(".info-box")
-              .attr("style", "left: initial; right: 160px;");
+              .attr("style", "left: initial; right: 220px;");
 
             infoBoxContent
               .append("time")
@@ -1388,6 +1388,30 @@ d3.csv("data/ECSS-systems.csv", function (data) {
     //   .height((container.node().parentNode.offsetWidth - 40) * 9 / 6);
   }
 
-  estimates.draw(data.filter(function (d) { return d["remove?"] !== "yes"; }));
+  estimates.draw(data);
+
+  estimates.base.select("g").append("g")
+    .classed("cancellation", true)
+    .attr("clip-path", "url(#line-clip)")
+    .append("line")
+      .attr("x1", estimates.xScale(new Date("11/1/2012")))
+      .attr("x2", estimates.xScale(new Date("11/1/2012")))
+      .attr("y1", 0)
+      .attr("y2", estimates.height())
+      .style("stroke-width", "2px")
+      .style("stroke", "gray")
+      .style("stroke-dasharray", "5px 5px");
+
+  estimates.base.select(".cancellation")
+    .append("text")
+      .attr("x", 0)
+      .attr("y", estimates.xScale(new Date("11/1/2012")))
+      .attr("dy", "1em")
+      .attr("transform", "rotate(-90)")
+      .style("text-anchor", "end")
+      .style("fill", "gray")
+      .style("font-size", ".8em")
+      .text("program cancelled");
+
   pymChild.sendHeight();
 });
