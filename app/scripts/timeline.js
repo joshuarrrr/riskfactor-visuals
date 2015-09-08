@@ -76,6 +76,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.layers = {};
     chart.quantities = [];
     chart.sortables = [];
+    chart.fillOpacity = 0.3;
 
     chart.gaDatapointsClicked = 0;
     chart.gaCategoriesChanged = 0;
@@ -83,7 +84,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     chart.maxBubbleSize = 70;
     chart.instructs = "To begin exploring the timeline, select one of the circles below." + 
-      "<br>Only failures <span class=\"metric\">with measurable costs</span> are <span class=\"optional hidden\">currently</span> displayed. <span class=\"optional hidden\">Use the \"Size by\" dropdown to explore other types of impacts.</span>";
+      "<div class=\"optional hidden\">You can also: <ul class=\"instructs-list\"><li>Change the “<span class=\"ui-label\">Size by</span>” menu to reveal failures with other types of impacts.</li><li>Change the “<span class=\"ui-label\">View range</span>” to reveal failures currently too large or small to display.</li><li>Use the “<span class=\"ui-label\">Sort by</span>” menu to change the failures are categorized.</li></ul></div>";
+    
     chart.parentID = d3.select(chart.base.node().parentNode).attr("id");
 
     console.log(chart);
@@ -99,8 +101,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
     chart.layers.axesBase = chart.base.select("g").append("g")
       .classed("axes", true);
 
-    chart.layers.statusBase = chart.base.select("g").append("g")
-      .classed("status-base", true);
+    // chart.layers.statusBase = chart.base.select("g").append("g")
+    //   .classed("status-base", true);
 
     chart.layers.linesBase = chart.base.select("g").append("g")
       .classed("lines", true);
@@ -121,6 +123,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     chart.layers.selectorsBase = d3.select(chart.base.node().parentNode).select(".selectors");
 
+    chart.layers.statusBase = chart.layers.selectorsBase.select(".status-base");
+
     chart.layers.legendBase = chart.layers.infoBoxBase.append("svg")
       .classed("legend-base", true)
       .append("g")
@@ -138,6 +142,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     // when the width changes, update the x scale range
     chart.on("change:width", function(newWidth) {
+      console.log("width changed");
       chart.xScale.range([0, newWidth]);
       chart.layers.backgroundBase
         .attr("width", newWidth);
@@ -149,6 +154,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     // when the height changes, update the y scale range
     chart.on("change:height", function(newHeight) {
+      console.log("height changed");
       chart.yScale.rangeRoundBands([0, newHeight], 0);
       chart.layers.backgroundBase
         .attr("height", newHeight);
@@ -386,7 +392,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             d3.select("#chart .legend-base").classed(metric.id, true);
 
             if ( activeSelection.empty() === false && (activeSelection.datum()[chart.rData()] > 0) === false ){
-              activeSelection.classed("active", false).style("fill-opacity", 0.2);
+              activeSelection.classed("active", false).style("fill-opacity", chart.fillOpacity);
             }
 
             chart.draw(chart.data);
@@ -425,25 +431,25 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               return d.domain.toString();
             })
             .attr("class", function(d) {
-              if ( d.label === "Less than" ) {
+              if ( d.label === "less than" ) {
                 return "max";
               }
-              else if ( d.label === "More than" ) {
+              else if ( d.label === "more than" ) {
                 return "min";
               }
-              else if ( d.label === "Between" ) {
+              else if ( d.label === "between" ) {
                 return "range";
               }
             })
             .text(function(d) {
               var optionLabel;
-              if ( d.label === "Less than" ) {
+              if ( d.label === "less than" ) {
                 optionLabel = makeReadable(d.domain[1]);
               }
-              else if ( d.label === "More than" ) {
+              else if ( d.label === "more than" ) {
                 optionLabel = makeReadable(d.domain[0]);
               }
-              else if ( d.label === "Between" ) {
+              else if ( d.label === "between" ) {
                 optionLabel = makeReadable(d.domain[0]) + " and " + makeReadable(d.domain[1]);
               }
 
@@ -464,6 +470,9 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                   else {
                     num = num + " hours";
                   }
+                }
+                else if ( metric.id === "money") {
+                  num = "$" + formatNumber(num);
                 }
                 else {
                   num = formatNumber(num);
@@ -526,6 +535,9 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
       insert: function() {
         var selection = this.append("option");
+
+        chart.layers.selectorsBase.select(".category-selection-container")
+          .classed("hidden", function() { return chart.sortables.length < 2 ? true : false; });
 
         selection
           .attr("value", function(d) { return d; })
@@ -608,7 +620,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               if ( activeSelection.datum()[category] === "" ) {
                 // d3.select(bubbles.base.node().parentNode).select(".info-box").selectAll("div").remove();
                 // d3.select(bubbles.base.node().parentNode).select(".legend-ring").remove();
-                activeSelection.classed("active", false).style("fill-opacity", 0.2);
+                activeSelection.classed("active", false).style("fill-opacity", chart.fillOpacity);
                 chart.layer("info-box").draw();
               }
 
@@ -781,8 +793,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       insert: function() {
         var chart = this.chart();
         var selection = this.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + chart.height() + ")");
+          .attr("class", "x axis");
 
         return selection;
       },
@@ -799,9 +810,16 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .tickFormat(chart._xformat || d3.time.format("%Y"));
 
           chart.base.select(".x.axis")
+            .attr("transform", "translate(0," + chart.height() + ")")
           .transition()
             .duration(chart.duration())
             .call(xAxis);
+
+          chart.on("change:height", function() {
+            chart.base.select(".x.axis")
+              .attr("transform", "translate(0," + chart.height() + ")")
+              .call(xAxis);
+          });
 
           return selection;
         },
@@ -837,7 +855,15 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
         // console.log(selection.data());
         selection
-          .classed("data-point", true)
+          .attr("class", function(d) {
+            var classes = "data-point";
+            chart.quantities.forEach(function(q) {
+              if (d[q.columnName] > 0 ) {
+                classes += " " + q.id;
+              }
+            });
+            return classes;
+          })
           .attr("r", 0)
           .attr("data-date-index", function(d) { return d.dateIndex; });
 
@@ -888,7 +914,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           selection.filter(function() {
               return !(d3.select(this).classed("too-big") || d3.select(this).classed("too-small") || d3.select(this).classed("active"));
             })
-            .style("fill-opacity", 0.2);
+            .style("fill-opacity", chart.fillOpacity);
 
           // chart.base.selectAll(".too-big")
           //   .style("fill-opacity", 0);
@@ -912,7 +938,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           var active = chart.layers.circlesBase.select(".data-point.active");
           if ( !active.empty() && ( active.classed("too-small") || active.classed("too-big") ) ) {
-            active.classed("active", false).style("fill-opacity", 0.2);
+            active.classed("active", false).style("fill-opacity", chart.fillOpacity);
           }
 
 
@@ -936,7 +962,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                   d3.select(this).style("fill-opacity", 0.8);
                 }
                 else {
-                  d3.select(this).style("fill-opacity", 0.2);
+                  d3.select(this).style("fill-opacity", chart.fillOpacity);
                 }
               }
             });
@@ -974,7 +1000,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
               if ( !el.classed("active") && !el.classed("too-big") && !el.classed("too-small") ) {
                 chart.base.selectAll(".active")
-                  .classed("active", false).style("fill-opacity", 0.2);
+                  .classed("active", false).style("fill-opacity", chart.fillOpacity);
 
                 el
                   .classed("active", true).style("fill-opacity", 0.8);
@@ -989,7 +1015,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                     console.log("unselect");
 
                     chart.base.selectAll(".active")
-                      .classed("active", false).style("fill-opacity", 0.2);
+                      .classed("active", false).style("fill-opacity", chart.fillOpacity);
 
                     chart.layer("info-box").draw();
                   }
@@ -1060,7 +1086,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           //   chart.trigger("unbrush", this);
           // });
-
+          
+          chart.on("change:height", function() {
+            selection
+              .attr("cy", function(d) { return chart.yScale(d[chart.yData()]) + (chart.yScale.rangeBand() / 2); });
+          });
 
           return selection;
         },
@@ -1119,11 +1149,14 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
       },
 
       insert: function() {
-        var selection = this.append("g")
+        var selection = this.append("div")
           .attr("class", "current-status");
           // .attr("transform", "tranlate(0,20)");
 
-        selection.append("text");
+        selection.append("span")
+          .attr("class", "details hidden");
+
+        selection.append("span");
 
         return selection;
       },
@@ -1133,20 +1166,20 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           var chart = this.chart();
           var selection = this;
           
-          selection.select("text")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("dx", 150)
-            .attr("dy", -15)
-            .text(function (d) { return "Currently displaying " + d.length + " of " + chart.layers.circlesBase.selectAll(".data-point").size() + " failures"; });
+          selection.select("span:not(.details)")
+            // .attr("x", 0)
+            // .attr("y", 0)
+            // .attr("dx", 150)
+            // .attr("dy", -15)
+            .text(function (d) { return "Currently displaying " + d.length + " of " + chart.layers.circlesBase.selectAll(".data-point").size() + " failures with a measurable"; });
 
           selection.on("mouseover", function () {
-            d3.select(this).append("text")
-              .classed("status-details", true)
-              .attr("x", 0)
-              .attr("y", 0)
-              .attr("dx", 150)
-              .attr("dy", 5)
+            d3.select(this).select(".details")
+              .classed("hidden", false)
+              // .attr("x", 0)
+              // .attr("y", 0)
+              // .attr("dx", 150)
+              // .attr("dy", 5)
               .text(function () { 
                 var explanation = "(" +
                   chart.layers.circlesBase.selectAll(".data-point:not(.too-big):not(.too-small)").filter(function() { return d3.select(this).attr("r") === "0"; }).size() + " not defined";
@@ -1159,10 +1192,14 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 }                
                 return explanation + ")";
               });
+
+            // d3.select(this).selectAll("span")
+            //   .style("display", "block");
           });
 
           selection.on("mouseout", function() {
-            d3.select(this).select(".status-details").remove();
+            d3.select(this).select(".details")
+              .classed("hidden", true);
           });
 
           return selection;
@@ -1280,9 +1317,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .attr("x1", 0)
             .attr("x2", 0)
             .attr("y1", function(d) { return d3.select(this).datum() === minValue && chart.rScale(chart.zoomIntervals[chart.zoomIntervals.length - 2]) - chart.rScale(d) < 16 ? - chart.rScale(d) : chart.rScale(d); })
-            .attr("y2", function(d) { return d3.select(this).datum() === minValue && chart.rScale(chart.zoomIntervals[chart.zoomIntervals.length - 2]) - chart.rScale(d) < 16 ? - chart.rScale(d) : chart.rScale(d); })
-            .attr("stroke", "gray")
-            .attr("stroke-width", 1);
+            .attr("y2", function(d) { return d3.select(this).datum() === minValue && chart.rScale(chart.zoomIntervals[chart.zoomIntervals.length - 2]) - chart.rScale(d) < 16 ? - chart.rScale(d) : chart.rScale(d); });
 
           selection.selectAll(".legend-text")
             .attr("x", chart.maxBubbleSize)
@@ -1336,7 +1371,6 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .attr("dy", ".5em")
             .attr("y", -chart.maxBubbleSize / 2)
             .style("opacity", 0)
-            .style("font-style", "italic")
             .text(function() {
               var svg = d3.select(chart.layers.legendBase.node().parentNode.parentNode);
 
@@ -1715,6 +1749,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .attr("href", "#")
             .text("Later →");
 
+          timeContainer.append("span")
+            .attr("class", "small-instructs")
+            .classed("hidden", function() { return chart.gaDatapointsClicked > 1; })
+            .text("←Use these buttons to step through the timeline chronologically");
+
           selection
             .append("a")
             .attr("href", function(d) { return d.url.split("; ")[0]; })
@@ -1838,7 +1877,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               chart.gaDatapointsClicked++;
 
               chart.base.selectAll(".active")
-                .classed("active", false).style("fill-opacity", 0.2);
+                .classed("active", false).style("fill-opacity", chart.fillOpacity);
 
               next
                 .classed("active", true).style("fill-opacity", 0.8);
@@ -1887,36 +1926,36 @@ d3.csv("data/timeline.csv", function (data) {
     {
       "columnName":"Impact - USD",
       "id":"money",
-      "label":"Monetary Cost",
+      "label":"monetary cost",
       "instructsLabel":"with measurable costs",
       "ranges": [
-        {"label":"Less than", "domain": [0,50000000]},
-        {"label":"More than", "domain": [20000000,"max"]}
+        {"label":"less than", "domain": [0,50000000]},
+        {"label":"more than", "domain": [20000000,"max"]}
       ]
     },
     {
       "columnName":"Impact - hours",
       "id":"time",
-      "label":"Impact Duration",
+      "label":"duration",
       "instructsLabel":"with measurable durations",
       "ranges": [
-        {"label":"Less than", "domain": [0,1]},
-        {"label":"Less than", "domain": [0,12]},
-        {"label":"Between", "domain": [1,24 * 30]},
+        {"label":"less than", "domain": [0,1]},
+        {"label":"less than", "domain": [0,12]},
+        {"label":"between", "domain": [1,24 * 30]},
         // {"label":"Less than", "domain": [0,24 * 30]},
-        {"label":"More than", "domain": [24 * 30,"max"]}
+        {"label":"more than", "domain": [24 * 30,"max"]}
       ]
     },
     {
       "columnName":"Impact - customers affected",
       "id":"people",
-      "label":"# People Affected",
+      "label":"# of people affected",
       "instructsLabel":"that affected a measurable number of people",
       "ranges": [
         // {"label":"Less than", "domain": [0,10000]},
-        {"label":"Less than", "domain": [0,50000]},
-        {"label":"Between", "domain": [1000,1000000]},
-        {"label":"More than", "domain": [150000,"max"]}
+        {"label":"less than", "domain": [0,50000]},
+        {"label":"between", "domain": [1000,1000000]},
+        {"label":"more than", "domain": [150000,"max"]}
       ]
     }
   ];
@@ -1954,11 +1993,8 @@ d3.csv("data/timeline.csv", function (data) {
   var selectors = container.append("div")
     .attr("class","selectors");
 
-  var selector = selectors.append("div")
-    .attr("class", "category-selection-container")
-    .html("Sort by:<br>")
-    .append("select")
-      .attr("class", "select-category dropdown");
+  selectors.append("div")
+      .classed("status-base", true);
 
   var sizeSelector = selectors.append("div")
     .attr("class", "size-selection-container")
@@ -1971,6 +2007,12 @@ d3.csv("data/timeline.csv", function (data) {
     .html("View range:<br>")
     .append("select")
       .attr("class", "select-range dropdown");
+
+  var selector = selectors.append("div")
+    .attr("class", "category-selection-container")
+    .html("Sort by:<br>")
+    .append("select")
+      .attr("class", "select-category dropdown");
 
 
   // initialize main chart    
@@ -2286,13 +2328,112 @@ d3.csv("data/timeline.csv", function (data) {
 
   console.log(data.length);
 
-  makeThemeChart("#modernization-chart","project termination/cancellation",quantities[0]);
-  makeThemeChart("#health-chart","health",quantities[0]);
-  makeThemeChart("#banks-chart","bank",quantities[2]);
-  makeThemeChart("#exchange-chart","stock exchange",quantities[1]);
-  makeThemeChart("#air-chart","airport/port/customs systems",quantities[1]);
+  var modernization = makeThemeChart("#modernization-chart","project termination/cancellation",quantities[0]);
+  var health = makeThemeChart("#health-chart","health",quantities[0]);
+  var bank = makeThemeChart("#banks-chart","bank",quantities[2]);
+  var exchange = makeThemeChart("#exchange-chart","stock exchange",quantities[1]);
+  var air = makeThemeChart("#air-chart","airport/port/customs systems",quantities[1]);
 
-  
+  (function() { // force re-render of element_name to get the styling right on-print
+    var beforePrint = function() {
+      parWidth = container.node().parentNode.offsetWidth; // dynamically calc width of parent contatiner
+      width = parWidth - margins.left - margins.right;
+      height = width * 1 / 3;
+
+      bubbles
+        .width(width)
+        .height(height);
+
+      modernization
+        .width(width)
+        .height(height / 3)
+        .draw(modernization.data);
+
+      health
+        .width(width)
+        .height(height / 3)
+        .draw(health.data);
+
+      bank
+        .width(width)
+        .height(height / 3)
+        .draw(bank.data);
+
+
+      exchange
+        .width(width)
+        .height(height / 3)
+        .draw(exchange.data);
+
+      air
+        .width(width)
+        .height(height / 3)
+        .draw(air.data);
+
+      totalCounters
+        .style("width", "30%")
+        .style("margin", "0 20px 0 0");
+
+      bubbles.draw(data);
+    };
+
+    var afterPrint = function() {
+      parWidth = container.node().parentNode.offsetWidth; // dynamically calc width of parent contatiner
+      width = parWidth - margins.left - margins.right;
+      height = width * 1 / 3;
+
+      bubbles
+        .width(width)
+        .height(height);
+
+      modernization
+        .width(width)
+        .height(height / 3)
+        .draw(modernization.data);
+
+      health
+        .width(width)
+        .height(height / 3)
+        .draw(health.data);
+
+      bank
+        .width(width)
+        .height(height / 3)
+        .draw(bank.data);
+
+
+      exchange
+        .width(width)
+        .height(height / 3)
+        .draw(exchange.data);
+
+      air
+        .width(width)
+        .height(height / 3)
+        .draw(air.data);
+
+      totalCounters
+        .attr("style", null);
+
+      bubbles.draw(data);
+    };
+
+    if (window.matchMedia) {
+      window.matchMedia("print").addListener(function(mql) {
+        if (mql.matches) { 
+          beforePrint(); 
+          window.matchMedia("screen").addListener(function(newMql) {
+            if (newMql.matches) {
+              afterPrint();
+            }
+          });
+        }
+      });
+    }
+
+    window.onbeforeprint = beforePrint;
+    window.onafterprint = afterPrint;
+  }());
 
   function makeThemeChart (id, filter, impact) {
     var infoBox = d3.select(id).append("div")
@@ -2351,6 +2492,16 @@ d3.csv("data/timeline.csv", function (data) {
         });
       });
 
+    console.log(theme.sortables);
+
+    theme.sortables = theme.sortables.filter(function (cat) {
+      return d3.set(themeData
+        .filter(function(d) {
+          return d[cat] !== "";
+        })
+        .map(function(d) { return d[cat]; }))
+      .values().length > 1;
+    });
     
 
     // selector.selectAll("option")
@@ -2409,6 +2560,8 @@ d3.csv("data/timeline.csv", function (data) {
       console.log("The element ", d, "was selected");
       pymChild.sendHeight();
     });
+
+    return theme;
   }
 
   // var Share = function() {
@@ -2516,8 +2669,6 @@ d3.csv("data/timeline.csv", function (data) {
 
   // var sharing = new Share();
 
-
-
   pymChild.sendHeight();
   
 });
@@ -2528,7 +2679,7 @@ d3.csv("data/timeline.csv", function (data) {
 function readableNumbers (n) {
   "use strict";
   var hundreds = d3.format(",3f");
-  var bigNumbers = d3.format("f");
+  var bigNumbers = d3.format(" >3");
 
   // console.log(n);
   if ( n < 1e3 ) {

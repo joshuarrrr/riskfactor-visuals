@@ -29,6 +29,7 @@ $lightgray: #ddd;
 $lightergray: #efefef;
 $medgray: #bbb;
 $gray: #808080;
+$headergray: #5a5a5a;
 
 $impact: #ff0500;
 $green: #00bb6a;
@@ -36,6 +37,19 @@ $lightblue: #008db4;
 $turquoise: #0fb3ff;
 $violet: #4a0096;
 $yellow: #f8cf04;
+
+$greenminusblue: #da00da;
+$greenminusviolet: #81ff91;
+$violetminusblue: #e131e1;
+$greenminusblueminusviolet: #ffff91;
+$violetminusblueminusgreen: #ff37ff;
+
+$brightfuscia: #eb0089;
+$brightyellow: #fff600;
+$brightblue: #00adff;
+$brightgreen: #65f600;
+$brightaqua: #04fffd;
+
 
 // $halfred: rgba(255, 0, 0, .5);
 // $halfgreen: rgba(0, 255, 0, .5);
@@ -157,6 +171,12 @@ $border1: $black 2px solid;
   .info-box {
     display: static;
   }
+
+  // iframe svg {
+  //   page-break-after: always;
+  //   page-break-before: avoid;
+  //   page-break-inside: avoid;
+  // }
 }
 
 
@@ -169,6 +189,10 @@ $border1: $black 2px solid;
   background: linear-gradient(to left, $base-color 5%, $start-color);
   background-color: $base-color;
 }
+
+// .timeline.chart-container svg:not(.legend-base) {
+//   margin-top: -30px;
+// }
 
 // Totals Section
 .totals {
@@ -281,7 +305,26 @@ p.fail-stat {
 
 p.instructions, 
 .instructions {
-  font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
+  font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif;
+
+  .optional {
+    font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
+  }
+
+  .ui-label {
+    font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif;
+  }
+
+  .instructs-list {
+    margin: 0;
+  }
+}
+
+.small-instructs {
+  font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
+  font-size: .9em;
+  font-style: italic;
+  margin-left: 1em;
 }
 
 .instructions {
@@ -297,11 +340,20 @@ p.instructions,
 .data-point, 
 .legend-circle {
   cursor: pointer;
-  fill-opacity: .2;  
+  // fill-opacity: .2;  
+  fill-opacity: .3;
+  stroke: $black;
+  stroke-width: .5;
 }
 
-.too-big {
+// .legend-text {
+//   text-anchor: end;
+// }
+
+.too-big,
+.too-small {
   cursor: default;
+  stroke: none;
 }
 
 .money {
@@ -325,10 +377,30 @@ p.instructions,
   }
 }
 
+.money.time.data-point {
+  fill: $brightaqua;
+  fill-opacity: .4;
+}
+
+.money.people.data-point {
+  fill: $brightblue;
+  fill-opacity: .4;
+}
+
+.time.people.data-point {
+  fill: $brightfuscia;
+  fill-opacity: .4;
+}
+
+.money.time.people.data-point {
+  fill: $impact;
+  fill-opacity: .4;
+}
+
 .legend-circle {
   cursor: default;
-  stroke: $medgray;
-  stroke-width: 1;
+  // stroke: $medgray;
+  // stroke-width: 1;
 }
 
 .data-point.active {
@@ -339,6 +411,15 @@ p.instructions,
 
 .data-point.hovered {
   fill-opacity: .5;
+}
+
+h3.timeline-section-header {
+  border-bottom: $headergray 2px solid;
+  border-top: $headergray 2px solid;
+  font-family: "Theinhardt-Bold", sans-serif;
+  margin-top: 3em;
+  font-size: 1em;
+  text-transform: uppercase;
 }
 
 // Info Box Area
@@ -384,12 +465,21 @@ p.instructions,
       right: 0;
       text-align: left;
       top: 134px;
-      width: 220px;
+      width: 140px;
     }
   }
 
   &.timeline-chart {
     overflow: auto;
+    
+    .legend-heading {
+      text-transform: uppercase;
+    }
+
+    .legend-line {
+      stroke: $black;
+      stroke-opacity: 0.5;
+    }
 
     .legend-base {
       float: right;
@@ -488,6 +578,14 @@ p.instructions,
       width: auto;
     }
   }
+
+  .status-base {
+    display: none;
+  }
+
+  .selectors {
+    text-align: left;
+  }
 }
 
 .times {
@@ -560,9 +658,10 @@ p.instructions,
 
 // Selection Buttons
 .category-selection-container {
-  clear: both;
-  left: 20px;
-  position: absolute; 
+  // clear: both;
+  // left: 20px;
+  // position: absolute; 
+  float: left;
 }
 
 .select-category {
@@ -588,19 +687,41 @@ p.instructions,
 }
 
 // Selection Sizes
-.size-selection-container {
+.selectors {
   clear: both;
-  position: absolute;
-  right: 20px;
+  margin: -30px 15px 0;
+  position: relative;
   text-align: right;
+  top: 30px;
+
+  >div {
+    display: inline-block;
+    margin: 0 5px;
+    position: static;
+  }
 }
 
-.range-selection-container {
-  clear: both;
-  position: absolute;
-  right: 200px;
-  text-align: right;
+.current-status {
+  cursor: default;
+
+  .details {
+    display: block;
+  }
 }
+
+// .size-selection-container {
+//   clear: both;
+//   position: absolute;
+//   right: 20px;
+//   text-align: right;
+// }
+
+// .range-selection-container {
+//   clear: both;
+//   position: absolute;
+//   right: 200px;
+//   text-align: right;
+// }
 
 
 
@@ -710,22 +831,22 @@ p.instructions,
 .area1 {
   .area, 
   .projection {
-    fill: $lightgray;
-    opacity: .3;
+    fill: $turquoise;
+    opacity: .2;
   }
 
   .initial .total,
   .initial .tot-est,
   .initial .annual-est,
   .initial .maint-est {
-    fill: $green;
-    opacity: .3;
+    fill: $turquoise;
+    opacity: .4;
   }
 
   .initial .dev,
   .initial .dev-est {
-    fill: $green;
-    opacity: .3;
+    fill: $turquoise;
+    opacity: .4;
   }
 
   .selected .total,
@@ -733,14 +854,20 @@ p.instructions,
   .selected .annual-est,
   .selected .maint-est {
     fill: $turquoise;
-    opacity: .3;
+    opacity: .4;
   }
 
   .selected .dev,
   .selected .dev-est {
     fill: $turquoise;
-    opacity: .3;
+    opacity: .4;
   }
+}
+
+.area.spent {
+  fill: $impact;
+  opacity: .6;
+  stroke: none;
 }
 
 
