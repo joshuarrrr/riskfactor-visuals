@@ -169,7 +169,33 @@ $border1: $black 2px solid;
   }
 
   .info-box {
-    display: static;
+    position: static;
+  }
+
+  a.fail-hed-link:after {
+    content: none !important;
+  }
+
+  .fail-stats {
+    display: block !important;
+    position: static !important;
+  }
+
+  .times a.button {
+    display: none !important;
+  }
+
+  .times time.date {
+    padding: 0;
+  }
+
+  .small-instructs {
+    display: none!important;
+  }
+
+  .data-point.too-big {
+    display: none!important;
+    // fill-opacity: 0 !important;
   }
 
   // iframe svg {
@@ -321,10 +347,16 @@ p.instructions,
 }
 
 .small-instructs {
+  display: block;
   font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
   font-size: .9em;
   font-style: italic;
-  margin-left: 1em;
+  // margin-top: -.9em;
+  // margin-left: 1em;
+
+  // &:before {
+  //   content: '← ';
+  // }
 }
 
 .instructions {
@@ -417,8 +449,10 @@ h3.timeline-section-header {
   border-bottom: $headergray 2px solid;
   border-top: $headergray 2px solid;
   font-family: "Theinhardt-Bold", sans-serif;
-  margin-top: 3em;
   font-size: 1em;
+  line-height: 1.4em;
+  margin-top: 3em;
+  padding: .3em 0;
   text-transform: uppercase;
 }
 
@@ -487,20 +521,45 @@ h3.timeline-section-header {
       width: 220px;
     }
 
+    // .fail-head {
+    //   margin-top: .5em;
+    // }
+
     .fail-stats {
-      float: right;
-      height: 150px;
-      // margin-top: -42px;
-      margin-top: 0;
+      display: inline-block;
+      // float: right;
+      // height: 150px;
+      // // margin-top: -42px;      // text-align: right;
+      // margin-top: 0;
+      margin: .5em 0;
       position: static;
-      text-align: right;
+      // text-align: right;
+      vertical-align: bottom;
+      width: auto;
     }
 
     .fail-stat {
       color: $black;
+      display: inline;
       font-family: "Theinhardt-Medium", Helvetica, Arial, sans-serif; 
       font-size: 18px;
+      margin-top: 0;
       text-transform: none;
+
+      &:not(:last-child) {
+        margin-right: 10px;
+        &:after {
+          content: ',';
+        }
+      }
+      &:first-child:after {
+        content: none;
+      }
+    }
+
+    .conversion {
+      // display: block;
+      font-size: .7em;
     }
 
     .current {
@@ -556,6 +615,16 @@ h3.timeline-section-header {
   }
 }
 
+// #chart .timeline-chart .description:not(.hidden),
+// #chart .timeline-chart .instructions:not(.hidden) {
+//   min-height: 150px;
+// }
+
+// .timeline .y.label {
+//   cursor: pointer;
+//   user-select: none;
+// }
+
 .mobile-view {
   .replacements-chart.info-box {
     left: default;
@@ -564,18 +633,82 @@ h3.timeline-section-header {
     width: 100%; 
   }
 
+  .timeline svg {
+    margin-top: -30px;
+  }
+
+  .timeline .data-point {
+    stroke: $gray;
+
+    &.active {
+      stroke: $impact;
+    }
+
+    &.too-big,
+    &.too-small {
+      cursor: default;
+      stroke: none; }
+  }
+
   .timeline-chart {
     .legend-base {
       display: none;
     }
 
+    .description,
+    div.instructions {
+      margin-left: 0;
+    }
+
+    .instructions p {
+      font-size: 16px;
+      line-height: 1.4em;
+      margin-bottom: 0;
+    }
+
+    .times {
+      display: block;
+      text-align: center;
+    }
+
+    .small-instructs {
+      display: block;
+      margin-left: 0;
+      text-align: center;
+
+      // &:before {
+      //   content: none;
+      // }
+
+      // &:before, 
+      // &:after {
+      //   content: "↑"
+      // }
+    }
+
     .fail-stats {
+      display: block;
       float: none;
       height: auto;
-      margin: 0 auto;
+      margin: .5em auto 1em;
       position: static;
-      text-align: left;
+      text-align: center;
       width: auto;
+    }
+
+    .fail-stat {
+      display: inline-block;
+      font-size: 16px;
+      line-height: .5em;
+      margin-right: 10px;
+
+      // &:not(:last-child):after {
+      //   content: ","
+      // }
+
+      &.current {
+        font-size: 18px;
+      }
     }
   }
 
@@ -584,12 +717,17 @@ h3.timeline-section-header {
   }
 
   .selectors {
+    margin: 0 auto;
     text-align: left;
+    top: 0;
   }
 }
 
 .times {
+  display: inline-block;
   margin-bottom: .5em;
+  margin-right: 10px;
+  vertical-align: bottom;
 
   a.button {
     display: inline;

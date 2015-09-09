@@ -512,8 +512,10 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               .each("end", function() { return chart.layer("info-box").draw(); });
 
             // chart.layer("info-box").draw();
-            chart.layer("legend").draw();
-            chart.layer("status").draw();
+            if ( chart.mode() !== "mobile" ) {
+              chart.layer("legend").draw();
+              chart.layer("status").draw();
+            }
           });
         },
 
@@ -608,11 +610,14 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               //update y scale domain
               chart.yScale.domain(chart.categories);
 
-              chart.layer("grid-lines").draw();
+              
               chart.layer("y-axis-labels").draw();
               chart.layer("bubbles").draw(chart.data);
-              chart.layer("status").draw();
 
+              if ( chart.mode() !== "mobile" ) {
+                chart.layer("grid-lines").draw();
+                chart.layer("status").draw();
+              }
             }
 
             if ( activeSelection.empty() === false ){
@@ -1713,6 +1718,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           chart.layers.infoBoxBase.select(".instructions").classed("hidden", true);
 
+          selection.classed("hidden",false);
+
           var ring = chart.layers.legendBase.selectAll(".legend-ring")
             .data([selection.datum()]).enter()
           .append("circle")
@@ -1727,10 +1734,11 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .attr("r", function(d) { return chart.rScale(d[chart.rData()]); });
 
           selection.selectAll("*").remove();
-            
-          selection.append("div")
-            .attr("class", "fail-stats")
-            .html(function (d) { return displayStat(chart, d); });
+
+          selection.append("span")
+            .attr("class", "small-instructs")
+            .classed("hidden", function() { return chart.mode !== "mobile" && chart.gaDatapointsClicked > 1; })
+            .text("↓ Use these buttons to step through the timeline chronologically");
 
           var timeContainer = selection.append("div")
             .classed("times", true);
@@ -1738,26 +1746,26 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           timeContainer.append("a")
             .attr("class", "prev button")
             .attr("href", "#")
-            .text("← Earlier");
+            .html("←&nbsp;Earlier");
 
           timeContainer.append("time")
             .attr("class", "date")
-            .text(function (d) { return d.date; });
+            .html(function (d) { return d.date.replace(" ", "&nbsp"); });
 
           timeContainer.append("a")
             .attr("class", "next button")
             .attr("href", "#")
-            .text("Later →");
+            .html("Later&nbsp;→");
 
-          timeContainer.append("span")
-            .attr("class", "small-instructs")
-            .classed("hidden", function() { return chart.gaDatapointsClicked > 1; })
-            .text("←Use these buttons to step through the timeline chronologically");
+          selection.append("div")
+            .attr("class", "fail-stats")
+            .html(function (d) { return displayStat(chart, d); });
 
           selection
             .append("a")
             .attr("href", function(d) { return d.url.split("; ")[0]; })
             .attr("target", "_blank")
+            .attr("class", "fail-hed-link")
             .append("h3")
             .attr("class", "fail-hed")
             .text(function (d) { return d.Headline; });
@@ -1900,6 +1908,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           chart.layers.legendBase.select(".legend-ring").remove();
 
+          selection.classed("hidden", true);
+
           chart.layers.infoBoxBase.select(".instructions").classed("hidden", false);
 
           // chart.layers.infoBoxBase.select(".nav-buttons").classed("hidden", true);
@@ -1943,7 +1953,8 @@ d3.csv("data/timeline.csv", function (data) {
         {"label":"less than", "domain": [0,12]},
         {"label":"between", "domain": [1,24 * 30]},
         // {"label":"Less than", "domain": [0,24 * 30]},
-        {"label":"more than", "domain": [24 * 30,"max"]}
+        // {"label":"more than", "domain": [24 * 30,"max"]}
+        {"label":"more than", "domain": [24 * 7,"max"]}
       ]
     },
     {
@@ -1971,7 +1982,7 @@ d3.csv("data/timeline.csv", function (data) {
     "Government Type",
     "Government Department",
     "Industry Area",
-    "Companies"
+    // "Companies"
   ];
 
 
@@ -2059,7 +2070,8 @@ d3.csv("data/timeline.csv", function (data) {
     bubbles
       .width(container.node().parentNode.offsetWidth - 40)
       // .height((container.node().parentNode.offsetWidth - 40) / 1.5);
-      .height((container.node().parentNode.offsetWidth - 40) * 3 / 4);
+      .height((container.node().parentNode.offsetWidth - 40) * 3 / 4)
+      .margin({top: 45, bottom: 45, right: 30, left: 10});
   }
 
   totalCounters.select(".number")
@@ -2454,7 +2466,7 @@ d3.csv("data/timeline.csv", function (data) {
       .chart("BubbleTimeline")
       .width(width)
       .height(height / 3)
-      .margin({top: 50, bottom: 65, right: 20, left: 20})
+      .margin({top: 60, bottom: 65, right: 20, left: 20})
       .dateParse("iso")
       .dateDisplay("%B 20%y")
       .yData("Region")
@@ -2717,10 +2729,10 @@ function formatNumber(amount) {
   }
 
   if ( amount >= 1e9 ) {
-    formatted += (amount / 1e9).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " billion";
+    formatted += (amount / 1e9).toPrecision(3).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " billion";
   }
   else if ( amount >= 1e6 ) {
-    formatted += (amount / 1e6).toFixed(2).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " million";
+    formatted += (amount / 1e6).toPrecision(3).replace(/^(\d+\.\d*?[1-9])0+$|(\.0*?)$/, "$1") + " million";
   }
   else {
     formatted += comma(amount);
@@ -2739,6 +2751,7 @@ function displayStat (chart, d) {
   var num = fullNum.split(" ")[0];
   var post = fullNum.split(" ")[1] || "";
   var elem = "";
+  var header = "Impact";
 
   var quantities = [
     {"columnName":"Impact - Qty", "id":"money"},
@@ -2771,6 +2784,9 @@ function displayStat (chart, d) {
         else {
           pre = d["Currency Symbol"];
         }
+        if ( pre !== "US $" ) {
+          post += " <span class=\"conversion\">(US $"+ formatNumber(d["Impact - USD"]) +")</span>";
+        }
       }
       else if ( quant.id === "time" ) {
         num = readableNumbers(d["Impact - duration"]).split(" "[0]);
@@ -2784,12 +2800,25 @@ function displayStat (chart, d) {
       else if ( quant.id === "people" ) {
         post += " people";
       }
-      elem +="<p class=\"" + elemClass + "\">" + pre + "<span class=\"number\">" + num + "</span> " + post + "</p>";
+      elem +="<p class=\"" + elemClass + "\">" + 
+        pre + 
+        "<span class=\"number\">" + num + "</span> " + 
+        post + "</p>";
+
       console.log(elem); 
     }
   });
 
-  return elem;
+  if ( quantities.filter(function (quant) {
+      return +d[quant.columnName] > 0;
+    }).length > 1 ) {
+    header += "s:";
+  }
+  else {
+    header += ":";
+  }
+
+  return "<p class=\"fail-stat\">" + header + "</p>" + elem;
 
   // if ( svg.attr("class").indexOf("money") !== -1 ) {
   //   console.log("money value");
