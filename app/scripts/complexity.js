@@ -18,13 +18,15 @@ d3.chart("MarginChart").extend("SystemsChart", {
     chart.gaProjectsHovered = 0;
 
     chart.layers.yAxisBase = chart.base.select("g").append("g")
-      .classed("axes", true);
+      .classed("y-axis-base", true);
 
     chart.layers.xAxisBase = chart.base.select("g").append("g")
-      .classed("axes", true);
+      .classed("x-axis-base", true);
 
     chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).insert("div")
       .attr("class", "circle-info-box");
+
+    chart.layers.longDescription = d3.select(chart.base.node().parentNode).select(".long-description");
 
     chart.layers.lineBase = chart.base.select("g").append("g")
       .classed("data-series", true);
@@ -34,7 +36,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     chart.layers.legendBase = chart.base.append("g")
       .classed("legend-base", true)
-      .attr("transform", "translate(560, 55)");
+      .attr("transform", "translate(535, 55)");
 
     chart.layers.defs = chart.base.select("g").append("defs");
 
@@ -223,13 +225,13 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
           if ( chart.yScale.domain()[1] >= 1e9 ) {
             selection.select(".y.axis-label text")
-              .attr("dy", -35)
+              .attr("dy", -30)
               .text("US dollars,");
 
             selection.select(".y.axis-label").append("text")
               .attr("y", 0)
               .attr("x", -9)
-              .attr("dy", -15)
+              .attr("dy", -12)
               .attr("dx", 0)
               .attr("text-anchor", "end")
               .text("billions");
@@ -339,40 +341,64 @@ d3.chart("MarginChart").extend("SystemsChart", {
           //   .attr("stroke", "black")
           // .transition().duration(1000)
           //   .attr("d", function(d) { return line(d); });
-         if ( chart.xScaleType !== "date" ) { 
-            selection.append("line")
-              .attr("x1", function(d) {
-                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-              })
-              .attr("y1", function(d) {
-                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-              })
-              .attr("x2", function(d) {
-                return chart.xScale(d[chart.lineData()][1][chart.xData()]);
-              })
-              .attr("y2", function(d) {
-                return chart.yScale(d[chart.lineData()][1][chart.yData()]);
-              })
+         if ( chart.xScaleType !== "date" ) {
+            var line = d3.svg.line()
+              .x(function(d) { return chart.xScale(d[chart.xData()]); })
+              .y(function(d) { return chart.yScale(d[chart.yData()]); }); 
+
+            selection.selectAll(".invisible-line")
+              .data(function(d) { return [d[chart.lineData()]]; }).enter()
+              .append("path")
               .attr("class", "invisible-line")
               .attr("stroke", "black")
-              .attr("stroke-width", 15)
-              .style("opacity", 0);
+              .attr("stroke-width", 35)
+              .attr("stroke-linecap", "round")
+              .attr("fill", "none")
+              // .style("opacity", .3)
+              .style("opacity", 0)
+              .attr("d", line);
 
 
-            selection.append("line")
-              .attr("x1", function(d) {
-                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-              })
-              .attr("y1", function(d) {
-                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-              })
-              .attr("x2", function(d) {
-                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-              })
-              .attr("y2", function(d) {
-                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-              })
-              .attr("class", "line");
+            // selection.append("line")
+            //   .attr("x1", function(d) {
+            //     return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+            //   })
+            //   .attr("y1", function(d) {
+            //     return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+            //   })
+            //   .attr("x2", function(d) {
+            //     return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+            //   })
+            //   .attr("y2", function(d) {
+            //     return chart.yScale(d[chart.lineData()][1][chart.yData()]);
+            //   })
+            //   .attr("class", "invisible-line")
+            //   .attr("stroke", "black")
+            //   .attr("stroke-width", 15)
+            //   .style("opacity", 0);
+
+            selection.selectAll("path.line")
+              .data(function(d) { return [d[chart.lineData()]]; }).enter()
+              .append("path")
+              .attr("class", "line")
+              .attr("fill", "none")
+              .attr("d", line);
+
+
+            // selection.append("line")
+            //   .attr("x1", function(d) {
+            //     return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+            //   })
+            //   .attr("y1", function(d) {
+            //     return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+            //   })
+            //   .attr("x2", function(d) {
+            //     return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+            //   })
+            //   .attr("y2", function(d) {
+            //     return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+            //   })
+            //   .attr("class", "line");
 
             
 
@@ -396,15 +422,27 @@ d3.chart("MarginChart").extend("SystemsChart", {
             //   .style("fill", "red");
 
 
-            selection.append("circle")
+            selection.selectAll("circle")
+              .data(function(d) { return d[chart.lineData()]; }).enter()
+            .append("circle")
               .attr("cx", function(d) {
-                return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+                return chart.xScale(d[chart.xData()]);
               })
               .attr("cy", function(d) {
-                return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+                return chart.yScale(d[chart.yData()]);
               })
               .attr("r", 0)
-              .attr("class", function(d) { return d[chart.lineData()][0].milestone; });
+              .attr("class", function(d) { 
+                if ( d.milestone.search(/complete|termination|fixed/) !== -1 ) {
+                  return "end";
+                }
+                else if (d.milestone === "to date") {
+                  return d.milestone.replace(" ", "-");
+                }
+                else {
+                  return d.milestone;
+                }
+              });
           }
           else {
             selection.append("circle")
@@ -418,12 +456,21 @@ d3.chart("MarginChart").extend("SystemsChart", {
               .attr("class", "point")
               .attr("clip-path", "url(#line-clip)");
           }
-          
 
+          selection.on("mouseover", function() {
+            d3.select(this)
+              .classed("hovered", true);
+          });
+
+          selection.on("mouseout", function() {
+            d3.select(this)
+              .classed("hovered", false);
+          });
+          
           // add a mouseover listener to our groups
           // and change their color and broadcast a chart
           // brush event to any listeners.
-          selection.on("mouseover", function() {
+          selection.on("click", function() {
             var el = d3.select(this);
 
             var gaEventLabel = "complexity-" + el.datum().project;
@@ -461,38 +508,38 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
               chart.layer("info-box").draw();
 
-              el.selectAll(".line")
-                .attr("x2", function(d) {
-                  return chart.xScale(d[chart.lineData()][0][chart.xData()]);
-                })
-                .attr("y2", function(d) {
-                  return chart.yScale(d[chart.lineData()][0][chart.yData()]);
-                })
-                .attr("marker-end", "")
-                .transition().duration(1000)
-                .attr("x2", function(d) {
-                  return chart.xScale(d[chart.lineData()][1][chart.xData()]);
-                })
-                .attr("y2", function(d) {
-                  return chart.yScale(d[chart.lineData()][1][chart.yData()]);
-                })
-                .transition().duration(1000)
-                .attr("marker-end", function(d) {
-                  if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
-                    if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
-                      // return "url(#markerExplodeEnd)";
-                      return "url(#markerCircle)";
-                    }
-                    else {
-                      return "url(#markerCircleToDate)";
-                    }
-                  }
-                  else{
-                    return "url(#markerCircle)";
-                  }
-                });
+              // el.selectAll(".line")
+              //   .attr("x2", function(d) {
+              //     return chart.xScale(d[chart.lineData()][0][chart.xData()]);
+              //   })
+              //   .attr("y2", function(d) {
+              //     return chart.yScale(d[chart.lineData()][0][chart.yData()]);
+              //   })
+              //   .attr("marker-end", "")
+              //   .transition().duration(1000)
+              //   .attr("x2", function(d) {
+              //     return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+              //   })
+              //   .attr("y2", function(d) {
+              //     return chart.yScale(d[chart.lineData()][1][chart.yData()]);
+              //   })
+              //   .transition().duration(1000)
+              //   .attr("marker-end", function(d) {
+              //     if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
+              //       if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
+              //         // return "url(#markerExplodeEnd)";
+              //         return "url(#markerCircle)";
+              //       }
+              //       else {
+              //         return "url(#markerCircleToDate)";
+              //       }
+              //     }
+              //     else{
+              //       return "url(#markerCircle)";
+              //     }
+              //   });
 
-              el.selectAll("circle.start")
+              el.selectAll("circle")
                 .attr("r", 7);
 
               chart.trigger("brush", this);
@@ -519,36 +566,63 @@ d3.chart("MarginChart").extend("SystemsChart", {
         // their fill to blue
         "enter:transition": function() {
           var chart = this.chart();
+          var line = d3.svg.line()
+            .x(function(d) { return chart.xScale(d[chart.xData()]); })
+            .y(function(d) { return chart.yScale(d[chart.yData()]); }); 
 
           if ( chart.xScaleType !== "date" ) { 
-            this.selectAll("circle.start").transition().duration(500)
+            this.selectAll("circle").transition().duration(500)
               .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
 
             this.selectAll(".line")
-              .attr("stroke-width", 2)
-              .attr("marker-end", "")
-            .transition().delay(500).duration(1000)
-              .attr("x2", function(d) {
-                  return chart.xScale(d[chart.lineData()][1][chart.xData()]);
-                })
-              .attr("y2", function(d) {
-                return chart.yScale(d[chart.lineData()][1][chart.yData()]);
-              })
-            .transition().duration(1000)
-              .attr("marker-end", function(d) {
-                if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
-                  if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
-                    // return "url(#markerExplodeEnd)";
-                    return "url(#markerCircle)";
-                  }
-                  else {
-                    return "url(#markerCircleToDate)";
-                  }
-                }
-                else{
-                  return "url(#markerCircle)";
-                }
-              });
+              .attr("stroke-width", 2);
+            //   .attr("marker-end", "")
+            // .transition()
+            //   // .delay(500)
+            //   .duration(1000)
+            //   // .attr("d", line)
+            //   .attr("marker-mid", "url(#markerCircleToDate)")
+            //   .attr("marker-end", function(d) {
+            //     // console.log(d[d.length - 1][chart.dataLabel()]);
+            //     if (d[d.length - 1][chart.xData()] === 0 || null) {
+            //       if (d[d.length - 1][chart.dataLabel()].search(/complete|termination|fixed/) !== -1) {
+            //         // return "url(#markerExplodeEnd)";
+            //         return "url(#markerCircle)";
+            //       }
+            //       else {
+            //         return "url(#markerCircleToDate)";
+            //       }
+            //     }
+            //     else{
+            //       return "url(#markerCircle)";
+            //     }
+            //   });
+
+            // this.selectAll(".line")
+            //   .attr("stroke-width", 2)
+            //   .attr("marker-end", "")
+            // .transition().delay(500).duration(1000)
+            //   .attr("x2", function(d) {
+            //       return chart.xScale(d[chart.lineData()][1][chart.xData()]);
+            //     })
+            //   .attr("y2", function(d) {
+            //     return chart.yScale(d[chart.lineData()][1][chart.yData()]);
+            //   })
+            // .transition().duration(1000)
+            //   .attr("marker-end", function(d) {
+            //     if (d[chart.lineData()][1][chart.xData()] === 0 || null) {
+            //       if (d[chart.lineData()][1][chart.dataLabel()] === "complete") {
+            //         // return "url(#markerExplodeEnd)";
+            //         return "url(#markerCircle)";
+            //       }
+            //       else {
+            //         return "url(#markerCircleToDate)";
+            //       }
+            //     }
+            //     else{
+            //       return "url(#markerCircle)";
+            //     }
+            //   });
           }
           else {
             this.selectAll("circle.point").transition().duration(500)
@@ -709,7 +783,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
         //   var chart = this.chart();
 
         //   if ( chart.xScaleType !== "date" ) { 
-        //     this.selectAll("circle.start").transition().duration(500)
+        //     this.selectAll("circle.start.").transition().duration(500)
         //       .attr("r", function() { return d3.select(this.parentNode).classed("active") ? 7 : 5; });
 
         //     this.selectAll(".line")
@@ -811,6 +885,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
         }
         else {
           return this.selectAll("g.line")
+            // .data(data);
             .data([]);
         }
       },
@@ -829,8 +904,12 @@ d3.chart("MarginChart").extend("SystemsChart", {
           var chart = this.chart();
           var selection = this;
           var line = d3.svg.area()
-            .x(function(d) { return chart.xScale(d[chart.xData()]); })
-            .y(function(d) { return chart.yScale(d[chart.yData()]); });
+              .x(function (d) { return chart.xScale(d[chart.xData()]); })
+              .y(function (d) { return chart.yScale(d[chart.yData()]); });
+
+          // var multiline = d3.svg.area()
+          //     .x(function (d) { return chart.xScale(d[chart.lineData][chart.xData()]); })
+          //     .y(function (d) { return chart.yScale(d[chart.lineData][chart.yData()]); });
 
           // selection
           //   .attr("clip-path", function (d,i) {
@@ -841,8 +920,14 @@ d3.chart("MarginChart").extend("SystemsChart", {
             .attr("clip-path", "url(#line-clip)")
             .attr("stroke", "black")
             .attr("stroke-width", 2)
-            .attr("d", function (d) { return line(d); });
-
+            .attr("d", function (d) { 
+              if ( chart.xScaleType === "date" ) {
+                return line(d); 
+              }
+              else {
+                return line(d[chart.lineData()]);
+              }
+            });
 
         },
         // // then transition them to a radius of 5 and change
@@ -944,10 +1029,22 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
             infoBoxContent.append("p")
               .attr("class", "fail-stat small")
-              .html(function (d) { return chart.displayStat(d); })
+              .html(function (d) { return chart.displayStat(d); });
+              // .append("a")
+              //   .attr("class", "readmore")
+              //   .attr("href", function(d) { return d.url; })
+              //   .attr("target", "_blank")
+              //   .html("Read More");
+
+            chart.layers.longDescription.select("div")
+              .html(selection.datum().projectDescription);
+
+            chart.layers.longDescription.select(".readmore").remove();
+
+            chart.layers.longDescription
               .append("a")
                 .attr("class", "readmore")
-                .attr("href", function(d) { return d.url; })
+                .attr("href", function(d) { return selection.datum().url; })
                 .attr("target", "_blank")
                 .html("Read More");
           }
@@ -1193,6 +1290,7 @@ d3.csv("data/complexity.csv", function (data) {
   data.forEach(function (d) {
     d.project = d.values[0].project;
     d.url = d.values[0].url;
+    d.projectDescription = d.values[0].description;
     d.currency = d.values[0].currency;
     d.milestones = d.values.map(function (point, i) { 
       var ii = i;
@@ -1228,7 +1326,7 @@ d3.csv("data/complexity.csv", function (data) {
   var systems = container
     .append("svg")
     .chart("SystemsChart")
-    .width(parWidth - margins.left - margins.right)
+    .width(width * 0.6)
     .height(height)
     .margin(margins)
     .lineData("milestones")
@@ -1317,8 +1415,8 @@ d3.csv("data/complexity.csv", function (data) {
 
   systems.draw(data
     .sort(function(a,b) {
-      var len = a.milestones.length;
-      return a.milestones[len - 1].cost - b.milestones[len - 1].cost;
+      // var len = a.milestones.length;
+      return a.milestones[a.milestones.length - 1].cost - b.milestones[b.milestones.length - 1].cost;
     }
   ));
 

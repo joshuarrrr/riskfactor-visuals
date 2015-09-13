@@ -575,7 +575,7 @@ h3.timeline-section-header {
   }
 
   &.replacements-chart {
-    left: 160px;
+    left: 135px;
     position: absolute;
     top: 45px;
     width: 380px;
@@ -888,6 +888,14 @@ h3.timeline-section-header {
 .datapoint {
   opacity: .4;
 
+  &:not(.active) {
+    cursor: pointer;
+  }
+
+  &.hovered {
+    opacity: 1;
+  }
+
   &.active {
     opacity: 1;
 
@@ -916,6 +924,15 @@ h3.timeline-section-header {
 .to-date {
   fill: $yellow;
   stroke: none;
+}
+
+.long-description {
+  float: right;
+  width: 300px;
+
+  div {
+    font-size: 1.1em;
+  }
 }
 
 /////////////////////
