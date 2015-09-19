@@ -973,7 +973,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     this.layer("info-box", chart.layers.infoBoxBase, {
       dataBind: function() {
-        console.log([chart.layers.datapointBase.select(".active").datum()]);
+        // console.log([chart.layers.datapointBase.select(".active").datum()]);
         return this.selectAll(".info-box")
           .data([chart.layers.datapointBase.select(".active").datum()]);
       },
@@ -1112,7 +1112,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
     //   // ];
     // });
 
-    console.log(data);
+    // console.log(data);
 
     // var sorted = data.sort(function(a,b){ return b.date - a.date; });
     // var sortedByDate = data.sort(function(a,b){return a.dateObject.getTime() - b.dateObject.getTime();});
@@ -1125,23 +1125,23 @@ d3.chart("MarginChart").extend("SystemsChart", {
 
     //update x scale domain
     //chart.xScale.domain([mindate,maxdate]);
-    console.log(chart.xScaleType);
+    // console.log(chart.xScaleType);
     if ( chart.xScaleType === "date" ) {
       chart.xScale = d3.time.scale()
         .range([0, chart.width()]);
 
       chart.xScale.domain(d3.extent(data, function(d) { return d[chart.xData()]; })).nice();
-      console.log(chart.xScale.domain());
+      // console.log(chart.xScale.domain());
 
       chart.yScale.domain([0,d3.max(data, function(d) { return d[chart.yData()]; })]).nice();
-      console.log(chart.yScale.domain());
+      // console.log(chart.yScale.domain());
 
       chart.layers.legendBase.selectAll(".legend-item").remove();
     }
     else {
       chart.xScale.domain([d3.max(data, function (d) {
-        console.log(chart);
-        console.log(chart.lineData());
+        // console.log(chart);
+        // console.log(chart.lineData());
         var maxX = d[chart.lineData()].reduce(function (a,b) {
           return d3.max([a[chart.xData()],b[chart.xData()]]);
         });
@@ -1274,18 +1274,22 @@ d3.chart("MarginChart").extend("SystemsChart", {
 d3.csv("data/complexity.csv", function (data) {
   "use strict";
 
-  console.log(data);
+  // console.log(data);
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
   var margins = {top: 50, bottom: 70, right: 20, left: 90};
   var width = parWidth - margins.left - margins.right;
   var height = width * 9 / 16;
 
+  // width = 620 - margins.left - margins.right;
+  // height = (width / 1.91 ) - 37.5;
+
+
   data = d3.nest()
     .key(function(d) { return d.project; })
     .entries(data);
 
-  console.log(data);
+  // console.log(data);
 
   data.forEach(function (d) {
     d.project = d.values[0].project;
@@ -1294,11 +1298,11 @@ d3.csv("data/complexity.csv", function (data) {
     d.currency = d.values[0].currency;
     d.milestones = d.values.map(function (point, i) { 
       var ii = i;
-      console.log(ii);
+      // console.log(ii);
       while( point["cost USD"] === "null" || "" ) {
         ii++;
         point["cost USD"] = d.values[ii]["cost USD"];
-        console.log(point["cost USD"]);
+        // console.log(point["cost USD"]);
       }
       return {
         "cost": point["cost USD"] === "null" || "" ? null : +point["cost USD"],
@@ -1318,7 +1322,7 @@ d3.csv("data/complexity.csv", function (data) {
     delete d.values;
   });
 
-  console.log(data);  
+  // console.log(data);  
 
   // container.append("div")
   //   .attr("class", "circle-info-box");
@@ -1327,6 +1331,7 @@ d3.csv("data/complexity.csv", function (data) {
     .append("svg")
     .chart("SystemsChart")
     .width(width * 0.6)
+    // .width(width)
     .height(height)
     .margin(margins)
     .lineData("milestones")
@@ -1432,12 +1437,15 @@ d3.csv("data/complexity.csv", function (data) {
 d3.csv("data/ECSS-systems.csv", function (data) {
   "use strict";
 
-  console.log(data);
+  // console.log(data);
   var container = d3.select("#ECSS-chart");
   var parWidth = container.node().parentNode.offsetWidth;
   var margins = {top: 50, bottom: 30, right: 20, left: 90};
   var width = parWidth - margins.left - margins.right;
   var height = width * 9 / 16;
+
+  // width = 620 - margins.left - margins.right;
+  // height = (width / 1.91);
 
   var formatString = "%m/%e/%y";
   var format = d3.time.format("%B 20%y");
@@ -1449,9 +1457,9 @@ d3.csv("data/ECSS-systems.csv", function (data) {
     d.date = format(d.dateObject);
     d.month = d.dateObject.getMonth();
 
-    console.log(d.description);
+    // console.log(d.description);
     d.description = d.description.replace(/((approximately |more than |over )?[0-9~\+]+)/, "<span class=\"number\">$1</span>");
-    console.log(d.description);
+    // console.log(d.description);
 
   });
 
@@ -1459,6 +1467,7 @@ d3.csv("data/ECSS-systems.csv", function (data) {
     .append("svg")
     .chart("SystemsChart")
     .width(parWidth - margins.left - margins.right)
+    // .width(width)
     // .height((parWidth - margins.left - margins.right) * 3 / 4)
     .height(height)
     .margin(margins)
@@ -1513,3 +1522,134 @@ d3.csv("data/ECSS-systems.csv", function (data) {
 
   pymChild.sendHeight();
 });
+
+var Share = function() {
+    // var fbInitialized = false;
+    
+    function shareData() {
+      var data = {
+        // title: $("meta[property='og:title']").attr('content'),
+        // longTitle: "",
+        // url: $("meta[property='og:url']").attr('content'),
+        // image: $("meta[property='og:image']").attr('content'),
+        // description: $("meta[property='og:description']").attr('content')
+        titles: {
+          "default": "Overcomplexifying, Underdelivering",
+          "ECSS-chart": "The ECSS Debacle: How many systems are we replacing anyway?"
+        },
+        preTitle: "Lessons from a Decade of IT Failures:",
+        url: window.location.protocol + "//" + 
+            window.location.host +
+            window.location.pathname,
+        images: {
+          "default": "/images/complexity-chart.png",
+          "ECSS-chart": "/images/ECSS-chart.png"
+        },
+        description: "Trying to replace multiple IT systems with one can lead to none"
+      };
+
+      // pymChild.onMessage("share", function (title) {
+      //   data.title = title;
+      //   console.log("message sent!");
+      // });
+      return data;
+    }
+
+    function track(label) {
+      return;
+      //MCP.share(label);
+    }
+
+
+    var that = {
+
+      assignButtons: function() {
+        $('.share-fb').on('click',that.postToFacebook)
+        $('.share-twtr').on('click',that.postToTwitter)
+        $('#share-email').on('click',that.emailLink)
+        $('#share-gpls').on('click',that.postToGooglePlus)
+        $('#share-lin').on('click',that.postToLinkedIn)
+      },
+      
+      postToFacebook: function() {
+        event.preventDefault();
+        var data = shareData();
+        data.title = $(this.parentNode).attr("data-chart") !== undefined ? data.titles[$(this.parentNode).attr("data-chart")] : data.titles.default;
+        data.image = $(this.parentNode).attr("data-chart") !== undefined ? data.images[$(this.parentNode).attr("data-chart")] : data.images.default;
+        var obj = {
+          app_id: "174248889578740",
+          method: "feed",
+          // name: data.longTitle,
+          name: data.title,
+          link: data.url,
+          picture: window.location.protocol + "//" + 
+            window.location.host +
+            window.location.pathname.split("/").slice(0,-1).join("/") +
+            data.image,
+          description: data.description
+        };
+        window.parent.FB.ui(obj, function(response) {
+          track("Facebook");
+        });
+        // pymChild.sendMessage("shareFB", JSON.stringify(obj));
+      },
+      
+      centerPopup: function(width, height) {
+        var wLeft = window.parent.screenLeft ? window.screenLeft : window.screenX;
+        var wTop = window.parent.screenTop ? window.screenTop : window.screenY;
+        var left = wLeft + (window.parent.innerWidth / 2) - (width / 2);
+        var top = wTop + (window.parent.innerHeight / 2) - (height / 2);
+
+        // console.log(window.parent.location.hash);
+        return 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
+      },
+      
+      postToTwitter: function() {
+        event.preventDefault();
+        var data = shareData();
+        data.title = $(this.parentNode).attr("data-chart") !== undefined ? data.titles[$(this.parentNode).attr("data-chart")] : data.titles.default;
+        var tweetUrl = "https://twitter.com/share?url=" + encodeURIComponent(data.url) + "&text=" + encodeURIComponent(data.preTitle + " " + data.title);
+        var opts = that.centerPopup(500, 300) + "scrollbars=1";
+        track("Twitter");
+        // console.log(window.parent.location.hash);
+        // window.parent.location.hash = "ECSS-chart";
+        // window.hash = "ECSS-chart";
+        // document.getElementById('ECSS-chart').scrollIntoView();
+        // console.log(window.parent.location.hash);
+        window.parent.open(tweetUrl, 'twitter', opts);
+      },
+      
+      // emailLink: function() {
+      //   var data = shareData();
+      //   var mailto = "mailto:?subject=" + encodeURIComponent(data.longTitle) + "&body=" + encodeURIComponent(data.description + "\n\n" + window.location.href);
+      //   track('Email');
+      //   window.location.href = mailto;
+      // },
+      
+      // postToGooglePlus: function() {
+      //   var url = encodeURIComponent(window.location.href);
+      //   var gPlusUrl ="https://plus.google.com/share?url={" + url + "}"; 
+      //   track('Google');
+      //   var opts = that.centerPopup(800, 480) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+      //   window.open(gPlusUrl, '', opts);
+      // },
+      
+      // postToLinkedIn: function() {
+      //   // This doesn't work when served up with a port
+      //   var data = shareData();
+      //   var url = encodeURIComponent(window.location.href);
+      //   var linkedInUrl ="http://www.linkedin.com/shareArticle?mini=true&url=" + url
+      //     + "&title=" + encodeURIComponent(data.longTitle) + "&summary=" + encodeURIComponent(data.description); 
+      //   track('LinkedIn');
+      //   var opts = that.centerPopup(880, 460) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+      //   window.open(linkedInUrl, '', opts);
+      // }
+    };
+
+    that.assignButtons()
+    return that;
+  };
+
+  var sharing = new Share();
+
+  pymChild.sendHeight();
