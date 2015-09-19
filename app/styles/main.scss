@@ -50,6 +50,7 @@ $brightyellow: #fff600;
 $brightblue: #00adff;
 $brightgreen: #65f600;
 $brightaqua: #04fffd;
+$lightaqua: #b5fffe;
 
 
 // $halfred: rgba(255, 0, 0, .5);
@@ -1015,6 +1016,10 @@ h3.timeline-section-header {
     stroke: $gray;
   }
 
+  .projection.payroll-est {
+    fill: $lightaqua;
+  }
+
 
 
   .selected .total,
@@ -1033,6 +1038,13 @@ h3.timeline-section-header {
     // opacity: .4;
   }
 
+  .selected .payroll,
+  .selected .payroll-est {
+    fill: $brightaqua;
+    opacity: 1;
+    // opacity: .4;
+  }
+
   .initial .total,
   .initial .tot-est,
   .initial .annual-est,
@@ -1046,6 +1058,14 @@ h3.timeline-section-header {
     // fill: $turquoise;
     // opacity: .4;
     fill: $brightyellow;
+    opacity: .8;
+  }
+
+  .initial .payroll,
+  .initial .payroll-est {
+    // fill: $turquoise;
+    // opacity: .4;
+    fill: $brightgreen;
     opacity: .8;
   }
 }

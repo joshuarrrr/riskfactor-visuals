@@ -258,7 +258,7 @@ d3.chart("MarginChart").extend("FailureChart", {
           return this.selectAll("clipPath.project-clip")
             .data(data
               .filter(function(d,i,arr) {
-                return i === 0 || arr[i].projections[0].area[1].y1 > arr[i - 1].projections[0].area[1].y1 || arr[i].projections[0].area[1].x > arr[i - 1].projections[0].area[1].x;
+                return !d.launch && (i === 0 || arr[i].projections[0].area[1].y1 > arr[i - 1].projections[0].area[1].y1 || arr[i].projections[0].area[1].x > arr[i - 1].projections[0].area[1].x);
               })
               , function(d,i) { return i; });
         },
@@ -335,7 +335,7 @@ d3.chart("MarginChart").extend("FailureChart", {
           return this.selectAll("g")
             .data(data
               .filter(function(d,i,arr) {
-                return i === 0 || arr[i].projections[0].area[1].y1 > arr[i - 1].projections[0].area[1].y1 || arr[i].projections[0].area[1].x > arr[i - 1].projections[0].area[1].x;
+                return !d.launch && (i === 0 || arr[i].projections[0].area[1].y1 > arr[i - 1].projections[0].area[1].y1 || arr[i].projections[0].area[1].x > arr[i - 1].projections[0].area[1].x);
               })
               .reverse(), function(d,i) { return i; });
         },
@@ -1017,7 +1017,7 @@ d3.csv("data/estimates.csv", function (data) {
     // { "name": "Total Committed Spending", "class": "spent" },
     // { "name": "Total Life Cycle Cost", "class": "tot-est" },
     { "name": "Estimated Cost to Develop", "class": "dev-est" },
-    { "name": "Payroll Development Cost", "class": "dev-est" },
+    { "name": "Payroll Development Cost", "class": "payroll-est" },
     // { "name": "Annual Maintenance & Operational Costs", "class": "annual-est" },
     // { "name": "Maintenance & Operational Costs", "class": "maint-est" }
   ];
