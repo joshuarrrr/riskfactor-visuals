@@ -1535,6 +1535,7 @@ var Share = function() {
         // description: $("meta[property='og:description']").attr('content')
         titles: {
           "default": "Overcomplexifying, Underdelivering",
+          "chart": "Overcomplexifying, Underdelivering",
           "ECSS-chart": "The ECSS Debacle: How many systems are we replacing anyway?"
         },
         preTitle: "Lessons from a Decade of IT Failures:",
@@ -1543,6 +1544,7 @@ var Share = function() {
             window.location.pathname,
         images: {
           "default": "/images/complexity-chart.png",
+          "chart": "/images/complexity-chart.png",
           "ECSS-chart": "/images/ECSS-chart.png"
         },
         description: "Trying to replace multiple IT systems with one can lead to none"
