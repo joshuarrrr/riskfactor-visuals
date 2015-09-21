@@ -472,6 +472,8 @@ d3.chart("MarginChart").extend("FailureChart", {
               .attr("class", function(d) { console.log(d); return "projection " + d.class; })
               .attr("d", function(d,i) { return area(d.area); });
 
+            console.log(projections);
+
             // projections
             //   .transition()
             //   .duration(chart.duration())
@@ -1015,7 +1017,7 @@ d3.csv("data/estimates.csv", function (data) {
   var potentialSeries = [
     { "name": "Monies Spent to Date", "class": "spent" },
     // { "name": "Total Committed Spending", "class": "spent" },
-    // { "name": "Total Life Cycle Cost", "class": "tot-est" },
+    { "name": "Total Life-Cycle Cost", "class": "tot-est" },
     { "name": "Estimated Cost to Develop", "class": "dev-est" },
     { "name": "Payroll Development Cost", "class": "payroll-est" },
     // { "name": "Annual Maintenance & Operational Costs", "class": "annual-est" },
@@ -1044,6 +1046,7 @@ d3.csv("data/estimates.csv", function (data) {
 
     var prevValue = {};
     var prevScale = {};
+    var prevEndDate;
     
     potentialSeries.forEach (function (series) {
       prevValue[series.name] = null;
@@ -1078,11 +1081,21 @@ d3.csv("data/estimates.csv", function (data) {
         baseline = data["Monies Spent to Date"];
       }
       else if (prevScale[key]) {
-        baseline = prevScale[key](dateObject);
+        if (dateObject > prevEndDate) {
+          baseline = prevScale[key](prevEndDate);
+        }
+        else {
+          baseline = prevScale[key](dateObject);
+        }
+      }
+      else if (d3.keys(prevScale).length > 0) {
+        baseline = prevScale[d3.keys(prevScale)[0]](dateObject);
       }
       else {
         baseline = 0;
       }
+
+      prevEndDate = dateFormat.parse(data["Estimated Schedule"].replace(/T.*Z$/,""));
       return baseline;
     }
 
@@ -1102,7 +1115,7 @@ d3.csv("data/estimates.csv", function (data) {
       var schedObject = new Date(milestone["Estimated Schedule"]);
 
       var estimated = parseCostString(milestone,"Estimated Cost to Develop");
-      var total = parseCostString(milestone,"Total Life Cycle Cost");
+      var total = parseCostString(milestone,"Total Life-Cycle Cost");
       var annual = parseCostString(milestone,"Annual Maintenance & Operational Costs");
       var spent = parseCostString(milestone,"Monies Spent to Date");
 
@@ -1153,7 +1166,12 @@ d3.csv("data/estimates.csv", function (data) {
 
         "projections" :  potentialSeries.filter(function(entry) {
             // return entry.class === "dev-est" && milestone[entry.name] !== "";
-            return entry.class !== "spent" && milestone[entry.name] !== "";
+            if (milestone["Estimated Cost to Develop"] === "") {
+              return entry.name === "Total Life-Cycle Cost";
+            }
+            else {
+              return entry.class !== "spent" && milestone[entry.name] !== "" && entry.name !== "Total Life-Cycle Cost";
+            }
           })
           .map(function(entry) {
             // var baseline = spent.value !== null ? spent.value : 0;
