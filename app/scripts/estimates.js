@@ -941,17 +941,49 @@ d3.chart("MarginChart").extend("FailureChart", {
       //update x scale domain
       chart.mindate = formatString.parse(data[0].dateOriginal);
       chart.maxdate = d3.max(data, function (d) {
-          return d3.max([formatString.parse(d.schedOriginal),formatString.parse(d.dateOriginal)]);
-        });
-
-      chart.maxCost = d3.max(data, function (d) {
         var seriesMaxes = []; 
-        chart.yData().forEach(function (series) {
-          seriesMaxes.push(d[series.name]);
+
+        chart.data.forEach(function (milestone) {
+          var milestoneMaxes = [];
+
+          milestone.projections.forEach(function (projection) {
+            milestoneMaxes.push(projection.area[1].x);
+          });
+          console.log(milestoneMaxes);
+
+          seriesMaxes.push(d3.max(milestoneMaxes));
         });
+        console.log(seriesMaxes);
         console.log(d3.max(seriesMaxes));
         return d3.max(seriesMaxes);
-        // return d[chart.yData()[2]] || d[chart.yData()[1]];
+          // return d3.max([formatString.parse(d.schedOriginal),formatString.parse(d.dateOriginal)]);
+      });
+
+      // console.log(chart.yData());
+
+      chart.maxCost = d3.max(data, function (d) {  
+        var seriesMaxes = []; 
+
+        chart.data.forEach(function (milestone) {
+          var milestoneMaxes = [];
+
+          milestone.projections.forEach(function (projection) {
+            milestoneMaxes.push(projection.area[1].y1);
+          });
+          console.log(milestoneMaxes);
+
+          seriesMaxes.push(d3.max(milestoneMaxes));
+        });
+        console.log(seriesMaxes);
+        console.log(d3.max(seriesMaxes));
+        return d3.max(seriesMaxes);
+
+        // chart.yData().forEach(function (series) {
+        //   seriesMaxes.push(d[series.name]);
+        // });
+        // console.log(d3.max(seriesMaxes));
+        // return d3.max(seriesMaxes);
+        // // return d[chart.yData()[2]] || d[chart.yData()[1]];
       });
 
       chart.xScale.domain([chart.mindate,chart.maxdate]);
@@ -1108,7 +1140,12 @@ d3.csv("data/estimates.csv", function (data) {
     d.mindate = dateFormat.parse(d.values[0].date.replace(/T.*Z$/,""));
     console.log(d.mindate);
 
-    d.milestones = d.values.map(function (milestone) { 
+    console.log(d.values);
+    d.nestedValues = d3.nest().key(function(d) { return d.date; }).entries(d.values);
+    console.log(d.nestedValues);
+
+    d.milestones = d.nestedValues.map(function (nestedDate) { 
+      milestone = nestedDate.values[0];
       var dateFormat = d3.time.format("%Y-%m-%d");
 
       var dateObject = dateFormat.parse(milestone.date.replace(/T.*Z$/,""));
@@ -1164,7 +1201,8 @@ d3.csv("data/estimates.csv", function (data) {
           }
         ],
 
-        "projections" :  potentialSeries.filter(function(entry) {
+        "projections" :  (function() {
+          var projections = potentialSeries.filter(function(entry) {
             // return entry.class === "dev-est" && milestone[entry.name] !== "";
             if (milestone["Estimated Cost to Develop"] === "") {
               return entry.name === "Total Life-Cycle Cost";
@@ -1174,29 +1212,49 @@ d3.csv("data/estimates.csv", function (data) {
             }
           })
           .map(function(entry) {
-            // var baseline = spent.value !== null ? spent.value : 0;
-            var baseline = findBaseline(milestone, entry.name);
-            console.log(baseline);
-            // var baseline = 0;
-            // var start = spent.value !== null ? dateObject : d.mindate;
-            var start = dateObject;
-            var endValue = parseCostString(milestone, entry.name).value;
-            var newScale = d3.time.scale().range([baseline,endValue]).domain([start,schedObject]);
+            function calcProjection (milestone) {
+              var schedObject = new Date(milestone["Estimated Schedule"]);
+              // var baseline = spent.value !== null ? spent.value : 0;
+              var baseline = findBaseline(milestone, entry.name);
+              console.log(baseline);
+              // var baseline = 0;
+              // var start = spent.value !== null ? dateObject : d.mindate;
+              var start = dateObject;
+              var endValue = parseCostString(milestone, entry.name).value;
+              var newScale = d3.time.scale().range([baseline,endValue]).domain([start,schedObject]);
 
-            console.log(endValue);
-            console.log(newScale(schedObject));
+              console.log(endValue);
+              console.log(newScale(schedObject));
 
-            prevScale[entry.name] = newScale;
-            return {
-                "name": entry.name,
-                "class": entry.class,
-                "scale": newScale,
-                "area": [
-                  { "x": start, "y1": baseline, "y0": 0 },
-                  { "x": schedObject, "y1": endValue, "y0": 0 }
-                ]
-              };
-          })
+              prevScale[entry.name] = newScale;
+              return {
+                  "name": entry.name,
+                  "class": entry.class,
+                  "scale": newScale,
+                  "area": [
+                    { "x": start, "y1": baseline, "y0": 0 },
+                    { "x": schedObject, "y1": endValue, "y0": 0 }
+                  ]
+                };
+            }
+
+            if ( nestedDate.values.length > 1 ) {
+              var temps = [];
+              nestedDate.values.forEach(function (milestone) { temps.push(calcProjection(milestone)); });
+              console.log(temps);
+              return temps;
+            }
+
+            else {
+              return calcProjection(milestone);
+            }
+          });
+          console.log(projections);
+          if ( Array.isArray(projections[0]) ) {
+            return projections[0].sort(function(a,b){return b.area[1].y1 - a.area[1].y1;});
+          }
+          return projections;
+        })()
 
       };
 
