@@ -123,7 +123,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
               .attr("text-anchor", "middle")
               .attr("dy", "3em")
               .attr("dx", "0")
-              .text("Number of Legacy Systems to Replace");
+              .text("Number of legacy systems to replace");
         }
 
         return selection;
@@ -195,7 +195,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
                 .attr("dy", 0)
                 .attr("dx", 0)
                 .attr("text-anchor", "middle")
-                .text("Number of Legacy Systems to Replace");
+                .text("Number of legacy systems to replace");
         }
 
         return selection;
