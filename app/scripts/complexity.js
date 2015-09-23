@@ -1281,9 +1281,17 @@ d3.csv("data/complexity.csv", function (data) {
   var width = parWidth - margins.left - margins.right;
   var height = width * 9 / 16;
 
+  // //set dimensions for facebook image export
+  // margins = {top: 20, bottom: 50, right: 20, left: 40};
   // width = 620 - margins.left - margins.right;
-  // height = (width / 1.91 ) - 37.5;
+  // height = 325 - margins.top - margins.bottom;
 
+  /*
+  Also, set these properties:
+    svg: background-color: white;
+    .legend-base: translate(50, 220)
+    .y .axis-label: transform: translate(95px,37px);
+  */
 
   data = d3.nest()
     .key(function(d) { return d.project; })
@@ -1444,8 +1452,10 @@ d3.csv("data/ECSS-systems.csv", function (data) {
   var width = parWidth - margins.left - margins.right;
   var height = width * 9 / 16;
 
+  // //set dimensions for facebook image export
+  // margins = {top: 20, bottom: 30, right: 20, left: 80};
   // width = 620 - margins.left - margins.right;
-  // height = (width / 1.91);
+  // height = 325 - margins.top - margins.bottom;
 
   var formatString = "%m/%e/%y";
   var format = d3.time.format("%B 20%y");
@@ -1543,9 +1553,9 @@ var Share = function() {
             window.location.host +
             window.location.pathname,
         images: {
-          "default": "/images/complexity-chart.png",
-          "chart": "/images/complexity-chart.png",
-          "ECSS-chart": "/images/ECSS-chart.png"
+          "default": "/images/complexity-chart-fb.png",
+          "chart": "/images/complexity-chart-fb.png",
+          "ECSS-chart": "/images/ECSS-chart-fb.png"
         },
         description: "Trying to replace multiple IT systems with one can lead to none"
       };
