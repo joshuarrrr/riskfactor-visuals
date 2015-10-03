@@ -205,6 +205,11 @@ $border1: $black 2px solid;
   //   page-break-before: avoid;
   //   page-break-inside: avoid;
   // }
+
+  .long-description {
+    float: none!important;
+    width: 100%!important;
+  }
 }
 
 
@@ -897,6 +902,14 @@ h3.timeline-section-header {
 //   min-height: 392px;
 // }
 
+:not(.mobile-view) .complexity-chart {
+  overflow: auto;
+
+  svg {
+    float: left;
+  }
+}
+
 .complexity-chart .axis-label {
   font-size: 1.2em;
 }
@@ -954,8 +967,27 @@ h3.timeline-section-header {
   float: right;
   width: 300px;
 
+  h3 {
+    color: $black;
+    font-family: 'Theinhardt-Regular', Helvetica, Arial, sans-serif;
+    font-size: 1.2em;
+    margin-bottom: 14px;
+    margin-top: 0;
+  }
+
   div {
     font-size: 1.1em;
+  }
+}
+
+.mobile-view .long-description,
+.print-view .long-description {
+  float: none;
+  margin-bottom: 2em;
+  width: auto;
+
+  h3 {
+    display: none;
   }
 }
 

@@ -1,4 +1,4 @@
-/*global d3, pym, ga */
+/*global d3, pym, ga, Modernizr */
 var pymChild = new pym.Child();
 
 d3.chart("MarginChart").extend("SystemsChart", {
@@ -1335,6 +1335,14 @@ d3.csv("data/complexity.csv", function (data) {
   // container.append("div")
   //   .attr("class", "circle-info-box");
 
+  var longDesc = container.append("div")
+    .classed("long-description", true);
+
+  longDesc.append("h3")
+    .text("About");
+
+  longDesc.append("div");
+
   var systems = container
     .append("svg")
     .chart("SystemsChart")
@@ -1346,6 +1354,8 @@ d3.csv("data/complexity.csv", function (data) {
     .xData("systems to replace")
     .yData("cost")
     .dataLabel("milestone");
+
+  longDesc.node().parentNode.appendChild(longDesc.node());
 
   if ( systems.mode() === "mobile" ) {
     var mobMargins = margins;
@@ -1367,6 +1377,8 @@ d3.csv("data/complexity.csv", function (data) {
   }
 
   if ( Modernizr.mq("only print") ) {
+    d3.select("body").classed("print-view", true);
+
     systems
       .width(parWidth)
       .height(height)
@@ -1432,7 +1444,6 @@ d3.csv("data/complexity.csv", function (data) {
       return a.milestones[a.milestones.length - 1].cost - b.milestones[b.milestones.length - 1].cost;
     }
   ));
-
   
   pymChild.sendHeight();
 
