@@ -1039,7 +1039,9 @@ h3.timeline-section-header {
   }
 
   .selected .payroll,
-  .selected .payroll-est {
+  .selected .payroll-est,
+  .selected .dev:not(:first-child):last-child,
+  .selected .dev-est:not(:first-child):last-child {
     fill: $brightaqua;
     opacity: 1;
     // opacity: .4;
@@ -1062,7 +1064,9 @@ h3.timeline-section-header {
   }
 
   .initial .payroll,
-  .initial .payroll-est {
+  .initial .payroll-est,
+  .initial .dev:not(:first-child):last-child,
+  .initial .dev-est:not(:first-child):last-child {
     // fill: $turquoise;
     // opacity: .4;
     fill: $brightgreen;

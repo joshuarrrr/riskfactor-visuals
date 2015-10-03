@@ -279,7 +279,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             var chart = this.chart();
             var selection = this;
 
-            console.log(selection);
+            // console.log(selection);
 
             selection.select("rect")
               .attr("x", function (d) {
@@ -308,7 +308,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             var chart = this.chart();
             var selection = this;
 
-            console.log(selection);
+            // console.log(selection);
 
             selection.select("rect")
               .delay(function() {
@@ -456,7 +456,7 @@ d3.chart("MarginChart").extend("FailureChart", {
               .classed("launch", function(d) { console.log(d.launch); return d.launch; });
 
             var projections = selection.selectAll("path.projection")
-              .data(function(d) { console.log(d.projections); return d.projections;
+              .data(function(d) { return d.projections;
                 // .filter(function (p,i,projections) {
                 //   console.log(projections);
                 //   return i ===0 || projections[i][0].area[1].y1 > projections[i - 1][0].area[1].y1;
@@ -465,14 +465,14 @@ d3.chart("MarginChart").extend("FailureChart", {
               .attr("class", function(d) { return "projection " + d.class; })
               .attr("d", function(d) { return area(d.area); });
 
-            console.log(projections.data());
+            // console.log(projections.data());
 
             projections.enter()
               .append("path")
-              .attr("class", function(d) { console.log(d); return "projection " + d.class; })
+              .attr("class", function(d) { return "projection " + d.class; })
               .attr("d", function(d,i) { return area(d.area); });
 
-            console.log(projections);
+            // console.log(projections);
 
             // projections
             //   .transition()
@@ -494,7 +494,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       //add area labels
       this.layer("arealabels", chart.layers.labelsBase, {
         dataBind: function(data) {
-          console.log(data.slice(-1));
+          // console.log(data.slice(-1));
           return this.selectAll(".area-labels")
             .data(data.slice(-1).filter(function (milestone) {
               return !milestone.launch;
@@ -694,7 +694,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             //   });
 
             var area = d3.svg.area()
-              .x(function(d) { console.log("unique spent"); return chart.xScale(d.dateObject); })
+              .x(function(d) { return chart.xScale(d.dateObject); })
               .y0(chart.height())
               .y1(function(d) { return chart.yScale(d.spent.value); });
 
@@ -748,7 +748,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             labels.selectAll("tspan").remove();
 
             labels.append("tspan")
-              .attr("x", function(d) { console.log(d); return chart.xScale(d.dateObject); })
+              .attr("x", function(d) { return chart.xScale(d.dateObject); })
               .attr("y", function(d) { return chart.yScale(d.spent.value); })
               .attr("dy", "-1em")
               .attr("class", "desc")
@@ -936,7 +936,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       data[0].class = "initial";
       data[data.length - 1].class = "selected";
 
-      console.log(chart.data);
+      // console.log(chart.data);
 
       //update x scale domain
       chart.mindate = formatString.parse(data[0].dateOriginal);
@@ -949,12 +949,12 @@ d3.chart("MarginChart").extend("FailureChart", {
           milestone.projections.forEach(function (projection) {
             milestoneMaxes.push(projection.area[1].x);
           });
-          console.log(milestoneMaxes);
+          // console.log(milestoneMaxes);
 
           seriesMaxes.push(d3.max(milestoneMaxes));
         });
-        console.log(seriesMaxes);
-        console.log(d3.max(seriesMaxes));
+        // console.log(seriesMaxes);
+        // console.log(d3.max(seriesMaxes));
         return d3.max(seriesMaxes);
           // return d3.max([formatString.parse(d.schedOriginal),formatString.parse(d.dateOriginal)]);
       });
@@ -970,12 +970,12 @@ d3.chart("MarginChart").extend("FailureChart", {
           milestone.projections.forEach(function (projection) {
             milestoneMaxes.push(projection.area[1].y1);
           });
-          console.log(milestoneMaxes);
+          // console.log(milestoneMaxes);
 
           seriesMaxes.push(d3.max(milestoneMaxes));
         });
-        console.log(seriesMaxes);
-        console.log(d3.max(seriesMaxes));
+        // console.log(seriesMaxes);
+        // console.log(d3.max(seriesMaxes));
         return d3.max(seriesMaxes);
 
         // chart.yData().forEach(function (series) {
@@ -997,7 +997,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       //   }
       // });
 
-      console.log(data);
+      // console.log(data);
 
       chart.layers.ylabels.select(".y.axis-label text")
         .text(data[0].currency);
@@ -1106,6 +1106,7 @@ d3.csv("data/estimates.csv", function (data) {
       console.log(data);
       console.log(key);
       console.log(prevScale[key]);
+      console.log(prevScale);
       var dateFormat = d3.time.format("%Y-%m-%d");
 
       var dateObject = dateFormat.parse(data.date.replace(/T.*Z$/,""));
@@ -1204,7 +1205,7 @@ d3.csv("data/estimates.csv", function (data) {
         "projections" :  (function() {
           var projections = potentialSeries.filter(function(entry) {
             // return entry.class === "dev-est" && milestone[entry.name] !== "";
-            if (milestone["Estimated Cost to Develop"] === "") {
+            if (milestone["Estimated Cost to Develop"] === "" && milestone[""] === "Payroll Development Cost") {
               return entry.name === "Total Life-Cycle Cost";
             }
             else {
@@ -1212,10 +1213,12 @@ d3.csv("data/estimates.csv", function (data) {
             }
           })
           .map(function(entry) {
-            function calcProjection (milestone) {
+            console.log(entry);
+            function calcProjection (milestone, i) {
+              var i = typeof i !== "undefined" ? i : 0;
               var schedObject = new Date(milestone["Estimated Schedule"]);
               // var baseline = spent.value !== null ? spent.value : 0;
-              var baseline = findBaseline(milestone, entry.name);
+              var baseline = findBaseline(milestone, entry.name + i);
               console.log(baseline);
               // var baseline = 0;
               // var start = spent.value !== null ? dateObject : d.mindate;
@@ -1226,7 +1229,7 @@ d3.csv("data/estimates.csv", function (data) {
               console.log(endValue);
               console.log(newScale(schedObject));
 
-              prevScale[entry.name] = newScale;
+              prevScale[entry.name + i] = newScale;
               return {
                   "name": entry.name,
                   "class": entry.class,
@@ -1240,13 +1243,13 @@ d3.csv("data/estimates.csv", function (data) {
 
             if ( nestedDate.values.length > 1 ) {
               var temps = [];
-              nestedDate.values.forEach(function (milestone) { temps.push(calcProjection(milestone)); });
+              nestedDate.values.forEach(function (milestone, i) { temps.push(calcProjection(milestone, i)); });
               console.log(temps);
               return temps;
             }
 
             else {
-              return calcProjection(milestone);
+              return calcProjection(milestone, 0);
             }
           });
           console.log(projections);
@@ -1312,7 +1315,7 @@ d3.csv("data/estimates.csv", function (data) {
 
   // data.sort(function(a,b){return a.dateObject.getTime() - b.dateObject.getTime();});
 
-  console.log(data);
+  // console.log(data);
 
   var projectSelector = d3.select("#project-selector");
   var gaProjectsViewed = 0;
@@ -1436,7 +1439,7 @@ d3.csv("data/estimates.csv", function (data) {
       currentMilestone = data[currentProjectID].milestones[milestone-1];
 
       failure.draw(data[currentProjectID].milestones.slice(0, milestone));
-      console.log(currentMilestone.formattedDate);
+      // console.log(currentMilestone.formattedDate);
       
       // var notes = d3.select("#notes")
       //   .html("<p><strong>" +
