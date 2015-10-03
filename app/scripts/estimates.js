@@ -1205,7 +1205,7 @@ d3.csv("data/estimates.csv", function (data) {
         "projections" :  (function() {
           var projections = potentialSeries.filter(function(entry) {
             // return entry.class === "dev-est" && milestone[entry.name] !== "";
-            if (milestone["Estimated Cost to Develop"] === "" && milestone[""] === "Payroll Development Cost") {
+            if (milestone["Estimated Cost to Develop"] === "" && milestone["Payroll Development Cost"] === "") {
               return entry.name === "Total Life-Cycle Cost";
             }
             else {
