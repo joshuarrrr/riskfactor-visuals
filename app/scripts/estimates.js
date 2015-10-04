@@ -302,6 +302,15 @@ d3.chart("MarginChart").extend("FailureChart", {
                 // return chart.xScale(d.projections[0].area[0].x);
                 return chart.xScale(d.dateObject);
               });
+
+            selection.filter(function (d,i) {
+              console.log(i);
+              console.log(selection.size() - 1);
+              console.log(d);
+              console.log(i === selection.size() - 1 && (d.projections[0].change !== 0 || d.projections[0].dateChange) && !chart.data[chart.data.length - 1].launch);
+              return i === selection.size() - 1 && (d.projections[0].change !== 0 || d.projections[0].dateChange) && !chart.data[chart.data.length - 1].launch;
+            }).select("rect")
+              .attr("width", 0);
           },
 
           "merge:transition" : function() {
@@ -324,6 +333,15 @@ d3.chart("MarginChart").extend("FailureChart", {
                 return chart.width();
               })
               .attr("class", function(d,i) { return i; });
+          },
+
+          "exit" : function() {
+            var chart = this.chart();
+            var selection = this;
+
+            // console.log(selection);
+
+            selection.remove();
           } 
         }
       });
@@ -1096,6 +1114,9 @@ d3.csv("data/estimates.csv", function (data) {
         if (prevValue[key] > 0) {
           cost.change = data[key] - prevValue[key];
         }
+        else if (key === "Estimated Cost to Develop" && cost.value > prevValue["Total Life-Cycle Cost"]) {
+          cost.change = cost.value - prevValue["Total Life-Cycle Cost"];
+        }
         prevValue[key] = +data[key];
       }
       return cost;
@@ -1215,15 +1236,17 @@ d3.csv("data/estimates.csv", function (data) {
           .map(function(entry) {
             console.log(entry);
             function calcProjection (milestone, i) {
-              var i = typeof i !== "undefined" ? i : 0;
+              i = typeof i !== "undefined" ? i : 0;
               var schedObject = new Date(milestone["Estimated Schedule"]);
+              var dateChange = prevEndDate ? schedObject - prevEndDate : null;
               // var baseline = spent.value !== null ? spent.value : 0;
               var baseline = findBaseline(milestone, entry.name + i);
               console.log(baseline);
               // var baseline = 0;
               // var start = spent.value !== null ? dateObject : d.mindate;
               var start = dateObject;
-              var endValue = parseCostString(milestone, entry.name).value;
+              var end = parseCostString(milestone, entry.name);
+              var endValue = end.value;
               var newScale = d3.time.scale().range([baseline,endValue]).domain([start,schedObject]);
 
               console.log(endValue);
@@ -1234,6 +1257,8 @@ d3.csv("data/estimates.csv", function (data) {
                   "name": entry.name,
                   "class": entry.class,
                   "scale": newScale,
+                  "change": end.change,
+                  "dateChange": dateChange,
                   "area": [
                     { "x": start, "y1": baseline, "y0": 0 },
                     { "x": schedObject, "y1": endValue, "y0": 0 }
