@@ -1065,13 +1065,13 @@ d3.csv("data/estimates.csv", function (data) {
   var formatString = d3.time.format("%b %Y");
 
   var potentialSeries = [
-    { "name": "Monies Spent to Date", "class": "spent" },
-    // { "name": "Total Committed Spending", "class": "spent" },
-    { "name": "Total Life-Cycle Cost", "class": "tot-est" },
-    { "name": "Estimated Cost to Develop", "class": "dev-est" },
-    { "name": "Payroll Development Cost", "class": "payroll-est" },
-    // { "name": "Annual Maintenance & Operational Costs", "class": "annual-est" },
-    // { "name": "Maintenance & Operational Costs", "class": "maint-est" }
+    { "name": "Monies spent to date", "class": "spent" },
+    // { "name": "Total committed spending", "class": "spent" },
+    { "name": "Total life-cycle cost", "class": "tot-est" },
+    { "name": "Estimated cost to develop", "class": "dev-est" },
+    { "name": "Payroll development cost", "class": "payroll-est" },
+    // { "name": "Annual maintenance & operational costs", "class": "annual-est" },
+    // { "name": "Maintenance & operational costs", "class": "maint-est" }
   ];
 
   data = d3.nest()
@@ -1082,10 +1082,10 @@ d3.csv("data/estimates.csv", function (data) {
 
   data.forEach(function (d) {
     // var series = [
-    //   "Estimated Cost to Develop",
-    //   "Total Life Cycle Cost",
-    //   "Annual Maintenance & Operational Costs",
-    //   "Monies Spent to Date"
+    //   "Estimated cost to develop",
+    //   "Total life-cycle cost",
+    //   "Annual maintenance & operational costs",
+    //   "Monies spent to date"
     //   ];
 
     // series.forEach(function(potentialSeries) {
@@ -1114,8 +1114,8 @@ d3.csv("data/estimates.csv", function (data) {
         if (prevValue[key] > 0) {
           cost.change = data[key] - prevValue[key];
         }
-        else if (key === "Estimated Cost to Develop" && cost.value > prevValue["Total Life-Cycle Cost"]) {
-          cost.change = cost.value - prevValue["Total Life-Cycle Cost"];
+        else if (key === "Estimated cost to develop" && cost.value > prevValue["Total life-cycle cost"]) {
+          cost.change = cost.value - prevValue["Total life-cycle cost"];
         }
         prevValue[key] = +data[key];
       }
@@ -1131,8 +1131,8 @@ d3.csv("data/estimates.csv", function (data) {
       var dateFormat = d3.time.format("%Y-%m-%d");
 
       var dateObject = dateFormat.parse(data.date.replace(/T.*Z$/,""));
-      if ( data["Monies Spent to Date"] > 0 ) {
-        baseline = data["Monies Spent to Date"];
+      if ( data["Monies spent to date"] > 0 ) {
+        baseline = data["Monies spent to date"];
       }
       else if (prevScale[key]) {
         if (dateObject > prevEndDate) {
@@ -1149,7 +1149,7 @@ d3.csv("data/estimates.csv", function (data) {
         baseline = 0;
       }
 
-      prevEndDate = dateFormat.parse(data["Estimated Schedule"].replace(/T.*Z$/,""));
+      prevEndDate = dateFormat.parse(data["Estimated schedule"].replace(/T.*Z$/,""));
       return baseline;
     }
 
@@ -1171,12 +1171,12 @@ d3.csv("data/estimates.csv", function (data) {
       var dateFormat = d3.time.format("%Y-%m-%d");
 
       var dateObject = dateFormat.parse(milestone.date.replace(/T.*Z$/,""));
-      var schedObject = new Date(milestone["Estimated Schedule"]);
+      var schedObject = new Date(milestone["Estimated schedule"]);
 
-      var estimated = parseCostString(milestone,"Estimated Cost to Develop");
-      var total = parseCostString(milestone,"Total Life-Cycle Cost");
-      var annual = parseCostString(milestone,"Annual Maintenance & Operational Costs");
-      var spent = parseCostString(milestone,"Monies Spent to Date");
+      var estimated = parseCostString(milestone,"Estimated cost to develop");
+      var total = parseCostString(milestone,"Total life-cycle cost");
+      var annual = parseCostString(milestone,"Annual maintenance & operational costs");
+      var spent = parseCostString(milestone,"Monies spent to date");
 
       // console.log(estimated);
       // console.log(total);
@@ -1192,11 +1192,11 @@ d3.csv("data/estimates.csv", function (data) {
 
         "extrapolated": milestone.extrapolated,
 
-        "schedOriginal": milestone["Estimated Schedule"],
+        "schedOriginal": milestone["Estimated schedule"],
         "formattedSched": formatString(schedObject),
         "schedObject": schedObject,
 
-        "launch" : milestone.date === milestone["Estimated Schedule"],
+        "launch" : milestone.date === milestone["Estimated schedule"],
 
         "headline" : milestone.Headline,
         "notes": milestone.Notes,
@@ -1226,18 +1226,18 @@ d3.csv("data/estimates.csv", function (data) {
         "projections" :  (function() {
           var projections = potentialSeries.filter(function(entry) {
             // return entry.class === "dev-est" && milestone[entry.name] !== "";
-            if (milestone["Estimated Cost to Develop"] === "" && milestone["Payroll Development Cost"] === "") {
-              return entry.name === "Total Life-Cycle Cost";
+            if (milestone["Estimated cost to develop"] === "" && milestone["Payroll development cost"] === "") {
+              return entry.name === "Total life-cycle cost";
             }
             else {
-              return entry.class !== "spent" && milestone[entry.name] !== "" && entry.name !== "Total Life-Cycle Cost";
+              return entry.class !== "spent" && milestone[entry.name] !== "" && entry.name !== "Total life-cycle cost";
             }
           })
           .map(function(entry) {
             console.log(entry);
             function calcProjection (milestone, i) {
               i = typeof i !== "undefined" ? i : 0;
-              var schedObject = new Date(milestone["Estimated Schedule"]);
+              var schedObject = new Date(milestone["Estimated schedule"]);
               var dateChange = prevEndDate ? schedObject - prevEndDate : null;
               // var baseline = spent.value !== null ? spent.value : 0;
               var baseline = findBaseline(milestone, entry.name + i);
