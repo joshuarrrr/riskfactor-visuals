@@ -22,6 +22,7 @@ body {
 // CUSTOM //
 ////////////
 $spectrumblue: #03a6e3;
+$lighterspectrumblue: #4bccfd;
 
 $black: rgb(0, 0, 0);
 $white: rgb(255, 255, 255);
@@ -554,7 +555,7 @@ h3.timeline-section-header {
       text-transform: none;
 
       &:not(:last-child) {
-        margin-right: 10px;
+        margin-right: 5px;
         &:after {
           content: ',';
         }
@@ -566,13 +567,13 @@ h3.timeline-section-header {
 
     .conversion {
       // display: block;
-      font-size: .7em;
+      font-size: .8em;
     }
 
     .current {
       color: $impact;
       font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
-      font-size: 2em;
+      // font-size: 2em;
       margin: .7em 0;
     }
 
@@ -732,22 +733,27 @@ h3.timeline-section-header {
 
 .times {
   display: inline-block;
-  margin-bottom: .5em;
-  margin-right: 10px;
+  margin: 3px 5px 3px 0;
   vertical-align: bottom;
 
   a.button {
+    border-radius: 5px;
+    color: $black !important;
     display: inline;
+    font-family: "Theinhardt-Regular", sans-serif;
     font-size: 13px;
-    padding: .5em .7em;
+    margin-right: 5px;
+    padding: .3em .5em;
   }
 
   .date {
     background-color: $lightgray;
+    border-radius: 5px;
     color: $black;
     display: inline;
     // min-width: 115px;
-    padding: .5em .7em;
+    margin-right: 5px;
+    padding: .3em .5em;
     // text-align: center;
   }
 }
@@ -1350,6 +1356,10 @@ h3.timeline-section-header {
 
 a.button {
   @include button-gradient($spectrumblue);
+}
+
+.times a.button {
+  @include button-gradient($lighterspectrumblue);
 }
 
 .button.inactive {

@@ -1744,7 +1744,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           selection.append("span")
             .attr("class", "small-instructs")
             .classed("hidden", function() { return chart.mode !== "mobile" && chart.gaDatapointsClicked > 1; })
-            .text("↓ Use these buttons to step through the timeline chronologically");
+            .text("▼ Use these buttons to step through the timeline chronologically");
 
           var timeContainer = selection.append("div")
             .classed("times", true);
@@ -1752,7 +1752,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           timeContainer.append("a")
             .attr("class", "prev button")
             .attr("href", "#")
-            .html("←&nbsp;Earlier");
+            .html("◂&nbsp;Earlier");
 
           timeContainer.append("time")
             .attr("class", "date")
@@ -1761,7 +1761,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           timeContainer.append("a")
             .attr("class", "next button")
             .attr("href", "#")
-            .html("Later&nbsp;→");
+            .html("Later&nbsp;▸");
 
           selection.append("div")
             .attr("class", "fail-stats")
