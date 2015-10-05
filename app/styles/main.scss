@@ -355,7 +355,8 @@ p.instructions,
 }
 
 .small-instructs {
-  display: block;
+  // display: block;
+  display: none;
   font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
   font-size: .9em;
   font-style: italic;
