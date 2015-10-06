@@ -514,8 +514,8 @@ d3.chart("MarginChart").extend("FailureChart", {
         dataBind: function(data) {
           // console.log(data.slice(-1));
           return this.selectAll(".area-labels")
-            .data(data.slice(-1).filter(function (milestone) {
-              return !milestone.launch;
+            .data(data.filter(function (milestone, i) {
+              return (i === 0 || i === data.length - 1) && !milestone.launch;
             }));
         },
 
@@ -622,8 +622,12 @@ d3.chart("MarginChart").extend("FailureChart", {
             var selection = this;
 
             selection.selectAll(".desc")
-              .delay(function() {
-                if (chart.data[chart.data.length - 1].spent.value > 0) {
+              .delay(function(d,i) {
+                console.log(d);
+                if ((d.change === 0 && d.dateChange === 0)) {
+                  return 0;
+                }
+                else if (chart.data[chart.data.length - 1].spent.value > 0) {
                   return chart.duration()*6;
                 }
                 else {
@@ -633,8 +637,11 @@ d3.chart("MarginChart").extend("FailureChart", {
               .text(function(d) { return d.name + ":"; });
 
             selection.selectAll(".num")
-              .delay(function() {
-                if (chart.data[chart.data.length - 1].spent.value > 0) {
+              .delay(function(d, i) {
+                if ((d.change === 0 && d.dateChange === 0)) {
+                  return 0;
+                }
+                else if (chart.data[chart.data.length - 1].spent.value > 0) {
                   return chart.duration()*6;
                 }
                 else {
@@ -954,7 +961,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       data[0].class = "initial";
       data[data.length - 1].class = "selected";
 
-      // console.log(chart.data);
+      console.log(chart.data);
 
       //update x scale domain
       chart.mindate = formatString.parse(data[0].dateOriginal);
@@ -1107,6 +1114,7 @@ d3.csv("data/estimates.csv", function (data) {
       // console.log(data[key]);
       // console.log(prevValue);
       if (data[key] === "") {
+        // console.log("no data");
         cost = {"value":prevValue[key], "change": null};
       }
       else {
@@ -1119,6 +1127,7 @@ d3.csv("data/estimates.csv", function (data) {
         }
         prevValue[key] = +data[key];
       }
+      console.log(cost);
       return cost;
     }
 
@@ -1176,12 +1185,25 @@ d3.csv("data/estimates.csv", function (data) {
       var estimated = parseCostString(milestone,"Estimated cost to develop");
       var total = parseCostString(milestone,"Total life-cycle cost");
       var annual = parseCostString(milestone,"Annual maintenance & operational costs");
-      var spent = parseCostString(milestone,"Monies spent to date");
+      var spent;
+      spent = parseCostString(milestone,"Monies spent to date");
+
+      // console.log(nestedDate.values);
+
+      // if ( nestedDate.values.length === 1 ) {
+      //   spent = parseCostString(milestone,"Monies spent to date");
+      // }
+      // else {
+      //   spent = [];
+      //   for( var i=0; i < nestedDate.values.length - 1; i++ ){
+      //     spent.push(parseCostString(nestedDate.values[i], "Monies spent to date" + i));
+      //   }
+      // }
 
       // console.log(estimated);
       // console.log(total);
       // console.log(annual);
-      // console.log(spent);
+      console.log(spent);
       var datapoint = {
         "currency": currency,
         "Program": d.Program,
@@ -1245,11 +1267,25 @@ d3.csv("data/estimates.csv", function (data) {
               // var baseline = 0;
               // var start = spent.value !== null ? dateObject : d.mindate;
               var start = dateObject;
+              // prevValue = {};
               var end = parseCostString(milestone, entry.name);
+
+              // var end;
+
+              // if ( entry.name = "Estimated cost to develop" ) {
+              //   end = estimated;
+              // }
+              // else if ( entry.name = "Total life-cycle cost" ) {
+              //   end = total;
+              // }
+              // else if ( entry.name = "Payroll development cost") {
+              //   end = parseCostString(milestone, entry.name);
+              // }
+
               var endValue = end.value;
               var newScale = d3.time.scale().range([baseline,endValue]).domain([start,schedObject]);
 
-              console.log(endValue);
+              console.log(end);
               console.log(newScale(schedObject));
 
               prevScale[entry.name + i] = newScale;
@@ -1262,7 +1298,8 @@ d3.csv("data/estimates.csv", function (data) {
                   "area": [
                     { "x": start, "y1": baseline, "y0": 0 },
                     { "x": schedObject, "y1": endValue, "y0": 0 }
-                  ]
+                  ],
+                  "spent": spent
                 };
             }
 
