@@ -571,15 +571,15 @@ d3.chart("MarginChart").extend("FailureChart", {
             labels.selectAll("tspan").remove();
 
             labels.append("tspan")
-              .attr("x", chart.width())
-              .attr("y", function(d) { return chart.yScale(d.area[d.area.length - 1].y1); })
+              .attr("x", function(d) { return chart.xScale(d.area[d.area.length - 1].x) - 2; })
+              .attr("y", function(d) { return chart.yScale(d.area[d.area.length - 1].y1) - 5; })
               .attr("dy", "-1em")
               .attr("class", "desc")
               .text("");
 
             labels.append("tspan")
-              .attr("x", chart.width())
-              .attr("y", function(d) { return chart.yScale(d.area[d.area.length - 1].y1); })
+              .attr("x", function(d) { return chart.xScale(d.area[d.area.length - 1].x) - 2; })
+              .attr("y", function(d) { return chart.yScale(d.area[d.area.length - 1].y1) - 5; })
               .attr("dy", 0)
               .attr("class", "num")
               .text("");
@@ -766,15 +766,15 @@ d3.chart("MarginChart").extend("FailureChart", {
             labels.selectAll("tspan").remove();
 
             labels.append("tspan")
-              .attr("x", function(d) { return chart.xScale(d.dateObject); })
-              .attr("y", function(d) { return chart.yScale(d.spent.value); })
+              .attr("x", function(d) { return chart.xScale(d.dateObject) - 2; })
+              .attr("y", function(d) { return chart.yScale(d.spent.value) - 5; })
               .attr("dy", "-1em")
               .attr("class", "desc")
               .text("");
 
             labels.append("tspan")
-              .attr("x", function(d) { return chart.xScale(d.dateObject); })
-              .attr("y", function(d) { return chart.yScale(d.spent.value); })
+              .attr("x", function(d) { return chart.xScale(d.dateObject) - 2; })
+              .attr("y", function(d) { return chart.yScale(d.spent.value) - 5; })
               .attr("dy", 0)
               .attr("class", "num")
               .text("");
@@ -1055,7 +1055,7 @@ d3.csv("data/estimates.csv", function (data) {
   "use strict";
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
-  var margins = {top: 30, bottom: 30, right: 20, left: 100};
+  var margins = {top: 40, bottom: 30, right: 20, left: 100};
   var width = parWidth - margins.left - margins.right;
   var height = width * 3.5 / 8;
 
