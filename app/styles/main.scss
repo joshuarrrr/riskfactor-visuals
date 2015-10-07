@@ -209,7 +209,14 @@ $border1: $black 2px solid;
 
   .long-description {
     float: none!important;
+    margin-bottom: 2em;
     width: 100%!important;
+  }
+
+  .circle-info-box .info-box.replacements-chart {
+    left: 0;
+    top: 0;
+    width: 100%;
   }
 }
 
@@ -1365,4 +1372,8 @@ a.button {
 
 .button.inactive {
   @include button-gradient($medgray);
+}
+
+.article-detail figure {
+    max-width: 100%;
 }
