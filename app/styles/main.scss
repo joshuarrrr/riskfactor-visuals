@@ -1157,6 +1157,11 @@ h3.timeline-section-header {
     margin: 10px 0;
     text-transform: uppercase;
   }
+
+  .failure-hed {
+    margin-bottom: .5em;
+    margin-top: 0;
+  }
 }
 
 .answer>.cause,
@@ -1171,7 +1176,7 @@ h3.timeline-section-header {
   display: block;
 
   &.incorrect .cause {
-    background-color: $impact;
+    border-color: $impact;
   } 
 }
 
@@ -1190,9 +1195,13 @@ h3.timeline-section-header {
 
 .answer>.cause,
 .sumtext {
-  background: $lightgray;
+  // background: $lightgray;
   display: block;
   text-align: center;
+
+  &:hover {
+    background: $lightgray;
+  }
 }
 
 .impact-summary {
@@ -1219,7 +1228,7 @@ h3.timeline-section-header {
 }
 
 .sumtext a.readmore {
-  color: $lightgray !important;
+  color: $green !important;
   display: inline;
   font-size: 1em;
   margin-left: 1em;
@@ -1233,7 +1242,8 @@ h3.timeline-section-header {
 
 .answer.correct .sumtext, 
 .impact-summary.correct {
-  background-color: $green;
+  background-color: $white;
+  border-color: $green;
 }
 
 

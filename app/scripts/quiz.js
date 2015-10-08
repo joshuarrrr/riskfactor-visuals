@@ -135,7 +135,12 @@
       // console.log(answers[0].indexOf(d3.select(randQuestion.parentNode).select(".cause")[0][0]));
 
       questionContainer.html("");
-      questionContainer.append("span")
+
+      questionContainer.append("h3")
+        .classed("failure-hed", true)
+        .text(randQuestion.Headline);
+
+      questionContainer.append("div")
         .classed("effect", true)
         .text(randQuestion["Impact - Raw"]);
 
@@ -173,7 +178,7 @@
 
           for(var i = 0; slice.length < num; i++) {
             if ( i === data.length ) {
-              console.log("break")
+              console.log("break");
               break;
             }
             var match = data[i].cause.toLowerCase().replace(/(a |[^a-z])/g,"");
@@ -243,8 +248,8 @@
             .classed("sumtext", true)
             .text(d.sumtext);
 
-          questionContainer.insert("h3")
-            .text(d.Headline);
+          // questionContainer.insert("h3")
+          //   .text(d.Headline);
 
           // questionContainer.append(questionContainer.select(".effect").remove());
 
@@ -255,8 +260,8 @@
 
           clicked.select(".sumtext").append("br").attr("class", "sources hidden");
 
-          clicked.select(".sumtext").append("span").attr("class", "sources hidden").text("Read More:")
-            .style("color", "#ddd");
+          clicked.select(".sumtext").append("span").attr("class", "sources hidden").text("Read More:");
+            // .style("color", "#ddd");
 
           links.enter().append("a")
             .attr("class", "readmore")
