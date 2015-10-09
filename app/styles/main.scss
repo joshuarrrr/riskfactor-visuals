@@ -1177,7 +1177,12 @@ h3.timeline-section-header {
 
   &.incorrect .cause {
     border-color: $impact;
+    // opacity: .5;
   } 
+
+  &.faded {
+    opacity: .5;
+  }
 }
 
 .causes ul {
@@ -1198,10 +1203,6 @@ h3.timeline-section-header {
   // background: $lightgray;
   display: block;
   text-align: center;
-
-  &:hover {
-    background: $lightgray;
-  }
 }
 
 .impact-summary {
@@ -1220,6 +1221,10 @@ h3.timeline-section-header {
 
 .clickable {
   cursor: pointer;
+
+  .cause:hover {
+    background: $lightgray;
+  }
 }
 
 .sumtext>.cause {
@@ -1244,6 +1249,12 @@ h3.timeline-section-header {
 .impact-summary.correct {
   background-color: $white;
   border-color: $green;
+}
+
+.highlighted {
+  background: $green;
+  color: $white;
+  padding: 2px 4px;
 }
 
 
@@ -1382,6 +1393,10 @@ a.button {
 
 .button.inactive {
   @include button-gradient($medgray);
+
+  &:hover {
+    cursor: default;
+  }
 }
 
 .article-detail figure {

@@ -6,7 +6,7 @@
     var pymChild = new pym.Child();
 
     data = data.filter(function (d) {
-      return d.cause.length > 1 && d.cause.length < 20;
+      return d.cause.length > 1 && d.cause.length < 70;
     });
 
     console.log(data);
@@ -106,9 +106,15 @@
       
       console.log("Board reset");
 
-      answerContainers.selectAll(".answer").classed("correct",false);
+      answerContainers
+        .classed("attempted", false);
+
+      next
+        .classed("inactive", true);
+
+      answerContainers.selectAll(".answer").classed("correct",false).classed("clickable", true);
       questionContainer.classed("correct",false);
-      answerContainers.selectAll(".answer").classed("incorrect",false);
+      answerContainers.selectAll(".answer").classed("incorrect",false).classed("faded", false);
 
       d3.select(".question-counter")
         .text((performance.attempted + 1) + " of " + totalQuestions);
@@ -145,6 +151,40 @@
         .text(randQuestion["Impact - Raw"]);
 
       return;
+    }
+
+    function displayCorrect (target) {
+      target.classed("correct", true);
+      target.html("");
+      target.append("div")
+        .classed("sumtext", true)
+        .html(function (d) { return d.sumtext.split(d.cause).join("<span class=\"highlighted\">" + d.cause + "</span>"); });
+
+      var links = target.select(".sumtext").selectAll(".readmore")
+              .data(function(d) { return d.url.split("; "); });
+
+      target.select(".sumtext").append("br").attr("class", "sources hidden");
+
+      target.select(".sumtext").append("span").attr("class", "sources hidden").text("Read More:");
+        // .style("color", "#ddd");
+
+      links.enter().append("a")
+        .attr("class", "readmore")
+        .attr("href", function(d) { return d; })
+        .attr("target", "_blank")
+        .html(function(d,i) {
+          if ( links.size() === 1 ) {
+            target.selectAll(".sources").classed("hidden", true);
+            return "Read&nbsp;More";
+          }
+          else {
+            target.selectAll(".sources").classed("hidden", false);
+            return "["+ (i + 1) +"]";
+          }
+        });
+
+      answerContainers.selectAll(".answer:not(.correct):not(.incorrect)")
+        .classed("faded", true);
     }
 
     function getNewAnswers (num) {
@@ -232,51 +272,68 @@
 
         var clicked = d3.select(this);
 
+        if (!clicked.classed("clickable")) {
+          return;
+        }
+
         if ( answers.filter(".incorrect").empty() && answers.filter(".correct").empty() ) {
           performance.attempted++; 
         }
+
+        answerContainers
+          .classed("attemped", true);
+
+        next
+          .classed("inactive", false);
+
+        answers
+          .classed("clickable", false);
+
         // var effect = questionContainer.select(".effect");
 
         // console.log(incidents[i].effect);
         // console.log(effect);
 
         if (d["Impact - Raw"] === questionContainer.select(".effect").text()) {
-          clicked.classed("correct", true);
           clicked.classed("selected", true);
-          clicked.html("");
-          clicked.append("div")
-            .classed("sumtext", true)
-            .text(d.sumtext);
 
-          // questionContainer.insert("h3")
-          //   .text(d.Headline);
+          // clicked.classed("correct", true);
+          // clicked.html("");
+          // clicked.append("div")
+          //   .classed("sumtext", true)
+          //   .text(d.sumtext);
 
-          // questionContainer.append(questionContainer.select(".effect").remove());
+          // // questionContainer.insert("h3")
+          // //   .text(d.Headline);
+
+          // // questionContainer.append(questionContainer.select(".effect").remove());
 
           questionContainer.node().appendChild(questionContainer.select(".effect").node());
 
-          var links = clicked.select(".sumtext").selectAll(".readmore")
-              .data(function(d) { return d.url.split("; "); });
+          // var links = clicked.select(".sumtext").selectAll(".readmore")
+          //     .data(function(d) { return d.url.split("; "); });
 
-          clicked.select(".sumtext").append("br").attr("class", "sources hidden");
+          // clicked.select(".sumtext").append("br").attr("class", "sources hidden");
 
-          clicked.select(".sumtext").append("span").attr("class", "sources hidden").text("Read More:");
-            // .style("color", "#ddd");
+          // clicked.select(".sumtext").append("span").attr("class", "sources hidden").text("Read More:");
+          //   // .style("color", "#ddd");
 
-          links.enter().append("a")
-            .attr("class", "readmore")
-            .attr("href", function(d) { return d; })
-            .attr("target", "_blank")
-            .html(function(d,i) {
-              if ( links.size() === 1 ) {
-                clicked.selectAll(".sources").classed("hidden", true);
-                return "Read&nbsp;More";
-              }
-              else {
-                clicked.selectAll(".sources").classed("hidden", false);
-                return "["+ (i + 1) +"]";
-              }
-            });
+          // links.enter().append("a")
+          //   .attr("class", "readmore")
+          //   .attr("href", function(d) { return d; })
+          //   .attr("target", "_blank")
+          //   .html(function(d,i) {
+          //     if ( links.size() === 1 ) {
+          //       clicked.selectAll(".sources").classed("hidden", true);
+          //       return "Read&nbsp;More";
+          //     }
+          //     else {
+          //       clicked.selectAll(".sources").classed("hidden", false);
+          //       return "["+ (i + 1) +"]";
+          //     }
+          //   });
+
+          displayCorrect(clicked);
 
           questionContainer.classed("correct",true);
           if( answers.filter(".incorrect").empty() ) {
@@ -290,6 +347,18 @@
         else {
           clicked.classed("incorrect", true);
           performance.incorrect++;
+
+          var correct = answers
+            .filter(function(d) { return d["Impact - Raw"] === questionContainer.select(".effect").text(); });
+
+          displayCorrect(correct);  
+
+          // console.log(correct.datum());
+          // console.log(data.indexOf(correct.datum()));
+
+          used.push(data.splice(data.indexOf(correct.datum()),1));
+          console.log(used);
+          console.log(data.length);
         }
 
         d3.select(".score").html(score(performance.correct, performance.attempted));
