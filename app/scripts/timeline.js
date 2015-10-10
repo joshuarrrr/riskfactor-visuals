@@ -498,7 +498,8 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
               return d.label + " " + optionLabel;
             });
 
-          selection.node().parentNode.selectedIndex = selection.size() - 1;
+          var selectedIndex = selection.size() - 1;
+          selection.node().parentNode.selectedIndex = selectedIndex;
 
           chart.minVisible = selector.value.split(",")[0];
 
@@ -2454,35 +2455,49 @@ d3.csv("data/timeline.csv", function (data) {
 
       modernization
         .width(width)
-        .height(height / 3)
+        .height(height / 1.5)
         .draw(modernization.data);
 
       health
         .width(width)
-        .height(height / 3)
+        .height(height / 1.5)
         .draw(health.data);
 
       bank
         .width(width)
-        .height(height / 3)
+        .height(height / 1.5)
         .draw(bank.data);
 
 
       exchange
         .width(width)
-        .height(height / 3)
+        .height(height / 1.5)
         .draw(exchange.data);
 
       air
         .width(width)
-        .height(height / 3)
+        .height(height / 1.5)
         .draw(air.data);
 
-      totalCounters
-        .style("width", "30%")
-        .style("margin", "0 20px 0 0");
+      // totalCounters
+      //   .style("width", "30%")
+      //   .style("margin", "0 20px 0 0");
 
-      bubbles.draw(data);
+      // d3.selectAll(".data-point.too-small, .data-point.too-big")
+      //   // .filter(function(){
+      //   //   return d3.select(this).classed("too-small") || d3.select(this).classed("too-big");
+      //   // })
+      //   .style("fill-opacity", 0);
+
+      // console.log(d3.selectAll(".data-point.too-small, .data-point.too-big"));
+
+      // bubbles.draw(data);
+
+      bubbles.layer("grid-lines").draw(data);
+      bubbles.layer("y-axis-labels").draw(data);
+      bubbles.layer("bubbles").draw(data);
+
+      pymChild.sendHeight();
     };
 
     var afterPrint = function() {
@@ -2523,7 +2538,11 @@ d3.csv("data/timeline.csv", function (data) {
       totalCounters
         .attr("style", null);
 
-      bubbles.draw(data);
+      bubbles.layer("grid-lines").draw(data);
+      bubbles.layer("y-axis-labels").draw(data);
+      bubbles.layer("bubbles").draw(data);
+
+      pymChild.sendHeight();
     };
 
     if (window.matchMedia) {
