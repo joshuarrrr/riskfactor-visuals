@@ -50,14 +50,14 @@ var canvas = document.querySelector("canvas"),
     context = canvas.getContext("2d");
 
 var image = new Image;
-image.src = "/images/fallbacks/shareimages/complexity-chart-fb.svg";
+image.src = "/images/fallbacks/air-timeline.svg";
 
 
 image.onload = function() {
   context.drawImage(image, 0, 0);
 
   var a = document.createElement("a");
-  a.download = "complexity-chart-fb.png";
+  a.download = "air-timeline-fb.png";
   a.href = canvas.toDataURL("image/png");
   a.click();
 };

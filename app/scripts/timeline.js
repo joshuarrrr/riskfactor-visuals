@@ -2082,8 +2082,9 @@ d3.csv("data/timeline.csv", function (data) {
   var height = width * 1 / 3;
   var format, formatString;
 
+  // margins = {top: 50, bottom: 50, right: 20, left: 20};
   // width = 620 - margins.left - margins.right;
-  // height = (width - margins.top - margins.bottom) / 1.91;
+  // height = 325 - margins.top - margins.bottom;
 
   // console.log(parWidth);
 
@@ -2588,8 +2589,9 @@ d3.csv("data/timeline.csv", function (data) {
       .rData(impact.columnName)
       .duration(300);
 
+    // margins = {top: 50, bottom: 50, right: 20, left: 20}; 
     // width = 620 - margins.left - margins.right;
-    // height = (width - margins.top - margins.bottom) / 1.91;
+    // height = 300 - margins.top - margins.bottom;
     // theme
     //   .width(width)
     //   .height(height);
@@ -2715,12 +2717,12 @@ d3.csv("data/timeline.csv", function (data) {
             window.location.host +
             window.location.pathname,
         images: {
-          "default":"/images/main-timeline.png",
-          "modernization": "/images/modernization.png",
-          "health": "/images/health.png",
-          "banks": "/images/banks.png",
-          "exchange": "/images/exchange.png",
-          "air": "/images/air.png"
+          "default":"/images/fallbacks/shareimages/main-timeline-fb.png",
+          "modernization": "/images/fallbacks/shareimages/modernization-timeline-fb.png",
+          "health": "/images/fallbacks/shareimages/health-timeline-fb.png",
+          "banks": "/images/fallbacks/shareimages/banks-timeline-fb.png",
+          "exchange": "/images/fallbacks/shareimages/exchange-timeline-fb.png",
+          "air": "/images/fallbacks/shareimages/air-timeline-fb.png"
         },
         description: "Explore the many ways in which IT failures have squandered money, wasted time, and generally disrupted people’s lives"
       };
