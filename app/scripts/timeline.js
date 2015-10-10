@@ -291,6 +291,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           var selection = this;
           var selector = selection.node().parentNode;
 
+          var visible = chart.data
+            .filter(function(d) {
+              // console.log(d[chart.yData()]);
+              return d[chart.rData()] > 0;
+            });
+
           selection.each(function (d,i) {
             if (d.columnName === chart.rData()) {
               selector.selectedIndex = i;
@@ -302,6 +308,10 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           chart.layers.infoBoxBase.select(".instructions .metric")
             .text(d3.select(selection[0][selector.selectedIndex]).datum().instructsLabel);
+
+
+          d3.select(selector.parentNode).select(".limits")
+            .html("(" + visible.length + " of " + chart.data.length + " failures)");
 
           d3.select(selector).on("change", function() {
             // console.log("clicked size selector");
@@ -426,30 +436,36 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
           var selector = selection.node().parentNode;
           var metric = chart.layers.selectorsBase.select(".select-size").select("option.selected").datum();
 
+          var possible = chart.data
+            .filter(function(d) {
+              // console.log(d[chart.yData()]);
+              return d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
+            });
+
           selection
             .attr("value", function(d) {
               return d.domain.toString();
             })
             .attr("class", function(d) {
-              if ( d.label === "less than" ) {
+              if ( d.label === "Less than" ) {
                 return "max";
               }
-              else if ( d.label === "more than" ) {
+              else if ( d.label === "More than" ) {
                 return "min";
               }
-              else if ( d.label === "between" ) {
+              else if ( d.label === "Between" ) {
                 return "range";
               }
             })
             .text(function(d) {
               var optionLabel;
-              if ( d.label === "less than" ) {
+              if ( d.label === "Less than" ) {
                 optionLabel = makeReadable(d.domain[1]);
               }
-              else if ( d.label === "more than" ) {
+              else if ( d.label === "More than" ) {
                 optionLabel = makeReadable(d.domain[0]);
               }
-              else if ( d.label === "between" ) {
+              else if ( d.label === "Between" ) {
                 optionLabel = makeReadable(d.domain[0]) + " and " + makeReadable(d.domain[1]);
               }
 
@@ -486,6 +502,14 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           chart.minVisible = selector.value.split(",")[0];
 
+          var visible = possible
+            .filter(function(d) {
+              return d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] !== 0 && d[chart.rData()] >= chart.minVisible;
+            });
+
+          d3.select(selector.parentNode).select(".limits")
+            .html("(" + visible.length + " of " + possible.length + " failures)");
+
           d3.select(selector).on("change", function() {
             var selectedOption = d3.select(selection[0][selector.selectedIndex]);
             var cutOff = selector.value.split(",");
@@ -503,6 +527,36 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
             chart.minVisible = cutOff[0];
 
+            visible = possible
+              .filter(function(d) {
+                return d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] !== 0 && d[chart.rData()] >= chart.minVisible;
+              });
+
+            d3.select(selector.parentNode).select(".limits")
+              .html("(" + visible.length + " of " + possible.length + " failures)");
+
+            chart.layer("category-selector").draw(chart.data);
+
+            var categorized = chart.data
+              .filter(function(d) {
+                // console.log(d[chart.yData()]);
+                return d[chart.yData()] !== "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
+              });
+
+            // console.log(categorized.length);
+            // console.log(visible.length);
+
+            if ( visible.length > categorized.length ) {
+              chart.layers.selectorsBase.select(".category-selection-container").select(".limits")
+                .html("(" + categorized.length + " of " + visible.length + " failures)");
+
+              // chart.draw();
+            }
+            else {
+              chart.layers.selectorsBase.select(".category-selection-container").select(".limits")
+                .html("");
+            }
+
             chart.layer("bubbles").draw(chart.data);
               
             chart.layers.legendBase.select(".legend-ring")
@@ -514,7 +568,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             // chart.layer("info-box").draw();
             if ( chart.mode() !== "mobile" ) {
               chart.layer("legend").draw();
-              chart.layer("status").draw();
+              // chart.layer("status").draw();
             }
           });
         },
@@ -569,7 +623,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             var toFade = chart.base.selectAll(".label, .straight-line");
             var selectedOption = d3.select(selection[0][selector.selectedIndex]);
             var category = selectedOption.datum();
-
+            
             // console.log(selection[0][selector.selectedIndex]);
 
             selection
@@ -616,7 +670,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
               if ( chart.mode() !== "mobile" ) {
                 chart.layer("grid-lines").draw();
-                chart.layer("status").draw();
+                // chart.layer("status").draw();
               }
             }
 
@@ -629,6 +683,32 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
                 chart.layer("info-box").draw();
               }
 
+            }
+
+            var visible = chart.data
+              .filter(function(d) {
+                // console.log(d[chart.yData()]);
+                return d[category] !== "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
+              });
+
+            var invisible = chart.data
+              .filter(function(d) {
+                // console.log(d[chart.yData()]);
+                return d[category] === "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
+              });
+
+            // console.log(invisible.length);
+            // console.log(visible.length);
+
+            if ( invisible.length + visible.length > visible.length ) {
+              d3.select(selector.parentNode).select(".limits")
+                .html("(" + visible.length + " of " + (visible.length + invisible.length) + " failures)");
+
+              // chart.draw();
+            }
+            else {
+              d3.select(selector.parentNode).select(".limits")
+                .html("");
             }
           });
         }
@@ -1131,93 +1211,93 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     });
 
-    // add status layer
-    this.layer("status", chart.layers.statusBase, {
-      dataBind: function(data) {
-        var chart = this.chart();
+    // // add status layer
+    // this.layer("status", chart.layers.statusBase, {
+    //   dataBind: function(data) {
+    //     var chart = this.chart();
 
-        // return this.selectAll(".current-status")
-        //   .data([data
-        //     .filter(function (d) {
-        //       // filter out data that has no set value (category)
-        //       if (d[chart.yData()] !== "" && chart.rScale(d[chart.rData()]) > 2 && d[chart.rData()] <= chart.rScale.domain()[1] ) {
-        //         return d;
-        //       } 
-        //     })]);
+    //     // return this.selectAll(".current-status")
+    //     //   .data([data
+    //     //     .filter(function (d) {
+    //     //       // filter out data that has no set value (category)
+    //     //       if (d[chart.yData()] !== "" && chart.rScale(d[chart.rData()]) > 2 && d[chart.rData()] <= chart.rScale.domain()[1] ) {
+    //     //         return d;
+    //     //       } 
+    //     //     })]);
 
-        // return this.selectAll(".current-status")
-        //   .data([chart.layers.circlesBase.selectAll(":not(.too-big):not(.too-small).data-point")
-        //     .filter(function() {
-        //       return d3.select(this).attr("r") !== "0";
-        //     })]);
+    //     // return this.selectAll(".current-status")
+    //     //   .data([chart.layers.circlesBase.selectAll(":not(.too-big):not(.too-small).data-point")
+    //     //     .filter(function() {
+    //     //       return d3.select(this).attr("r") !== "0";
+    //     //     })]);
 
-        return this.selectAll(".current-status")
-          .data([chart.data
-            .filter(function(d) {
-              // console.log(d[chart.yData()]);
-              return d[chart.yData()] !== "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
-            })]);
-      },
+    //     return this.selectAll(".current-status")
+    //       .data([chart.data
+    //         .filter(function(d) {
+    //           // console.log(d[chart.yData()]);
+    //           return d[chart.yData()] !== "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
+    //         })]);
+    //   },
 
-      insert: function() {
-        var selection = this.append("div")
-          .attr("class", "current-status");
-          // .attr("transform", "tranlate(0,20)");
+    //   insert: function() {
+    //     var selection = this.append("div")
+    //       .attr("class", "current-status");
+    //       // .attr("transform", "tranlate(0,20)");
 
-        selection.append("span")
-          .attr("class", "details hidden");
+    //     selection.append("span")
+    //       .attr("class", "details hidden");
 
-        selection.append("span");
+    //     selection.append("span");
 
-        return selection;
-      },
+    //     return selection;
+    //   },
 
-      events: {
-        "merge" : function() {
-          var chart = this.chart();
-          var selection = this;
+    //   events: {
+    //     "merge" : function() {
+    //       var chart = this.chart();
+    //       var selection = this;
           
-          selection.select("span:not(.details)")
-            // .attr("x", 0)
-            // .attr("y", 0)
-            // .attr("dx", 150)
-            // .attr("dy", -15)
-            .text(function (d) { return "Currently displaying " + d.length + " of " + chart.layers.circlesBase.selectAll(".data-point").size() + " failures with a measurable"; });
+    //       selection.select("span:not(.details)")
+    //         // .attr("x", 0)
+    //         // .attr("y", 0)
+    //         // .attr("dx", 150)
+    //         // .attr("dy", -15)
+    //         .text(function (d) { return "Currently displaying " + d.length + " of " + chart.layers.circlesBase.selectAll(".data-point").size() + " failures with a measurable"; });
 
-          selection.on("mouseover", function () {
-            d3.select(this).select(".details")
-              .classed("hidden", false)
-              // .attr("x", 0)
-              // .attr("y", 0)
-              // .attr("dx", 150)
-              // .attr("dy", 5)
-              .text(function () { 
-                var explanation = "(" +
-                  chart.layers.circlesBase.selectAll(".data-point:not(.too-big):not(.too-small)").filter(function() { return d3.select(this).attr("r") === "0"; }).size() + " not defined";
+    //       selection.on("mouseover", function () {
+    //         d3.select(this).select(".details")
+    //           .classed("hidden", false)
+    //           // .attr("x", 0)
+    //           // .attr("y", 0)
+    //           // .attr("dx", 150)
+    //           // .attr("dy", 5)
+    //           .text(function () { 
+    //             var explanation = "(" +
+    //               chart.layers.circlesBase.selectAll(".data-point:not(.too-big):not(.too-small)").filter(function() { return d3.select(this).attr("r") === "0"; }).size() + " not defined";
 
-                if ( chart.layers.circlesBase.selectAll(".data-point.too-small").size() > 0 ) {
-                  explanation += ", " + chart.layers.circlesBase.selectAll(".data-point.too-small").size() + " too small";
-                }
-                if ( chart.layers.circlesBase.selectAll(".data-point.too-big").size() > 0 ) {
-                  explanation += ", " + chart.layers.circlesBase.selectAll(".data-point.too-big").size() + " too big";
-                }                
-                return explanation + ")";
-              });
+    //             if ( chart.layers.circlesBase.selectAll(".data-point.too-small").size() > 0 ) {
+    //               explanation += ", " + chart.layers.circlesBase.selectAll(".data-point.too-small").size() + " too small";
+    //             }
+    //             if ( chart.layers.circlesBase.selectAll(".data-point.too-big").size() > 0 ) {
+    //               explanation += ", " + chart.layers.circlesBase.selectAll(".data-point.too-big").size() + " too big";
+    //             }                
+    //             return explanation + ")";
+    //           });
 
-            // d3.select(this).selectAll("span")
-            //   .style("display", "block");
-          });
+    //         // d3.select(this).selectAll("span")
+    //         //   .style("display", "block");
+    //       });
 
-          selection.on("mouseout", function() {
-            d3.select(this).select(".details")
-              .classed("hidden", true);
-          });
+    //       selection.on("mouseout", function() {
+    //         d3.select(this).select(".details")
+    //           .classed("hidden", true);
+    //       });
 
-          return selection;
-        }
-      }
+    //       return selection;
+    //     }
+    //   }
 
-    });
+    // });
 
     this.layer("legend", chart.layers.legendBase, {
       modes: ["web", "tablet"],
@@ -1942,25 +2022,25 @@ d3.csv("data/timeline.csv", function (data) {
     {
       "columnName":"Impact - USD",
       "id":"money",
-      "label":"monetary cost",
+      "label":"Monetary cost",
       "instructsLabel":"with measurable costs",
       "ranges": [
-        {"label":"less than", "domain": [0,50000000]},
-        {"label":"more than", "domain": [20000000,"max"]}
+        {"label":"Less than", "domain": [0,50000000]},
+        {"label":"More than", "domain": [20000000,"max"]}
       ]
     },
     {
       "columnName":"Impact - hours",
       "id":"time",
-      "label":"duration",
+      "label":"Duration",
       "instructsLabel":"with measurable durations",
       "ranges": [
-        {"label":"less than", "domain": [0,1]},
-        {"label":"less than", "domain": [0,12]},
-        {"label":"between", "domain": [1,24 * 30]},
+        {"label":"Less than", "domain": [0,1]},
+        {"label":"Less than", "domain": [0,12]},
+        {"label":"Between", "domain": [1,24 * 30]},
         // {"label":"Less than", "domain": [0,24 * 30]},
         // {"label":"more than", "domain": [24 * 30,"max"]}
-        {"label":"more than", "domain": [24 * 7,"max"]}
+        {"label":"More than", "domain": [24 * 7,"max"]}
       ]
     },
     {
@@ -1970,9 +2050,9 @@ d3.csv("data/timeline.csv", function (data) {
       "instructsLabel":"that affected a measurable number of people",
       "ranges": [
         // {"label":"Less than", "domain": [0,10000]},
-        {"label":"less than", "domain": [0,50000]},
-        {"label":"between", "domain": [1000,1000000]},
-        {"label":"more than", "domain": [150000,"max"]}
+        {"label":"Less than", "domain": [0,50000]},
+        {"label":"Between", "domain": [1000,1000000]},
+        {"label":"More than", "domain": [150000,"max"]}
       ]
     }
   ];
@@ -1996,7 +2076,7 @@ d3.csv("data/timeline.csv", function (data) {
   // Setup the chart dimensions
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth; // dynamically calc width of parent contatiner
-  var margins = {top: 50, bottom: 50, right: 20, left: 20};
+  var margins = {top: 65, bottom: 50, right: 20, left: 20};
   var width = parWidth - margins.left - margins.right;
   var height = width * 1 / 3;
   var format, formatString;
@@ -2013,26 +2093,33 @@ d3.csv("data/timeline.csv", function (data) {
   var selectors = container.append("div")
     .attr("class","selectors");
 
-  selectors.append("div")
-      .classed("status-base", true);
+  // selectors.append("div")
+  //     .classed("status-base", true);
 
   var sizeSelector = selectors.append("div")
     .attr("class", "size-selection-container")
-    .html("Size by:<br>")
-    .append("select")
+    .html("Size by:<br>");
+    
+  sizeSelector.append("select")
       .attr("class", "select-size dropdown");
 
   var rangeSelector = selectors.append("div")
     .attr("class", "range-selection-container")
-    .html("View range:<br>")
-    .append("select")
+    .html("View range:<br>");
+
+  rangeSelector.append("select")
       .attr("class", "select-range dropdown");
 
   var selector = selectors.append("div")
     .attr("class", "category-selection-container")
-    .html("Sort by:<br>")
-    .append("select")
+    .html("Sort by:<br>");
+
+  selector.append("select")
       .attr("class", "select-category dropdown");
+
+  selectors.selectAll("div")
+    .append("div")
+      .attr("class", "limits");
 
 
   // initialize main chart    
