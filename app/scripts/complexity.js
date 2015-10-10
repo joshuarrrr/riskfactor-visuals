@@ -1560,9 +1560,9 @@ var Share = function() {
           "ECSS-chart": "The ECSS Debacle: How many systems are we replacing anyway?"
         },
         preTitle: "Lessons from a Decade of IT Failures:",
-        url: window.location.protocol + "//" + 
-            window.location.host +
-            window.location.pathname,
+        url: window.parent.location.protocol + "//" + 
+            window.parent.location.host +
+            window.parent.location.pathname,
         images: {
           "default": "/images/complexity-chart-fb.png",
           "chart": "/images/complexity-chart-fb.png",
@@ -1605,6 +1605,7 @@ var Share = function() {
           // name: data.longTitle,
           name: data.title,
           link: data.url,
+          caption: data.preTitle.slice(0,-1),
           picture: window.location.protocol + "//" + 
             window.location.host +
             window.location.pathname.split("/").slice(0,-1).join("/") +

@@ -2713,16 +2713,16 @@ d3.csv("data/timeline.csv", function (data) {
         // description: $("meta[property='og:description']").attr('content')
         title: "A Timeline of Costs",
         preTitle: "Lessons from a Decade of IT Failures:",
-        url: window.location.protocol + "//" + 
-            window.location.host +
-            window.location.pathname,
+        url: window.parent.location.protocol + "//" + 
+            window.parent.location.host +
+            window.parent.location.pathname,
         images: {
-          "default":"/images/fallbacks/shareimages/main-timeline-fb.png",
-          "modernization": "/images/fallbacks/shareimages/modernization-timeline-fb.png",
-          "health": "/images/fallbacks/shareimages/health-timeline-fb.png",
-          "banks": "/images/fallbacks/shareimages/banks-timeline-fb.png",
-          "exchange": "/images/fallbacks/shareimages/exchange-timeline-fb.png",
-          "air": "/images/fallbacks/shareimages/air-timeline-fb.png"
+          "default":"/images/main-timeline-fb.png",
+          "modernization": "/images/modernization-timeline-fb.png",
+          "health": "/images/health-timeline-fb.png",
+          "banks": "/images/banks-timeline-fb.png",
+          "exchange": "/images/exchanges-timeline-fb.png",
+          "air": "/images/air-timeline-fb.png"
         },
         description: "Explore the many ways in which IT failures have squandered money, wasted time, and generally disrupted people’s lives"
       };
@@ -2761,6 +2761,7 @@ d3.csv("data/timeline.csv", function (data) {
           // name: data.longTitle,
           name: data.title,
           link: data.url,
+          caption: data.preTitle.slice(0,-1),
           picture: window.location.protocol + "//" + 
             window.location.host +
             window.location.pathname.split("/").slice(0,-1).join("/") +
