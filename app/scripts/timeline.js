@@ -2583,7 +2583,7 @@ d3.csv("data/timeline.csv", function (data) {
     if ( theme.mode() === "mobile" ) {
       theme
         .width(container.node().parentNode.offsetWidth - 40)
-        .height(((container.node().parentNode.offsetWidth - 40) / 1.5) / 3);
+        .height(((container.node().parentNode.offsetWidth - 40) / 1.5) / 2);
     }
 
     d3.select(id).select(".legend-base").classed(impact.id, true);

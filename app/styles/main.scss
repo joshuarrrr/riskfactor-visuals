@@ -737,6 +737,14 @@ h3.timeline-section-header {
     text-align: left;
     top: 0;
   }
+
+  .selectors select {
+    margin-right: 10px;
+  }
+
+  .limits {
+    display: inline-block;
+  }
 }
 
 .times {
