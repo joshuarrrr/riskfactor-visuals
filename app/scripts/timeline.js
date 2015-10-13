@@ -877,7 +877,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
       // insert x-axis
       insert: function() {
-        var chart = this.chart();
+        // var chart = this.chart();
         var selection = this.append("g")
           .attr("class", "x axis");
 
@@ -1078,7 +1078,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             .on("click", function() {
               var el = d3.select(this);
               var selectedData = el.datum();
-              var infoBox = d3.select(chart.base.node().parentNode).select(".info-box");
+              // var infoBox = d3.select(chart.base.node().parentNode).select(".info-box");
 
               var gaEventLabel = chart.parentID + "-" + selectedData.Headline;
 
@@ -2058,7 +2058,7 @@ d3.csv("data/timeline.csv", function (data) {
     }
   ];
 
-  var mapped = d3.map(quantities, function(d) { return d.id; });
+  // var mapped = d3.map(quantities, function(d) { return d.id; });
 
   // console.log(mapped);
 
@@ -2417,7 +2417,7 @@ d3.csv("data/timeline.csv", function (data) {
 
   // });
 
-  bubbles.on("selection change", function(d) {
+  bubbles.on("selection change", function() {
       // console.log("The element ", d, "was selected");
       pymChild.sendHeight();
     });
@@ -2693,7 +2693,7 @@ d3.csv("data/timeline.csv", function (data) {
     //   }
     // });
 
-    theme.on("selection change", function(d) {
+    theme.on("selection change", function() {
       // console.log("The element ", d, "was selected");
       pymChild.sendHeight();
     });
@@ -2743,11 +2743,11 @@ d3.csv("data/timeline.csv", function (data) {
     var that = {
 
       assignButtons: function() {
-        $('.share-fb').on('click',that.postToFacebook)
-        $('.share-twtr').on('click',that.postToTwitter)
-        $('#share-email').on('click',that.emailLink)
-        $('#share-gpls').on('click',that.postToGooglePlus)
-        $('#share-lin').on('click',that.postToLinkedIn)
+        $(".share-fb").on("click",that.postToFacebook);
+        $(".share-twtr").on("click",that.postToTwitter);
+        $("#share-email").on("click",that.emailLink);
+        $("#share-gpls").on("click",that.postToGooglePlus);
+        $("#share-lin").on("click",that.postToLinkedIn);
       },
       
       postToFacebook: function() {
@@ -2781,7 +2781,7 @@ d3.csv("data/timeline.csv", function (data) {
         var top = wTop + (window.parent.innerHeight / 2) - (height / 2);
 
         // console.log(window)
-        return 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
+        return "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
       },
       
       postToTwitter: function() {
@@ -2791,7 +2791,7 @@ d3.csv("data/timeline.csv", function (data) {
         var tweetUrl = "https://twitter.com/share?url=" + encodeURIComponent(data.url) + "&text=" + encodeURIComponent(data.preTitle + " " + data.title);
         var opts = that.centerPopup(500, 300) + "scrollbars=1";
         track("Twitter");
-        window.parent.open(tweetUrl, 'twitter', opts);
+        window.parent.open(tweetUrl, "twitter", opts);
       },
       
       // emailLink: function() {
@@ -2821,7 +2821,7 @@ d3.csv("data/timeline.csv", function (data) {
       // }
     };
 
-    that.assignButtons()
+    that.assignButtons();
     return that;
   };
 

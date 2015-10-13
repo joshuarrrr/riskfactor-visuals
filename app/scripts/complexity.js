@@ -566,9 +566,9 @@ d3.chart("MarginChart").extend("SystemsChart", {
         // their fill to blue
         "enter:transition": function() {
           var chart = this.chart();
-          var line = d3.svg.line()
-            .x(function(d) { return chart.xScale(d[chart.xData()]); })
-            .y(function(d) { return chart.yScale(d[chart.yData()]); }); 
+          // var line = d3.svg.line()
+          //   .x(function(d) { return chart.xScale(d[chart.xData()]); })
+          //   .y(function(d) { return chart.yScale(d[chart.yData()]); }); 
 
           if ( chart.xScaleType !== "date" ) { 
             this.selectAll("circle").transition().duration(500)
@@ -670,7 +670,8 @@ d3.chart("MarginChart").extend("SystemsChart", {
           var chart = this.chart();
           var selection = this;
 
-          var xLeftMax, xBarScaleLeft, xBarScaleRight, yBarScale;
+          var xLeftMax, xBarScaleLeft, xBarScaleRight;
+          // var yBarScale;
 
 
 
@@ -728,7 +729,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
               .attr("y", function(d,i) {
                 return i * 20;
               })
-              .attr("width", function(d) {
+              .attr("width", function() {
                 return xBarScaleRight(1);
               })
               .attr("height", 15)
@@ -738,13 +739,13 @@ d3.chart("MarginChart").extend("SystemsChart", {
               .attr("stroke-width", 1);
 
             selection.append("rect")
-              .attr("x", function(d) {
+              .attr("x", function() {
                 return xBarScaleLeft(1);
               })
               .attr("y", function(d,i) {
                 return i * 20;
               })
-              .attr("width", function(d) {
+              .attr("width", function() {
                 return - xBarScaleLeft(1);
               })
               .attr("height", 15)
@@ -1044,7 +1045,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
             chart.layers.longDescription
               .append("a")
                 .attr("class", "readmore")
-                .attr("href", function(d) { return selection.datum().url; })
+                .attr("href", function() { return selection.datum().url; })
                 .attr("target", "_blank")
                 .html("Read More");
           }
@@ -1545,9 +1546,11 @@ d3.csv("data/ECSS-systems.csv", function (data) {
 });
 
 var Share = function() {
+  "use strict";
     // var fbInitialized = false;
     
     function shareData() {
+      
       var data = {
         // title: $("meta[property='og:title']").attr('content'),
         // longTitle: "",
@@ -1578,20 +1581,20 @@ var Share = function() {
       return data;
     }
 
-    function track(label) {
-      return;
-      //MCP.share(label);
-    }
+    // function track(label) {
+    //   return;
+    //   //MCP.share(label);
+    // }
 
 
     var that = {
 
       assignButtons: function() {
-        $('.share-fb').on('click',that.postToFacebook)
-        $('.share-twtr').on('click',that.postToTwitter)
-        $('#share-email').on('click',that.emailLink)
-        $('#share-gpls').on('click',that.postToGooglePlus)
-        $('#share-lin').on('click',that.postToLinkedIn)
+        $(".share-fb").on("click",that.postToFacebook);
+        $(".share-twtr").on("click",that.postToTwitter);
+        $("#share-email").on("click",that.emailLink);
+        $("#share-gpls").on("click",that.postToGooglePlus);
+        $("#share-lin").on("click",that.postToLinkedIn);
       },
       
       postToFacebook: function() {
@@ -1625,7 +1628,7 @@ var Share = function() {
         var top = wTop + (window.parent.innerHeight / 2) - (height / 2);
 
         // console.log(window.parent.location.hash);
-        return 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left;
+        return "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
       },
       
       postToTwitter: function() {
@@ -1640,7 +1643,7 @@ var Share = function() {
         // window.hash = "ECSS-chart";
         // document.getElementById('ECSS-chart').scrollIntoView();
         // console.log(window.parent.location.hash);
-        window.parent.open(tweetUrl, 'twitter', opts);
+        window.parent.open(tweetUrl, "twitter", opts);
       },
       
       // emailLink: function() {
@@ -1670,7 +1673,7 @@ var Share = function() {
       // }
     };
 
-    that.assignButtons()
+    that.assignButtons();
     return that;
   };
 
