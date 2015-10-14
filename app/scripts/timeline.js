@@ -598,7 +598,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
         selection
           .attr("value", function(d) { return d; })
-          .text(function(d) { return d.replace("Government", "Gov"); });
+          .text(function(d) { return d; });
 
         return selection;
       },
@@ -617,6 +617,32 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           d3.select(selection[0][selector.selectedIndex])
             .classed("selected", true);
+
+          var visible = chart.data
+              .filter(function(d) {
+                // console.log(d[chart.yData()]);
+                return d[chart.yData()] !== "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
+              });
+
+          var invisible = chart.data
+            .filter(function(d) {
+              // console.log(d[chart.yData()]);
+              return d[chart.yData()] === "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
+            });
+
+          // console.log(invisible.length);
+          // console.log(visible.length);
+
+          if ( invisible.length + visible.length > visible.length ) {
+            d3.select(selector.parentNode).select(".limits")
+              .html("(" + visible.length + " of " + (visible.length + invisible.length) + " failures)");
+
+            // chart.draw();
+          }
+          else {
+            d3.select(selector.parentNode).select(".limits")
+              .html("");
+          }
 
           d3.select(selector).on("change", function() {
             // console.log("clicked category selector");
@@ -686,13 +712,13 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
             }
 
-            var visible = chart.data
+            visible = chart.data
               .filter(function(d) {
                 // console.log(d[chart.yData()]);
                 return d[category] !== "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
               });
 
-            var invisible = chart.data
+            invisible = chart.data
               .filter(function(d) {
                 // console.log(d[chart.yData()]);
                 return d[category] === "" && d[chart.rData()] <= chart.rScale.domain()[1] && d[chart.rData()] >= chart.minVisible && d[chart.rData()] > 0;
@@ -1005,6 +1031,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
           selection.filter(function() {
               return !(d3.select(this).classed("too-big") || d3.select(this).classed("too-small") || d3.select(this).classed("active"));
+              // return !(d[chart.rData()] === 0 || d[chart.yData()] === "" || d3.select(this).classed("too-big") || d3.select(this).classed("too-small") || d3.select(this).classed("active"));
             })
             .style("fill-opacity", chart.fillOpacity);
 
@@ -2064,11 +2091,11 @@ d3.csv("data/timeline.csv", function (data) {
 
   var categories = [
     "Region",
-    "Failure Type",
-    "Organization Type",
-    "Government Type",
-    "Government Department",
-    "Industry Area",
+    "Failure type",
+    "Organization type",
+    "Government type",
+    "Government department",
+    "Industry area",
     // "Companies"
   ];
 

@@ -404,6 +404,10 @@ p.instructions,
   stroke: none;
 }
 
+// .no-measured-value {
+//   stroke: none;
+// }
+
 .money {
   .data-point, 
   .legend-circle {
@@ -879,6 +883,7 @@ h3.timeline-section-header {
 .selectors {
   clear: both;
   margin: -35px 20px 0;
+  min-height: 10px;
   position: relative;
   // text-align: right;
   top: 30px;
