@@ -84,7 +84,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
     chart.maxBubbleSize = 70;
     chart.instructs = "To begin exploring the timeline, select one of the circles below." + 
-      "<div class=\"optional hidden\">You can also: <ul class=\"instructs-list\"><li>Change the “<span class=\"ui-label\">Size by</span>” menu to reveal failures with other types of impacts.</li><li>Change the “<span class=\"ui-label\">View range</span>” to reveal failures currently too large or small to display.</li><li>Use the “<span class=\"ui-label\">Sort by</span>” menu to change the failures are categorized.</li></ul></div>";
+      "<div class=\"optional hidden\">You can also: <ul class=\"instructs-list\"><li>Change the “<span class=\"ui-label\">Size by</span>” menu to reveal failures with other types of impacts.</li><li>Change the “<span class=\"ui-label\">View range</span>” to reveal failures currently too large or small to display.</li><li>Use the “<span class=\"ui-label\">Sort by</span>” menu to change how the failures are categorized.</li></ul></div>";
     
     chart.parentID = d3.select(chart.base.node().parentNode).attr("id");
 

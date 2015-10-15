@@ -66,7 +66,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
       chart.yScale.range([newHeight, 0]);
     });
 
-    var legendValues = ["start", "to date", "end"];
+    var legendValues = ["Start", "To date", "End"];
 
     var legendItem = chart.layers.legendBase.selectAll(".legend-item")
       .data(legendValues)
@@ -90,7 +90,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
       .attr("cx", 0)
       .attr("cy", function (d,i) { return (i * 1.5) + "em"; })
       .attr("r", 5)
-      .attr("class", function(d) { return d.replace(" ", "-"); });
+      .attr("class", function(d) { return d.toLowerCase().replace(" ", "-"); });
 
     legendItem.append("text")
       .attr("x", 0)
@@ -226,7 +226,7 @@ d3.chart("MarginChart").extend("SystemsChart", {
           if ( chart.yScale.domain()[1] >= 1e9 ) {
             selection.select(".y.axis-label text")
               .attr("dy", -30)
-              .text("US dollars,");
+              .text("US $,");
 
             selection.select(".y.axis-label").append("text")
               .attr("y", 0)
@@ -1278,7 +1278,7 @@ d3.csv("data/complexity.csv", function (data) {
   // console.log(data);
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
-  var margins = {top: 50, bottom: 70, right: 20, left: 90};
+  var margins = {top: 50, bottom: 70, right: 20, left: 60};
   var width = parWidth - margins.left - margins.right;
   var height = width * 9 / 16;
 
@@ -1337,6 +1337,7 @@ d3.csv("data/complexity.csv", function (data) {
   //   .attr("class", "circle-info-box");
 
   var longDesc = container.append("div")
+    .style("width", ((parWidth - 40) / 3) + "px")
     .classed("long-description", true);
 
   longDesc.append("h3")
@@ -1347,7 +1348,7 @@ d3.csv("data/complexity.csv", function (data) {
   var systems = container
     .append("svg")
     .chart("SystemsChart")
-    .width(width * 0.6)
+    .width(((parWidth - 40) * 2 / 3) - margins.left - margins.right)
     // .width(width)
     .height(height)
     .margin(margins)
@@ -1363,9 +1364,15 @@ d3.csv("data/complexity.csv", function (data) {
     mobMargins.left = mobMargins.right * 2;
 
     // TODO: remove 1px currently needed to force recalc
-    var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+    var mobWidth = window.innerWidth - mobMargins.left - mobMargins.right - 1;
+
+    // console.log(parWidth);
+    // console.log(window.innerWidth);
 
     d3.select("body").classed("mobile-view", true);
+
+    longDesc
+      .style("width", null);
 
     systems
       .width(mobWidth)
@@ -1379,6 +1386,9 @@ d3.csv("data/complexity.csv", function (data) {
 
   if ( Modernizr.mq("only print") ) {
     d3.select("body").classed("print-view", true);
+
+    longDesc
+      .style("width", null);
 
     systems
       .width(parWidth)
@@ -1540,7 +1550,7 @@ d3.csv("data/ECSS-systems.csv", function (data) {
       .style("text-anchor", "end")
       .style("fill", "gray")
       .style("font-size", ".8em")
-      .text("program cancelled");
+      .text("Program cancelled");
 
   pymChild.sendHeight();
 });
