@@ -586,7 +586,7 @@ h3.timeline-section-header {
       color: $impact;
       font-family: "Theinhardt-Bold", Helvetica, Arial, sans-serif; 
       // font-size: 2em;
-      margin: .7em 0;
+      // margin: .7em 0;
     }
 
     .description {
@@ -646,6 +646,21 @@ h3.timeline-section-header {
 // }
 
 .mobile-view {
+  .article-detail figure {
+    &.xlrg,
+    &.lrg,
+    &.med,
+    &.sm {
+      float: none;
+      margin: 1.5em auto;
+      width: 100%;
+    }
+  }
+
+  // svg {
+  //   width: 100% !important;
+  // }
+
   .replacements-chart.info-box {
     left: default;
     position: static;
@@ -726,9 +741,9 @@ h3.timeline-section-header {
       //   content: ","
       // }
 
-      &.current {
-        font-size: 18px;
-      }
+      // &.current {
+      //   font-size: 18px;
+      // }
     }
   }
 
