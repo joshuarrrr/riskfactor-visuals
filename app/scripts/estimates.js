@@ -38,24 +38,26 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       // create an xScale
 
-      var parWidth = chart.base.node().parentNode.parentNode.offsetWidth;
-      var margins = {top: 30, bottom: 30, right: 20, left: 100};
-      var width = parWidth - margins.left - margins.right;
-      var height = width * 3.5 / 8;
-      this.xScale = d3.time.scale()
-        .range([0, width - 1]);
+      // var parWidth = chart.base.node().parentNode.parentNode.offsetWidth;
+      // var margins = {top: 30, bottom: 30, right: 20, left: 100};
+      // var width = parWidth - margins.left - margins.right;
+      // var height = width * 3.5 / 8;
+      chart.xScale = d3.time.scale()
+        .range([0, chart.width()]);
 
       // when the width changes, update the x scale range
       chart.on("change:width", function(newWidth) {
+        console.log("width changed");
         chart.xScale.range([0, newWidth - 1]);
       });
 
       // create a yScale
-      this.yScale = d3.scale.linear()
-        .range([height,0]);
+      chart.yScale = d3.scale.linear()
+        .range([chart.height(),0]);
 
       // when the height changes, update the y scale range
       chart.on("change:height", function(newHeight) {
+        console.log("height changed");
         chart.yScale.range([newHeight, 0]);
       });
 
@@ -70,7 +72,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       chart.layers.xAxisBase.append("g")
         .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")");
+        .attr("transform", "translate(0," + chart.height() + ")");
 
       var xAxis = d3.svg.axis()
         .scale(chart.xScale)
@@ -132,6 +134,12 @@ d3.chart("MarginChart").extend("FailureChart", {
             .transition()
               .duration(chart.duration())
               .call(xAxis);
+
+            chart.on("change:height", function() {
+              chart.base.select(".x.axis")
+                .attr("transform", "translate(0," + chart.height() + ")")
+                .call(xAxis);
+            });
 
             return selection;
           }
@@ -204,6 +212,11 @@ d3.chart("MarginChart").extend("FailureChart", {
               .duration(chart.duration())
               .call(yAxis);
 
+            chart.on("change:height", function() {
+              chart.base.select(".y.axis")
+                .call(yAxis);
+            });
+
             return selection;
           }
         }
@@ -234,9 +247,15 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             selection
               .attr("width", function (d) {
-                return d.length > 1 ? chart.xScale(d[d.length-2].dateObject) : 0;
+                if ( Modernizr.mq("only print") ) {
+                  return chart.xScale(d[d.length-1].dateObject);
+                }
+                else {
+                  return d.length > 1 ? chart.xScale(d[d.length-2].dateObject) : 0;
+                }
               })
               .attr("height", chart.height());
+
           },
 
           "merge:transition" : function() {
@@ -259,8 +278,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             .data(data
               .filter(function(d,i,arr) {
                 return !d.launch && (i === 0 || arr[i].projections[0].area[1].y1 > arr[i - 1].projections[0].area[1].y1 || arr[i].projections[0].area[1].x > arr[i - 1].projections[0].area[1].x);
-              })
-              , function(d,i) { return i; });
+              }), function(d,i) { return i; });
         },
 
         insert: function() {
@@ -310,7 +328,9 @@ d3.chart("MarginChart").extend("FailureChart", {
               console.log(i === selection.size() - 1 && (d.projections[0].change !== 0 || d.projections[0].dateChange) && !chart.data[chart.data.length - 1].launch);
               return i === selection.size() - 1 && (d.projections[0].change !== 0 || d.projections[0].dateChange) && !chart.data[chart.data.length - 1].launch;
             }).select("rect")
-              .attr("width", 0);
+              .attr("width", function() {
+                return Modernizr.mq("only print") ? chart.width() : 0;
+              });
           },
 
           "merge:transition" : function() {
@@ -1578,5 +1598,57 @@ d3.csv("data/estimates.csv", function (data) {
   
   projectSelector.node().selectedIndex = currentProjectID;
   resetChart(currentProjectID);
+
+  (function() { // force re-render of element_name to get the styling right on-print
+    var beforePrint = function() {
+      parWidth = container.node().parentNode.offsetWidth; // dynamically calc width of parent contatiner
+      width = parWidth - margins.left - margins.right;
+      height = width * 3.5 / 8;
+
+      console.log("beforePrint");
+
+      d3.select("body").classed("print-view", true);
+
+      failure
+        .width(width)
+        .height(height)
+        .draw(failure.data);
+
+      pymChild.sendHeight();
+    };
+
+    var afterPrint = function() {
+      parWidth = container.node().parentNode.offsetWidth; // dynamically calc width of parent contatiner
+      width = parWidth - margins.left - margins.right;
+      height = width * 3.5 / 8;
+
+      console.log("afterPrint");
+
+      d3.select("body").classed("print-view", false);
+
+      failure
+        .width(width)
+        .height(height)
+        .draw(failure.data);
+
+      pymChild.sendHeight();
+    };
+
+    if (window.matchMedia) {
+      window.matchMedia("print").addListener(function(mql) {
+        if (mql.matches) { 
+          beforePrint(); 
+          window.matchMedia("screen").addListener(function(newMql) {
+            if (newMql.matches) {
+              afterPrint();
+            }
+          });
+        }
+      });
+    }
+
+    window.onbeforeprint = beforePrint;
+    window.onafterprint = afterPrint;
+  }());
 
 });
