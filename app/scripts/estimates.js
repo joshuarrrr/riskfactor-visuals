@@ -514,8 +514,8 @@ d3.chart("MarginChart").extend("FailureChart", {
         dataBind: function(data) {
           // console.log(data.slice(-1));
           return this.selectAll(".area-labels")
-            .data(data.filter(function (milestone, i) {
-              return (i === 0 || i === data.length - 1) && !milestone.launch;
+            .data(data.filter(function(d,i,arr) {
+              return !d.launch && (i === 0 || i === arr.length -1 && (arr[i].projections[0].area[1].y1 > arr[i - 1].projections[0].area[1].y1 || arr[i].projections[0].area[1].x > arr[i - 1].projections[0].area[1].x));
             }));
         },
 
@@ -561,6 +561,7 @@ d3.chart("MarginChart").extend("FailureChart", {
                 .append("text")
                 .attr("class", function(d) { return "label " + d.class; });
 
+
             labels
               .exit().remove();
 
@@ -568,17 +569,40 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             // label.exit().remove();
 
+            labels
+              .style("text-anchor", function(d) {
+                console.log(chart.xScale(d.area[d.area.length - 1].x));
+                if ( chart.xScale(d.area[d.area.length - 1].x) - 2 < 200 ) {
+                  return "start";
+                }
+                else {
+                  return null;
+                }
+              });
+
             labels.selectAll("tspan").remove();
 
             labels.append("tspan")
-              .attr("x", function(d) { return chart.xScale(d.area[d.area.length - 1].x) - 2; })
+              .attr("x", function(d) { 
+                var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
+                if (location < 200) {
+                  location = location + 4;
+                }
+                return location;
+              })
               .attr("y", function(d) { return chart.yScale(d.area[d.area.length - 1].y1) - 5; })
               .attr("dy", "-1em")
               .attr("class", "desc")
               .text("");
 
             labels.append("tspan")
-              .attr("x", function(d) { return chart.xScale(d.area[d.area.length - 1].x) - 2; })
+              .attr("x", function(d) { 
+                var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
+                if (location < 200) {
+                  location = location + 4;
+                }
+                return location;
+              })
               .attr("y", function(d) { return chart.yScale(d.area[d.area.length - 1].y1) - 5; })
               .attr("dy", 0)
               .attr("class", "num")
@@ -624,7 +648,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             selection.selectAll(".desc")
               .delay(function(d,i) {
                 console.log(d);
-                if ((d.change === 0 && d.dateChange === 0)) {
+                if ((d.change === 0 && d.dateChange === 0) || (selection.size() > 1 && d.area[0].x.toString() === chart.mindate.toString())) {
                   return 0;
                 }
                 else if (chart.data[chart.data.length - 1].spent.value > 0) {
@@ -634,11 +658,21 @@ d3.chart("MarginChart").extend("FailureChart", {
                   return chart.duration()*3;
                 }
               })
-              .text(function(d) { return d.name + ":"; });
+              .text(function(d) { 
+                // console.log(d.area[0].x.toString() === chart.mindate.toString());
+                // console.log(chart.mindate.toString());
+                // console.log(d.area[0].x.toString());
+                if ( d.area[0].x.toString() === chart.mindate.toString() ) {
+                  return "Initial " + d.name.toLowerCase() + ":";
+                }
+                else {
+                  return d.name + ":"; 
+                }
+              });
 
             selection.selectAll(".num")
               .delay(function(d, i) {
-                if ((d.change === 0 && d.dateChange === 0)) {
+                if ((d.change === 0 && d.dateChange === 0) || (selection.size() > 1 && d.area[0].x.toString() === chart.mindate.toString())) {
                   return 0;
                 }
                 else if (chart.data[chart.data.length - 1].spent.value > 0) {
@@ -650,7 +684,7 @@ d3.chart("MarginChart").extend("FailureChart", {
               })
               .text(function (d) {
                 var value = chart.formatMoney(d.area[d.area.length-1].y1, chart.data[0].currency);
-                if ( chart.data[chart.data.length - 1].extrapolated === "yes" ) {
+                if ( chart.data[chart.data.length - 1].extrapolated === "yes"  && d.area[0].x.toString() !== chart.mindate.toString()) {
                   return value + " (extrapolated)";
                 }
                 else {
@@ -952,6 +986,8 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       var formatString = d3.time.format.iso;
 
+      var dateFormat = d3.time.format("%Y-%m-%d");
+
       chart.data = data;
 
       data.forEach(function (datapoint) {
@@ -964,7 +1000,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       console.log(chart.data);
 
       //update x scale domain
-      chart.mindate = formatString.parse(data[0].dateOriginal);
+      chart.mindate = dateFormat.parse(data[0].dateOriginal.replace(/T.*Z$/,""));
       chart.maxdate = d3.max(data, function (d) {
         var seriesMaxes = []; 
 
