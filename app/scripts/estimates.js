@@ -47,7 +47,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       // when the width changes, update the x scale range
       chart.on("change:width", function(newWidth) {
-        console.log("width changed");
+        // console.log("width changed");
         chart.xScale.range([0, newWidth - 1]);
       });
 
@@ -592,6 +592,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             labels
               .style("text-anchor", function(d) {
                 console.log(chart.xScale(d.area[d.area.length - 1].x));
+                console.log(d);
                 if ( chart.xScale(d.area[d.area.length - 1].x) - 2 < 200 ) {
                   return "start";
                 }
@@ -601,6 +602,25 @@ d3.chart("MarginChart").extend("FailureChart", {
               });
 
             labels.selectAll("tspan").remove();
+
+            console.log(labels.length);
+
+            labels
+              .filter(function (d) {
+                return d.extraLabel !== "";
+              })
+              .attr("x", function(d) { 
+                var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
+                if (location < 200) {
+                  location = location + 4;
+                }
+                return location;
+              })
+              .append("tspan")
+                .attr("y", function(d) { return chart.yScale(d.area[d.area.length - 1].y1) - 5; })
+                .attr("dy", "-2em")
+                .attr("class", "extra")
+                .text("");
 
             labels.append("tspan")
               .attr("x", function(d) { 
@@ -664,6 +684,23 @@ d3.chart("MarginChart").extend("FailureChart", {
           "merge:transition" : function() {
             var chart = this.chart();
             var selection = this;
+
+            selection.selectAll(".extra")
+              .delay(function(d,i) {
+                console.log(d);
+                if ((d.change === 0 && d.dateChange === 0) || (selection.size() > 1 && d.area[0].x.toString() === chart.mindate.toString())) {
+                  return 0;
+                }
+                else if (chart.data[chart.data.length - 1].spent.value > 0) {
+                  return chart.duration()*6;
+                }
+                else {
+                  return chart.duration()*3;
+                }
+              })
+              .text(function(d) { 
+                return d.extraLabel;
+              });
 
             selection.selectAll(".desc")
               .delay(function(d,i) {
@@ -1118,7 +1155,7 @@ d3.csv("data/estimates.csv", function (data) {
   "use strict";
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
-  var margins = {top: 40, bottom: 30, right: 20, left: 100};
+  var margins = {top: 50, bottom: 30, right: 20, left: 100};
   var width = parWidth - margins.left - margins.right;
   var height = width * 3.5 / 8;
 
@@ -1347,6 +1384,7 @@ d3.csv("data/estimates.csv", function (data) {
               prevScale[entry.name + i] = newScale;
               return {
                   "name": entry.name,
+                  "extraLabel": milestone["extra label"],
                   "class": entry.class,
                   "scale": newScale,
                   "change": end.change,
@@ -1361,7 +1399,9 @@ d3.csv("data/estimates.csv", function (data) {
 
             if ( nestedDate.values.length > 1 ) {
               var temps = [];
-              nestedDate.values.forEach(function (milestone, i) { temps.push(calcProjection(milestone, i)); });
+              nestedDate.values.forEach(function (milestone, i) { 
+                temps.push(calcProjection(milestone, i)); 
+              });
               console.log(temps);
               return temps;
             }
@@ -1470,7 +1510,7 @@ d3.csv("data/estimates.csv", function (data) {
     .margin(margins)
     .yData(potentialSeries);
 
-  var buttons = d3.selectAll(".button");
+  var buttons = d3.selectAll(".button:not(.share)");
 
   if ( failure.mode() === "mobile" ) {
     buttons
@@ -1504,6 +1544,9 @@ d3.csv("data/estimates.csv", function (data) {
 
     d3.select("#chart-title")
       .text(data[i].Program);
+
+    d3.select(".share-buttons")
+      .attr("data-section", i)
 
     failure.base
       .classed("hidden", false)
@@ -1650,5 +1693,139 @@ d3.csv("data/estimates.csv", function (data) {
     window.onbeforeprint = beforePrint;
     window.onafterprint = afterPrint;
   }());
+
+  var Share = function() {
+    // var fbInitialized = false;
+    
+    function shareData() {
+      var data = {
+        // title: $("meta[property='og:title']").attr('content'),
+        // longTitle: "",
+        // url: $("meta[property='og:url']").attr('content'),
+        // image: $("meta[property='og:image']").attr('content'),
+        // description: $("meta[property='og:description']").attr('content')
+        title: "The Life Cycles of Failed Projects",
+        preTitle: "Lessons from a Decade of IT Failures:",
+        url: window.parent.location.protocol + "//" + 
+            window.parent.location.host +
+            window.parent.location.pathname,
+        // images: {
+        //   "default":"/images/FiReControlSystem.png"
+        //   // "modernization": "/images/modernization-timeline-fb.png",
+        //   // "health": "/images/health-timeline-fb.png",
+        //   // "banks": "/images/banks-timeline-fb.png",
+        //   // "exchange": "/images/exchanges-timeline-fb.png",
+        //   // "air": "/images/air-timeline-fb.png"
+        // },
+        images : [
+          "/images/USAirForce.png",
+          "/images/FiReControlSystem.png",
+          "/images/FiReControlSystem.png",
+          "/images/FiReControlSystem.png",
+          "/images/Queensland.png",
+          "/images/FiReControlSystem.png"
+        ],
+        description: "When even more money and more time can’t prevent project disasters"
+      };
+
+      // pymChild.onMessage("share", function (title) {
+      //   data.title = title;
+      //   console.log("message sent!");
+      // });
+      return data;
+    }
+
+    function track(label) {
+      return;
+      //MCP.share(label);
+    }
+
+
+    var that = {
+
+      assignButtons: function() {
+        $(".share-fb").on("click",that.postToFacebook);
+        $(".share-twtr").on("click",that.postToTwitter);
+        $("#share-email").on("click",that.emailLink);
+        $("#share-gpls").on("click",that.postToGooglePlus);
+        $("#share-lin").on("click",that.postToLinkedIn);
+      },
+      
+      postToFacebook: function() {
+        event.preventDefault();
+        var data = shareData();
+        // data.title = $(this.parentNode).attr("data-section") !== undefined ? $("#" + $(this.parentNode).attr("data-section")).text() : data.title;
+        data.image = data.images[+$(this.parentNode).attr("data-section")];
+        var obj = {
+          app_id: "174248889578740",
+          method: "feed",
+          // name: data.longTitle,
+          name: data.title,
+          link: data.url,
+          caption: data.preTitle.slice(0,-1),
+          picture: window.location.protocol + "//" + 
+            window.location.host +
+            window.location.pathname.split("/").slice(0,-1).join("/") +
+            data.image,
+          description: data.description
+        };
+        window.parent.FB.ui(obj, function(response) {
+          track("Facebook");
+        });
+        // pymChild.sendMessage("shareFB", JSON.stringify(obj));
+      },
+      
+      centerPopup: function(width, height) {
+        var wLeft = window.parent.screenLeft ? window.screenLeft : window.screenX;
+        var wTop = window.parent.screenTop ? window.screenTop : window.screenY;
+        var left = wLeft + (window.parent.innerWidth / 2) - (width / 2);
+        var top = wTop + (window.parent.innerHeight / 2) - (height / 2);
+
+        // console.log(window)
+        return "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+      },
+      
+      postToTwitter: function() {
+        event.preventDefault();
+        var data = shareData();
+        // data.title = $(this.parentNode).attr("data-section") !== undefined ? $("#" + $(this.parentNode).attr("data-section")).text() : data.title;
+        var tweetUrl = "https://twitter.com/share?url=" + encodeURIComponent(data.url) + "&text=" + encodeURIComponent(data.preTitle + " " + data.title);
+        var opts = that.centerPopup(500, 300) + "scrollbars=1";
+        track("Twitter");
+        window.parent.open(tweetUrl, "twitter", opts);
+      },
+      
+      // emailLink: function() {
+      //   var data = shareData();
+      //   var mailto = "mailto:?subject=" + encodeURIComponent(data.longTitle) + "&body=" + encodeURIComponent(data.description + "\n\n" + window.location.href);
+      //   track('Email');
+      //   window.location.href = mailto;
+      // },
+      
+      // postToGooglePlus: function() {
+      //   var url = encodeURIComponent(window.location.href);
+      //   var gPlusUrl ="https://plus.google.com/share?url={" + url + "}"; 
+      //   track('Google');
+      //   var opts = that.centerPopup(800, 480) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+      //   window.open(gPlusUrl, '', opts);
+      // },
+      
+      // postToLinkedIn: function() {
+      //   // This doesn't work when served up with a port
+      //   var data = shareData();
+      //   var url = encodeURIComponent(window.location.href);
+      //   var linkedInUrl ="http://www.linkedin.com/shareArticle?mini=true&url=" + url
+      //     + "&title=" + encodeURIComponent(data.longTitle) + "&summary=" + encodeURIComponent(data.description); 
+      //   track('LinkedIn');
+      //   var opts = that.centerPopup(880, 460) + 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes';
+      //   window.open(linkedInUrl, '', opts);
+      // }
+    };
+
+    that.assignButtons();
+    return that;
+  };
+
+  var sharing = new Share();
 
 });
