@@ -47,6 +47,7 @@ $greenminusblueminusviolet: #ffff91;
 $violetminusblueminusgreen: #ff37ff;
 
 $brightfuscia: #eb0089;
+$brightorange: #eb8900;
 $brightyellow: #fff600;
 $brightblue: #00adff;
 $brightgreen: #65f600;
@@ -1099,8 +1100,6 @@ h3.timeline-section-header {
     fill: $lightaqua;
   }
 
-
-
   .selected .total,
   .selected .tot-est,
   .selected .annual-est,
@@ -1153,11 +1152,79 @@ h3.timeline-section-header {
   }
 }
 
+.multi {
+  .projection {
+    fill: $lightturquoise;
+    // opacity: .2;
+    opacity: .4;
+    stroke: $gray;
+  }
+
+  .projection.payroll-est {
+    fill: $lightaqua;
+  }
+
+  .selected .total,
+  .selected .tot-est,
+  .selected .annual-est,
+  .selected .maint-est {
+    fill: $turquoise;
+    // opacity: .4;
+    opacity: .6;
+  }
+
+  .selected .dev,
+  .selected .dev-est {
+    fill: $turquoise;
+    opacity: .6;
+    // opacity: .4;
+  }
+
+  .selected .payroll,
+  .selected .payroll-est,
+  .selected .dev:not(:first-child):last-child,
+  .selected .dev-est:not(:first-child):last-child {
+    fill: $brightaqua;
+    opacity: .6;
+    // opacity: .4;
+  }
+
+  .initial .total,
+  .initial .tot-est,
+  .initial .annual-est,
+  .initial .maint-est {
+    fill: $brightyellow;
+    opacity: .6;
+  }
+
+  .initial .dev,
+  .initial .dev-est {
+    // fill: $turquoise;
+    // opacity: .4;
+    fill: $brightyellow;
+    opacity: .6;
+  }
+
+  .initial .payroll,
+  .initial .payroll-est,
+  .initial .dev:not(:first-child):last-child,
+  .initial .dev-est:not(:first-child):last-child {
+    // fill: $turquoise;
+    // opacity: .4;
+    fill: $brightgreen;
+    opacity: .6;
+  }
+}
+
 .area.spent {
   fill: $brightfuscia;
   opacity: .6;
   stroke: none;
 }
+
+// .area.spent:first-child:not(:last-child) {
+//   fill: $brightorange;
+// }
 
 
 //////////

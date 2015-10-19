@@ -57,7 +57,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       // when the height changes, update the y scale range
       chart.on("change:height", function(newHeight) {
-        console.log("height changed");
+        // console.log("height changed");
         chart.yScale.range([newHeight, 0]);
       });
 
@@ -322,10 +322,10 @@ d3.chart("MarginChart").extend("FailureChart", {
               });
 
             selection.filter(function (d,i) {
-              console.log(i);
-              console.log(selection.size() - 1);
-              console.log(d);
-              console.log(i === selection.size() - 1 && (d.projections[0].change !== 0 || d.projections[0].dateChange) && !chart.data[chart.data.length - 1].launch);
+              // console.log(i);
+              // console.log(selection.size() - 1);
+              // console.log(d);
+              // console.log(i === selection.size() - 1 && (d.projections[0].change !== 0 || d.projections[0].dateChange) && !chart.data[chart.data.length - 1].launch);
               return i === selection.size() - 1 && (d.projections[0].change !== 0 || d.projections[0].dateChange) && !chart.data[chart.data.length - 1].launch;
             }).select("rect")
               .attr("width", function() {
@@ -491,7 +491,7 @@ d3.chart("MarginChart").extend("FailureChart", {
               });
 
             d3.select(selection[0][selection[0].length - 1])
-              .classed("launch", function(d) { console.log(d.launch); return d.launch; });
+              .classed("launch", function(d) { return d.launch; });
 
             var projections = selection.selectAll("path.projection")
               .data(function(d) { return d.projections;
@@ -591,8 +591,8 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             labels
               .style("text-anchor", function(d) {
-                console.log(chart.xScale(d.area[d.area.length - 1].x));
-                console.log(d);
+                // console.log(chart.xScale(d.area[d.area.length - 1].x));
+                // console.log(d);
                 if ( chart.xScale(d.area[d.area.length - 1].x) - 2 < 200 ) {
                   return "start";
                 }
@@ -603,7 +603,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             labels.selectAll("tspan").remove();
 
-            console.log(labels.length);
+            // console.log(labels.length);
 
             labels
               .filter(function (d) {
@@ -687,7 +687,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             selection.selectAll(".extra")
               .delay(function(d,i) {
-                console.log(d);
+                // console.log(d);
                 if ((d.change === 0 && d.dateChange === 0) || (selection.size() > 1 && d.area[0].x.toString() === chart.mindate.toString())) {
                   return 0;
                 }
@@ -704,7 +704,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             selection.selectAll(".desc")
               .delay(function(d,i) {
-                console.log(d);
+                // console.log(d);
                 if ((d.change === 0 && d.dateChange === 0) || (selection.size() > 1 && d.area[0].x.toString() === chart.mindate.toString())) {
                   return 0;
                 }
@@ -780,11 +780,33 @@ d3.chart("MarginChart").extend("FailureChart", {
               .attr("clip-path", "url(#spent-clip)"), {
         dataBind: function(data) {
           return this.selectAll("path.area")
-            .data([data.filter(function (milestone, index, data) {
-              if ( index === 0 || index === data.length - 1 || milestone.spent.value >  data[index - 1].spent.value ) {
-                return milestone;
+            .data(function() {
+              var path = data.filter(function (milestone, index, data) {
+                  if ( index === 0 || index === data.length - 1 || milestone.spent.value >  data[index - 1].spent.value ) {
+                    return milestone;
+                  }
+                });
+
+              if ( data[0].projections[0].extraLabel === "" ) {
+                return [path];
               }
-            })]);
+              else {
+                var first = data.filter(function (milestone, index, data) {
+                  if ( index === 0 || (index !== data.length - 1 && milestone.spent.value > data[index - 1].spent.value) ) {
+                    return milestone;
+                  }
+                });
+
+                var last = data.filter(function (milestone, index, data) {
+                  if ( index === 0 || (index === data.length - 1 && milestone.spent.value > data[index - 1].spent.value) ) {
+                    return milestone;
+                  }
+                });
+
+                return [first, last];
+              }
+            }
+            );
                 
         },
 
@@ -834,14 +856,23 @@ d3.chart("MarginChart").extend("FailureChart", {
       this.layer("spentlables", chart.layers.spentLabelsBase, {
         dataBind: function(data) {
           if (data.length > 1  && data[data.length - 1].spent.value > 0) {
-            return this.selectAll(".spent-labels")
-              .data([data[data.length - 1]], function(d) { return d.spent.value; });
+            if ( data[0].projections[0].extraLabel === "" ) {
+              return this.selectAll(".spent-labels")
+                .data([data[data.length - 1]], function(d) { return d.spent.value; });
+            }
+            else {
+              return this.selectAll(".spent-labels")
+                .data(data.filter(function (milestone, index, data) {
+                  if ( index > 0 && milestone.spent.value > data[index - 1].spent.value ) {
+                    return milestone;
+                  }
+                }), function(d) { return d.spent.value; });
+            }
           }
           else {
             return this.selectAll(".spent-labels")
               .data([]);
           }
-          
         },
 
         insert: function() {
@@ -863,6 +894,23 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             labels.selectAll("tspan").remove();
 
+            labels
+              .filter(function (d) {
+                return d.extraLabel !== "";
+              })
+              .attr("x", function(d) { 
+                var location = chart.xScale(d.dateObject) - 2; 
+                if (location < 200) {
+                  location = location + 4;
+                }
+                return location;
+              })
+              .append("tspan")
+                .attr("y", function(d) { return chart.yScale(d.spent.value) - 5; })
+                .attr("dy", "-2em")
+                .attr("class", "extra")
+                .text("");
+
             labels.append("tspan")
               .attr("x", function(d) { return chart.xScale(d.dateObject) - 2; })
               .attr("y", function(d) { return chart.yScale(d.spent.value) - 5; })
@@ -882,6 +930,13 @@ d3.chart("MarginChart").extend("FailureChart", {
             var chart = this.chart();
             var selection = this;
 
+            selection.selectAll(".extra")
+              .delay(chart.duration()*3)
+              .text(function(d) { 
+                console.log(d);
+                return d.projections[0].extraLabel;
+              });
+
             selection.selectAll(".desc")
               .delay(chart.duration()*3)
               .text("Spent so far:");
@@ -889,6 +944,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             selection.selectAll(".num")
               .delay(chart.duration()*3)
               .text(function (d) {
+                // console.log(d);
                 return chart.formatMoney(d.spent.value, d.currency);
               });
           },
@@ -1054,6 +1110,9 @@ d3.chart("MarginChart").extend("FailureChart", {
       data[0].class = "initial";
       data[data.length - 1].class = "selected";
 
+      chart.base
+        .classed("multi", function() { return data[0].projections[0].extraLabel !== ""; });
+
       console.log(chart.data);
 
       //update x scale domain
@@ -1178,7 +1237,7 @@ d3.csv("data/estimates.csv", function (data) {
     .key(function(d) { return d.Program; })
     .entries(data);
 
-  console.log(data);
+  // console.log(data);
 
   data.forEach(function (d) {
     // var series = [
@@ -1196,7 +1255,7 @@ d3.csv("data/estimates.csv", function (data) {
 
     var prevValue = {};
     var prevScale = {};
-    var prevEndDate;
+    var prevEndDate = {};
     
     potentialSeries.forEach (function (series) {
       prevValue[series.name] = null;
@@ -1220,28 +1279,31 @@ d3.csv("data/estimates.csv", function (data) {
         }
         prevValue[key] = +data[key];
       }
-      console.log(cost);
+
+      // console.log(cost);
       return cost;
     }
 
     function findBaseline (data, key) {
       var baseline;
-      console.log(data);
-      console.log(key);
-      console.log(prevScale[key]);
-      console.log(prevScale);
+      // console.log(data);
+      // console.log(key);
+      // console.log(prevScale[key]);
+      // console.log(prevScale);
       var dateFormat = d3.time.format("%Y-%m-%d");
 
       var dateObject = dateFormat.parse(data.date.replace(/T.*Z$/,""));
-      if ( data["Monies spent to date"] > 0 ) {
+      if ( data["Monies spent to date"] > 0 && !data["extra label"] ) {
         baseline = data["Monies spent to date"];
       }
       else if (prevScale[key]) {
-        if (dateObject > prevEndDate) {
-          baseline = prevScale[key](prevEndDate);
+        if (dateObject > prevEndDate[key]) {
+          baseline = prevScale[key](prevEndDate[key]);
         }
         else {
           baseline = prevScale[key](dateObject);
+          // console.log("baseline");
+          // console.log(baseline);
         }
       }
       else if (d3.keys(prevScale).length > 0) {
@@ -1251,7 +1313,7 @@ d3.csv("data/estimates.csv", function (data) {
         baseline = 0;
       }
 
-      prevEndDate = dateFormat.parse(data["Estimated schedule"].replace(/T.*Z$/,""));
+      prevEndDate[key] = dateFormat.parse(data["Estimated schedule"].replace(/T.*Z$/,""));
       return baseline;
     }
 
@@ -1259,14 +1321,14 @@ d3.csv("data/estimates.csv", function (data) {
     d.Program = d.values[0].Program;
     d.Currency = currency;
 
-    console.log(d.values[0].date);
+    // console.log(d.values[0].date);
     var dateFormat = d3.time.format("%Y-%m-%d");
     d.mindate = dateFormat.parse(d.values[0].date.replace(/T.*Z$/,""));
-    console.log(d.mindate);
+    // console.log(d.mindate);
 
-    console.log(d.values);
+    // console.log(d.values);
     d.nestedValues = d3.nest().key(function(d) { return d.date; }).entries(d.values);
-    console.log(d.nestedValues);
+    // console.log(d.nestedValues);
 
     d.milestones = d.nestedValues.map(function (nestedDate) { 
       milestone = nestedDate.values[0];
@@ -1280,6 +1342,8 @@ d3.csv("data/estimates.csv", function (data) {
       var annual = parseCostString(milestone,"Annual maintenance & operational costs");
       var spent;
       spent = parseCostString(milestone,"Monies spent to date");
+
+      
 
       // console.log(nestedDate.values);
 
@@ -1296,7 +1360,7 @@ d3.csv("data/estimates.csv", function (data) {
       // console.log(estimated);
       // console.log(total);
       // console.log(annual);
-      console.log(spent);
+      // console.log(spent);
       var datapoint = {
         "currency": currency,
         "Program": d.Program,
@@ -1321,22 +1385,22 @@ d3.csv("data/estimates.csv", function (data) {
         "annual": annual,
         "spent": spent,
 
-        "projection": [
-          {
-            x: dateObject,
-            y0: spent.value !== null ? spent.value : 0,
-            y1: spent.value !== null ? spent.value : 0,
-            y2: spent.value !== null ? spent.value : 0,
-            y3: spent.value !== null ? spent.value : 0
-          },
-          {
-            x: schedObject,
-            y0: spent.value !== null ? spent.value : 0,
-            y1: estimated.value,
-            y2: total.value,
-            y3: annual.value,
-          }
-        ],
+        // "projection": [
+        //   {
+        //     x: dateObject,
+        //     y0: spent.value !== null ? spent.value : 0,
+        //     y1: spent.value !== null ? spent.value : 0,
+        //     y2: spent.value !== null ? spent.value : 0,
+        //     y3: spent.value !== null ? spent.value : 0
+        //   },
+        //   {
+        //     x: schedObject,
+        //     y0: spent.value !== null ? spent.value : 0,
+        //     y1: estimated.value,
+        //     y2: total.value,
+        //     y3: annual.value,
+        //   }
+        // ],
 
         "projections" :  (function() {
           var projections = potentialSeries.filter(function(entry) {
@@ -1349,19 +1413,20 @@ d3.csv("data/estimates.csv", function (data) {
             }
           })
           .map(function(entry) {
-            console.log(entry);
+            // console.log(entry);
             function calcProjection (milestone, i) {
               i = typeof i !== "undefined" ? i : 0;
               var schedObject = new Date(milestone["Estimated schedule"]);
-              var dateChange = prevEndDate ? schedObject - prevEndDate : null;
+              var dateChange = prevEndDate[entry.name + i] ? schedObject - prevEndDate[entry.name + i] : null;
               // var baseline = spent.value !== null ? spent.value : 0;
               var baseline = findBaseline(milestone, entry.name + i);
-              console.log(baseline);
+              // console.log(baseline);
               // var baseline = 0;
               // var start = spent.value !== null ? dateObject : d.mindate;
               var start = dateObject;
               // prevValue = {};
               var end = parseCostString(milestone, entry.name);
+              // var spend = parseCostString(milestone, entry["Monies spent to date"]);
 
               // var end;
 
@@ -1378,8 +1443,8 @@ d3.csv("data/estimates.csv", function (data) {
               var endValue = end.value;
               var newScale = d3.time.scale().range([baseline,endValue]).domain([start,schedObject]);
 
-              console.log(end);
-              console.log(newScale(schedObject));
+              // console.log(end);
+              // console.log(newScale(schedObject));
 
               prevScale[entry.name + i] = newScale;
               return {
@@ -1400,17 +1465,24 @@ d3.csv("data/estimates.csv", function (data) {
             if ( nestedDate.values.length > 1 ) {
               var temps = [];
               nestedDate.values.forEach(function (milestone, i) { 
-                temps.push(calcProjection(milestone, i)); 
+                if (milestone.date !== milestone["Estimated schedule"]) {
+                  temps.push(calcProjection(milestone, milestone["extra label"])); 
+                }
               });
-              console.log(temps);
+              // console.log(temps);
               return temps;
             }
 
             else {
-              return calcProjection(milestone, 0);
+              if (milestone["extra label"] !== "") {
+                return calcProjection(milestone, milestone["extra label"]);
+              }
+              else {
+                return calcProjection(milestone, 0);
+              }
             }
           });
-          console.log(projections);
+          // console.log(projections);
           if ( Array.isArray(projections[0]) ) {
             return projections[0].sort(function(a,b){return b.area[1].y1 - a.area[1].y1;});
           }
@@ -1467,7 +1539,7 @@ d3.csv("data/estimates.csv", function (data) {
     // //   {x: d.schedObject, y: d.totMillions, y0: d.spentMillions}
     // // ];
 
-    console.log("data point processed");
+    // console.log("data point processed");
     // console.log(d.projection);
   });
 
@@ -1565,6 +1637,10 @@ d3.csv("data/estimates.csv", function (data) {
 
     d3.selectAll(".project-clip").remove();
 
+    d3.selectAll(".spent-clip").remove();
+
+    d3.selectAll(".spent.area").remove();
+
     // d3.select("#notes")
     //   .html("<p><strong>" +
     //     currentMilestone.formattedDate +
@@ -1648,7 +1724,7 @@ d3.csv("data/estimates.csv", function (data) {
       width = parWidth - margins.left - margins.right;
       height = width * 3.5 / 8;
 
-      console.log("beforePrint");
+      // console.log("beforePrint");
 
       d3.select("body").classed("print-view", true);
 
@@ -1665,7 +1741,7 @@ d3.csv("data/estimates.csv", function (data) {
       width = parWidth - margins.left - margins.right;
       height = width * 3.5 / 8;
 
-      console.log("afterPrint");
+      // console.log("afterPrint");
 
       d3.select("body").classed("print-view", false);
 
