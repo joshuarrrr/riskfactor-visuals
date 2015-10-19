@@ -833,13 +833,13 @@ d3.csv("data/complexity.csv", function (data) {
     mobMargins.left = mobMargins.right * 2;
 
     // TODO: remove 1px currently needed to force recalc
-    var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+    var mobWidth = window.parent.document.body.clientWidth - mobMargins.left - mobMargins.right;
 
-    // console.log(parWidth);
-    // console.log(window.innerWidth);
-    // console.log(window.parent.innerWidth);
-    // console.log(window.parent.document.body.clientWidth);
-    // console.log(d3.select("body").node().clientWidth);
+    console.log(parWidth);
+    console.log(window.innerWidth);
+    console.log(window.parent.innerWidth);
+    console.log(window.parent.document.body.clientWidth);
+    console.log(d3.select("body").node().clientWidth);
 
     d3.select("body").classed("mobile-view", true);
 
@@ -972,7 +972,7 @@ d3.csv("data/ECSS-systems.csv", function (data) {
     mobMargins.left = mobMargins.right * 2;
 
     // TODO: remove 1px currently needed to force recalc
-    var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+    var mobWidth = window.parent.document.body.clientWidth - mobMargins.left - mobMargins.right;
 
     d3.select("body").classed("mobile-view", true);
 
