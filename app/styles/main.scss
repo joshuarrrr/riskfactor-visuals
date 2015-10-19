@@ -1220,6 +1220,32 @@ h3.timeline-section-header {
   fill: $brightfuscia;
   opacity: .6;
   stroke: none;
+  stroke: $gray;
+}
+
+.area-labels,
+.spent-labels {
+  text-transform: uppercase;
+  font-size: 1.1em;
+
+  .desc {
+    font-size: .8em;
+  }
+
+  .num {
+    font-family: "Theinhardt-Medium", Helvetica, Arial, sans-serif;
+  }
+}
+
+.mobile-view {
+  .area-labels,
+  .spent-labels {
+    display: none;
+  }
+}
+
+.estimates .y.axis-label {
+  text-transform: uppercase;
 }
 
 // .area.spent:first-child:not(:last-child) {
