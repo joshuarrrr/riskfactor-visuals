@@ -1041,6 +1041,10 @@ var Share = function() {
       return data;
     }
 
+    function track(label) {
+      return;
+      //MCP.share(label);
+    }
 
     var that = {
 
@@ -1052,7 +1056,7 @@ var Share = function() {
         $("#share-lin").on("click",that.postToLinkedIn);
       },
       
-      postToFacebook: function() {
+      postToFacebook: function(event) {
         event.preventDefault();
         var data = shareData();
         data.title = $(this.parentNode).attr("data-chart") !== undefined ? data.titles[$(this.parentNode).attr("data-chart")] : data.titles.default;
@@ -1086,7 +1090,7 @@ var Share = function() {
         return "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
       },
       
-      postToTwitter: function() {
+      postToTwitter: function(event) {
         event.preventDefault();
         var data = shareData();
         data.title = $(this.parentNode).attr("data-chart") !== undefined ? data.titles[$(this.parentNode).attr("data-chart")] : data.titles.default;

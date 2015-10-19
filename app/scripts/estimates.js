@@ -615,7 +615,7 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             var extra = labels
               .filter(function (d) {
-                console.log(d);
+                // console.log(d);
                 return d.extraLabel !== "";
               })
               .attr("x", function(d) { 
@@ -790,11 +790,11 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             selection.selectAll(".num")
               .delay(function(d, i) {
-                console.log(d.change);
-                console.log(d.dateChange);
-                console.log(chart.data.length);
-                console.log(d.area[0].x.toString());
-                console.log(chart.mindate.toString());
+                // console.log(d.change);
+                // console.log(d.dateChange);
+                // console.log(chart.data.length);
+                // console.log(d.area[0].x.toString());
+                // console.log(chart.mindate.toString());
                 if ((!d.dateChange && chart.data.length > 1 && d.area[0].x.toString() === chart.mindate.toString())) {
                   return 0;
                 }
@@ -1179,7 +1179,7 @@ d3.chart("MarginChart").extend("FailureChart", {
       chart.base
         .classed("multi", function() { return data[0].extraLabel !== ""; });
 
-      console.log(chart.data);
+      // console.log(chart.data);
 
       //update x scale domain
       chart.mindate = dateFormat.parse(data[0].dateOriginal.replace(/T.*Z$/,""));
@@ -1907,7 +1907,7 @@ d3.csv("data/estimates.csv", function (data) {
         $("#share-lin").on("click",that.postToLinkedIn);
       },
       
-      postToFacebook: function() {
+      postToFacebook: function(event) {
         event.preventDefault();
         var data = shareData();
         // data.title = $(this.parentNode).attr("data-section") !== undefined ? $("#" + $(this.parentNode).attr("data-section")).text() : data.title;
@@ -1941,7 +1941,7 @@ d3.csv("data/estimates.csv", function (data) {
         return "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
       },
       
-      postToTwitter: function() {
+      postToTwitter: function(event) {
         event.preventDefault();
         var data = shareData();
         // data.title = $(this.parentNode).attr("data-section") !== undefined ? $("#" + $(this.parentNode).attr("data-section")).text() : data.title;

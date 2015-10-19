@@ -2777,7 +2777,7 @@ d3.csv("data/timeline.csv", function (data) {
         $("#share-lin").on("click",that.postToLinkedIn);
       },
       
-      postToFacebook: function() {
+      postToFacebook: function(event) {
         event.preventDefault();
         var data = shareData();
         data.title = $(this.parentNode).attr("data-section") !== undefined ? $("#" + $(this.parentNode).attr("data-section")).text() : data.title;
@@ -2811,7 +2811,7 @@ d3.csv("data/timeline.csv", function (data) {
         return "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
       },
       
-      postToTwitter: function() {
+      postToTwitter: function(event) {
         event.preventDefault();
         var data = shareData();
         data.title = $(this.parentNode).attr("data-section") !== undefined ? $("#" + $(this.parentNode).attr("data-section")).text() : data.title;
