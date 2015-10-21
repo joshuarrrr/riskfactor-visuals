@@ -32,7 +32,12 @@ d3.chart("MarginChart").extend("FailureChart", {
       chart.layers.spentLabelsBase = chart.base.select("g").append("g")
         .classed("spent-label-base", true);
 
-      chart.layers.infoBoxBase = d3.select(".info-box");
+      // chart.layers.infoBoxBase = d3.select(".info-box");
+
+      // chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).insert("div")
+      //   .attr("class", "info-box long-description");
+
+      chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).select(".long-description");
 
       chart.layers.defs = chart.base.select("g").append("defs");
 
@@ -580,7 +585,9 @@ d3.chart("MarginChart").extend("FailureChart", {
             var selection = this;
 
             selection
-              .attr("class", "area-labels");
+              .attr("class", function (d,i) {
+                return i===0 && chart.data.length > 1 ? "area-labels first" : "area-labels";
+              });
 
             var labels = selection.selectAll("text")
               .data(function(d) { return d.projections; });
@@ -601,7 +608,7 @@ d3.chart("MarginChart").extend("FailureChart", {
               .style("text-anchor", function(d) {
                 // console.log(chart.xScale(d.area[d.area.length - 1].x));
                 // console.log(d);
-                if ( chart.xScale(d.area[d.area.length - 1].x) - 2 < 200 ) {
+                if ( chart.xScale(d.area[d.area.length - 1].x) - 2 < 120 || (d.extraLabel === "CCNPAU" && chart.xScale(d.area[d.area.length - 1].x) - 2 < chart.width() - 120)) {
                   return "start";
                 }
                 else {
@@ -620,7 +627,8 @@ d3.chart("MarginChart").extend("FailureChart", {
               })
               .attr("x", function(d) { 
                 var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
-                if (location < 200) {
+                
+                if (location < 120 || (d.extraLabel === "CCNPAU" && location < chart.width() - 120)) {
                   location = location + 4;
                 }
                 return location;
@@ -633,13 +641,14 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             var split = labels
               .filter(function (d) {
-                return d.name.split(" ").length > 3;
+                return d.name.split(" ").length > 2;
               });
               
             split.append("tspan")
                 .attr("x", function(d) { 
                   var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
-                  if (location < 200) {
+                  
+                  if (location < 120 || (d.extraLabel === "CCNPAU" && location < chart.width() - 120)) {
                     location = location + 4;
                   }
                   return location;
@@ -652,7 +661,8 @@ d3.chart("MarginChart").extend("FailureChart", {
             split.append("tspan")
                 .attr("x", function(d) { 
                   var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
-                  if (location < 200) {
+                  
+                  if (location < 120 || (d.extraLabel === "CCNPAU" && location < chart.width() - 120)) {
                     location = location + 4;
                   }
                   return location;
@@ -669,12 +679,13 @@ d3.chart("MarginChart").extend("FailureChart", {
 
             labels
               .filter(function (d) {
-                return d.name.split(" ").length <= 3;
+                return d.name.split(" ").length <= 2;
               })
               .append("tspan")
               .attr("x", function(d) { 
                 var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
-                if (location < 200) {
+                
+                if (location < 120 || (d.extraLabel === "CCNPAU" && location < chart.width() - 120)) {
                   location = location + 4;
                 }
                 return location;
@@ -687,7 +698,8 @@ d3.chart("MarginChart").extend("FailureChart", {
             labels.append("tspan")
               .attr("x", function(d) { 
                 var location = chart.xScale(d.area[d.area.length - 1].x) - 2; 
-                if (location < 200) {
+                
+                if (location < 120 || (d.extraLabel === "CCNPAU" && location < chart.width() - 120)) {
                   location = location + 4;
                 }
                 return location;
@@ -775,7 +787,7 @@ d3.chart("MarginChart").extend("FailureChart", {
                   name = "Initial " + name;
                 }
 
-                if ( d.name.split(" ").length > 3 ) {
+                if ( d.name.split(" ").length > 2 ) {
                   if (i % 2 === 0) {
                     return name.split(" ").slice(0,2).join(" ");
                   }
@@ -967,7 +979,8 @@ d3.chart("MarginChart").extend("FailureChart", {
               .append("tspan")
                 .attr("x", function(d) { 
                 var location = chart.xScale(d.dateObject) - 2; 
-                if (location < 200) {
+                
+                if (location < 120 || (d.extraLabel === "CCNPAU" && location < chart.width() - 120)) {
                   location = location + 4;
                 }
                 return location;
@@ -999,7 +1012,7 @@ d3.chart("MarginChart").extend("FailureChart", {
             selection.selectAll(".extra")
               .delay(chart.duration()*3)
               .text(function(d) { 
-                console.log(d);
+                // console.log(d);
                 return d.projections.length > 0 ? d.projections[0].extraLabel : d.extraLabel;
               });
 
@@ -1114,15 +1127,17 @@ d3.chart("MarginChart").extend("FailureChart", {
               });
 
             if (chart.data.length > 1) {
-              if (selection.datum().spent.value > 0) {
+              if ( chart.data[0].Program !== "California’s Unemployment Insurance Modernization" && selection.datum().spent.value > 0) {
                 selection.append("p")
+                  .append("em")
                   .text(function (d) {
                     return "Spent so far: " + chart.formatMoney(d.spent.value,d.currency);
                   });
               }
 
-              if ( chart.data[0].Program !== "California's Unemployment Insurance Modernization" && Math.abs(selection.datum().estimated.change) > 0 ) {
+              if ( chart.data[0].Program !== "California’s Unemployment Insurance Modernization" && Math.abs(selection.datum().estimated.change) > 0 ) {
                 selection.append("p")
+                  .append("em")
                   .text(function (d) {
                     var sign = d.estimated.change > 0 ? "+" : "";
                     var changeWord = d.estimated.change > 0 ? "increased" : "decreased";
@@ -1244,12 +1259,12 @@ d3.chart("MarginChart").extend("FailureChart", {
 
       chart.layers.ylabels.select(".y.axis-label text")
         .text(function() {
-          var yLabelText = "Cost, " + data[0].currency;
+          var yLabelText = data[0].currency;
           if ( chart.maxCost >= 1e9 ) {
-            yLabelText += " billions";
+            yLabelText += ", billions";
           }
           else if ( chart.maxCost >= 1e6 ) {
-            yLabelText += " millions";
+            yLabelText += ", millions";
           }
           else {
             yLabelText += chart.maxCost;
@@ -1293,9 +1308,9 @@ d3.csv("data/estimates.csv", function (data) {
   "use strict";
   var container = d3.select("#chart");
   var parWidth = container.node().parentNode.offsetWidth;
-  var margins = {top: 65, bottom: 30, right: 20, left: 40};
+  var margins = {top: 65, bottom: 30, right: 5, left: 40};
   var width = parWidth - margins.left - margins.right;
-  var height = width * 3.5 / 8;
+  var height = width * 3.6 / 8;
 
   var milestone = 1; // counter to keep track of chart state
   var currentProjectID = 0; 
@@ -1305,7 +1320,7 @@ d3.csv("data/estimates.csv", function (data) {
   var potentialSeries = [
     { "name": "Monies spent to date", "class": "spent" },
     // { "name": "Total committed spending", "class": "spent" },
-    { "name": "Total life-cycle cost", "class": "tot-est" },
+    { "name": "Total life cycle cost", "class": "tot-est" },
     { "name": "Estimated cost to develop", "class": "dev-est" },
     { "name": "Payroll development cost", "class": "payroll-est" },
     // { "name": "Annual maintenance & operational costs", "class": "annual-est" },
@@ -1321,7 +1336,7 @@ d3.csv("data/estimates.csv", function (data) {
   data.forEach(function (d) {
     // var series = [
     //   "Estimated cost to develop",
-    //   "Total life-cycle cost",
+    //   "Total life cycle cost",
     //   "Annual maintenance & operational costs",
     //   "Monies spent to date"
     //   ];
@@ -1353,8 +1368,8 @@ d3.csv("data/estimates.csv", function (data) {
         if (prevValue[key] > 0) {
           cost.change = data[key] - prevValue[key];
         }
-        else if (key === "Estimated cost to develop" && cost.value > prevValue["Total life-cycle cost"]) {
-          cost.change = cost.value - prevValue["Total life-cycle cost"];
+        else if (key === "Estimated cost to develop" && cost.value > prevValue["Total life cycle cost"]) {
+          cost.change = cost.value - prevValue["Total life cycle cost"];
         }
         prevValue[key] = +data[key];
       }
@@ -1417,7 +1432,7 @@ d3.csv("data/estimates.csv", function (data) {
       var schedObject = new Date(milestone["Estimated schedule"]);
 
       var estimated = parseCostString(milestone,"Estimated cost to develop");
-      var total = parseCostString(milestone,"Total life-cycle cost");
+      var total = parseCostString(milestone,"Total life cycle cost");
       var annual = parseCostString(milestone,"Annual maintenance & operational costs");
       var spent;
       spent = parseCostString(milestone,"Monies spent to date");
@@ -1486,10 +1501,10 @@ d3.csv("data/estimates.csv", function (data) {
           var projections = potentialSeries.filter(function(entry) {
             // return entry.class === "dev-est" && milestone[entry.name] !== "";
             if ( milestone["Estimated cost to develop"] === "" && milestone["Payroll development cost"] === "" && milestone.date !== milestone["Estimated schedule"] ) {
-              return entry.name === "Total life-cycle cost";
+              return entry.name === "Total life cycle cost";
             }
             else {
-              return entry.class !== "spent" && milestone[entry.name] !== "" && entry.name !== "Total life-cycle cost";
+              return entry.class !== "spent" && milestone[entry.name] !== "" && entry.name !== "Total life cycle cost";
             }
           })
           .map(function(entry) {
@@ -1513,7 +1528,7 @@ d3.csv("data/estimates.csv", function (data) {
               // if ( entry.name = "Estimated cost to develop" ) {
               //   end = estimated;
               // }
-              // else if ( entry.name = "Total life-cycle cost" ) {
+              // else if ( entry.name = "Total life cycle cost" ) {
               //   end = total;
               // }
               // else if ( entry.name = "Payroll development cost") {
@@ -1641,7 +1656,9 @@ d3.csv("data/estimates.csv", function (data) {
     .data(data)
   .enter().append("option")
     .attr("value", function(d, i){ return i; })
-    .text(function(d){ return d.Program; });
+    .text(function(d){ 
+      return d.Program; 
+    });
 
   projectSelector.on("change", function() {
     currentProjectID = this.value;
@@ -1652,36 +1669,57 @@ d3.csv("data/estimates.csv", function (data) {
     resetChart(currentProjectID);
   });
 
+  var longDesc = container.append("div")
+    .style("width", ((parWidth - 40) / 3) + "px")
+    .classed("long-description", true);
+
   var failure = d3.select("#chart")
     .append("svg")
     // .classed("hidden", true)
     .chart("FailureChart")
     .duration(300)
-    .width(width)
+    // .width(width)
+    .width(((parWidth - 40) * 2 / 3) - margins.left + 15)
     .height(height)
     .margin(margins)
     .yData(potentialSeries);
+
+  longDesc.node().parentNode.appendChild(longDesc.node());
 
   var buttons = d3.selectAll(".button:not(.share)");
 
   if ( failure.mode() === "mobile" ) {
     buttons
-      .style("width", "100%")
-      .style("margin", "0 0 1em")
-      .style("padding", 0);
+      // .style("width", "100%")
+      .style("margin", "0 0 .5em 2px")
+      .style("padding", "0 6px")
+      .style("font-size", ".8em")
+      .each(function(d,i) { 
+        d3.select(this).text(d3.select(this).text().replace(/Project|Chart/,""));
+
+        if (i === 0) {
+          d3.select(this).style("margin", "0 0 .5em 0");
+        }
+      });
 
     var mobMargins = margins;
-    mobMargins.left = mobMargins.right * 2;
+    mobMargins.right = 10;
+    mobMargins.top = 50;
+    mobMargins.left = 35;
 
     // TODO: remove 1px currently needed to force recalc
-    var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+    // var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
+    var mobWidth = window.parent.document.body.clientWidth - mobMargins.left - mobMargins.right;
 
     d3.select("body").classed("mobile-view", true);
 
     failure
       .width(mobWidth)
-      .height(mobWidth / 1.5)
+      .height(mobWidth)
       .margin(mobMargins);
+
+    longDesc
+      .style("width", null);
 
     // failure
     //   .margin(margins)
@@ -1692,7 +1730,7 @@ d3.csv("data/estimates.csv", function (data) {
   var pymChild = new pym.Child();
 
   function resetChart(i) {
-    location.hash = "#project-selector";
+    // location.hash = "#project-selector";
 
     d3.select("#chart-title")
       .text(data[i].Program);
@@ -1802,11 +1840,14 @@ d3.csv("data/estimates.csv", function (data) {
     var beforePrint = function() {
       parWidth = container.node().parentNode.offsetWidth; // dynamically calc width of parent contatiner
       width = parWidth - margins.left - margins.right;
-      height = width * 3.5 / 8;
+      height = width * 3.6 / 8;
 
       // console.log("beforePrint");
 
       d3.select("body").classed("print-view", true);
+
+      longDesc
+        .style("width", null);
 
       failure
         .width(width)
@@ -1819,14 +1860,17 @@ d3.csv("data/estimates.csv", function (data) {
     var afterPrint = function() {
       parWidth = container.node().parentNode.offsetWidth; // dynamically calc width of parent contatiner
       width = parWidth - margins.left - margins.right;
-      height = width * 3.5 / 8;
+      height = width * 3.6 / 8;
 
       // console.log("afterPrint");
 
       d3.select("body").classed("print-view", false);
 
+      longDesc
+        .style("width", ((parWidth - 40) / 3) + "px");
+
       failure
-        .width(width)
+        .width(((parWidth - 40) * 2 / 3) - margins.left + 15)
         .height(height)
         .draw(failure.data);
 

@@ -867,6 +867,10 @@ h3.timeline-section-header {
     float: none;
     margin: 0 5px;
   }
+
+  &.estimates {
+    padding: 0;
+  }
 }
 
 .button {
@@ -1021,7 +1025,18 @@ h3.timeline-section-header {
 
   div {
     font-size: 1.1em;
+  
+    h4 {
+      margin-bottom: .5em;
+      margin-top: 0;
+    }
+
+    p {
+      font-size: .9em;
+      line-height: 1.24em;
+    }
   }
+
 }
 
 .mobile-view .long-description,
@@ -1032,6 +1047,20 @@ h3.timeline-section-header {
 
   h3 {
     display: none;
+  }
+
+  div {
+    font-size: inherit;
+  
+    h4 {
+      margin-bottom: .5em;
+      margin-top: 0;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 25px;
+    }
   }
 }
 
@@ -1046,6 +1075,10 @@ h3.timeline-section-header {
   .placeholder {
     display: none;
   }
+}
+
+.mobile-view .project-selector {
+  width: 100%;
 }
 
 .project-switch {
@@ -1235,13 +1268,23 @@ h3.timeline-section-header {
 
 .mobile-view {
   .area-labels,
-  .spent-labels {
+  .spent-labels,
+  .y.axis-label {
+    // display: none;
+    font-size: .8em;
+  }
+
+  .area-labels.first {
     display: none;
   }
 }
 
 .estimates .y.axis-label {
   text-transform: uppercase;
+}
+
+.estimates {
+  overflow: auto;
 }
 
 // .area.spent:first-child:not(:last-child) {
