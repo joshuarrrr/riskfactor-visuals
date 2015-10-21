@@ -1673,6 +1673,11 @@ d3.csv("data/estimates.csv", function (data) {
     .style("width", ((parWidth - 40) / 3) + "px")
     .classed("long-description", true);
 
+  //set dimensions for facebook image export
+  // margins = {top: 20, bottom: 30, right: 20, left: 80};
+  // width = 620 - margins.left - margins.right;
+  // height = 325 - margins.top - margins.bottom;
+
   var failure = d3.select("#chart")
     .append("svg")
     // .classed("hidden", true)
