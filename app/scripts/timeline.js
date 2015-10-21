@@ -1961,7 +1961,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             var el = chart.base.select(".active");
             var dateIndex = +el.attr("data-date-index");
 
-            event.preventDefault();
+            d3.event.preventDefault();
 
             if ( !el.empty() ) {
 

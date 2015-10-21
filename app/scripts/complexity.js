@@ -467,8 +467,8 @@ d3.chart("MarginChart").extend("SystemsChart", {
             .attr("width", 0)
             .attr("height", chart.height() + 10);
 
-          d3.select("#replay").on("click", function() {
-            event.preventDefault();
+          d3.select("#replay").on("click", function(event) {
+            d3.event.preventDefault();
 
             chart.layer("projectedMask").draw();
           });
