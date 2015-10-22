@@ -32,12 +32,12 @@ d3.chart("MarginChart").extend("FailureChart", {
       chart.layers.spentLabelsBase = chart.base.select("g").append("g")
         .classed("spent-label-base", true);
 
-      // chart.layers.infoBoxBase = d3.select(".info-box");
+      chart.layers.infoBoxBase = d3.select(".info-box");
 
       // chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).insert("div")
       //   .attr("class", "info-box long-description");
 
-      chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).select(".long-description");
+      // chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).select(".long-description");
 
       chart.layers.defs = chart.base.select("g").append("defs");
 
@@ -1669,10 +1669,6 @@ d3.csv("data/estimates.csv", function (data) {
     resetChart(currentProjectID);
   });
 
-  var longDesc = container.append("div")
-    .style("width", ((parWidth - 40) / 3) + "px")
-    .classed("long-description", true);
-
   //set dimensions for facebook image export
   // margins = {top: 20, bottom: 30, right: 20, left: 80};
   // width = 620 - margins.left - margins.right;
@@ -1689,22 +1685,22 @@ d3.csv("data/estimates.csv", function (data) {
     .margin(margins)
     .yData(potentialSeries);
 
+  var longDesc = container.select(".info-box")
+    .classed("long-description", true);
+
   longDesc.node().parentNode.appendChild(longDesc.node());
 
-  var buttons = d3.selectAll(".button:not(.share)");
+  var buttons = d3.select(".row-buttons").selectAll(".button");
 
   if ( failure.mode() === "mobile" ) {
-    buttons
-      // .style("width", "100%")
-      .style("margin", "0 0 .5em 2px")
-      .style("padding", "0 6px")
-      .style("font-size", ".8em")
-      .each(function(d,i) { 
-        d3.select(this).text(d3.select(this).text().replace(/Project|Chart/,""));
+    d3.select("body").classed("mobile-view", true);
 
-        if (i === 0) {
-          d3.select(this).style("margin", "0 0 .5em 0");
-        }
+    buttons
+      // .style("margin", "0 0 .5em 2px")
+      // .style("padding", "0 6px")
+      // .style("font-size", ".8em")
+      .each(function() { 
+        d3.select(this).text(d3.select(this).text().replace(/Project|Chart/,""));
       });
 
     var mobMargins = margins;
@@ -1716,15 +1712,10 @@ d3.csv("data/estimates.csv", function (data) {
     // var mobWidth = parWidth - mobMargins.left - mobMargins.right - 1;
     var mobWidth = window.parent.document.body.clientWidth - mobMargins.left - mobMargins.right;
 
-    d3.select("body").classed("mobile-view", true);
-
     failure
       .width(mobWidth)
       .height(mobWidth)
       .margin(mobMargins);
-
-    longDesc
-      .style("width", null);
 
     // failure
     //   .margin(margins)
@@ -1741,7 +1732,7 @@ d3.csv("data/estimates.csv", function (data) {
       .text(data[i].Program);
 
     d3.select(".share-buttons")
-      .attr("data-section", i)
+      .attr("data-section", i);
 
     failure.base
       .classed("hidden", false)
@@ -1851,8 +1842,8 @@ d3.csv("data/estimates.csv", function (data) {
 
       d3.select("body").classed("print-view", true);
 
-      longDesc
-        .style("width", null);
+      // longDesc
+      //   .style("width", null);
 
       failure
         .width(width)
@@ -1871,8 +1862,8 @@ d3.csv("data/estimates.csv", function (data) {
 
       d3.select("body").classed("print-view", false);
 
-      longDesc
-        .style("width", ((parWidth - 40) / 3) + "px");
+      // longDesc
+      //   .style("width", ((parWidth - 40) / 3) + "px");
 
       failure
         .width(((parWidth - 40) * 2 / 3) - margins.left + 15)
