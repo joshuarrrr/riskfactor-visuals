@@ -2,11 +2,16 @@
 (function() {
   "use strict";
 
+  RegExp.escape = function(s) {
+    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+  };
+
   d3.csv("data/timeline.csv", function (data) {
     var pymChild = new pym.Child();
 
     data = data.filter(function (d) {
-      return d.cause.length > 1 && d.cause.length < 70;
+      return d.cause.length > 1 && d.cause.split("\n").length < 4;
+      // return d.cause.length > 1;
     });
 
     console.log(data);
@@ -25,6 +30,8 @@
     var performance = {"attempted": 0, "correct": 0, "incorrect": 0};
     var used = [];
     var totalQuestions = data.length;
+    var questionsToComplete = 10;
+    var questionsToAttempt = questionsToComplete;
 
     console.log("answerContainers: " + answerContainers);
     // console.log("answers: " + answers);
@@ -47,8 +54,8 @@
 
     function score (nCorrect, nQuestions) {
       var answersWord = nCorrect === 1 ? "answer" : "answers";
-      return "You got <span class=\"correct-answers\">" + nCorrect + "</span> " +
-        "correct " + answersWord + " out of " + nQuestions + " questions";
+      return "You have <span class=\"correct-answers\">" + nCorrect + "</span> " +
+        "correct " + answersWord + " out of " + nQuestions + " so far";
     }
 
     next.on("click", function () {
@@ -117,7 +124,7 @@
       answerContainers.selectAll(".answer").classed("incorrect",false).classed("faded", false);
 
       d3.select(".question-counter")
-        .text((performance.attempted + 1) + " of " + totalQuestions);
+        .text((performance.attempted + 1) + " of " + questionsToAttempt);
 
       // console.log(data[0]);
       shuffle(data);
@@ -158,7 +165,44 @@
       target.html("");
       target.append("div")
         .classed("sumtext", true)
-        .html(function (d) { return d.sumtext.split(d.cause).join("<span class=\"highlighted\">" + d.cause + "</span>"); });
+        .html(function (d) { 
+          console.log(d.cause);
+          console.log(d.sumtext);
+          var search = d.cause.split("\n").filter(function(cause) { return cause.length > 0; });
+          var fullText = d.sumtext;
+
+          console.log(search);
+
+          search.forEach(function(cause) {
+            var expanded = cause;
+
+            console.log(cause);
+            if ( cause.indexOf("...") > 0 ) {
+              // console.log(cause.split("...").join(".*"));
+              expanded = new RegExp(cause.split("...")
+                .map(function (frag) {
+                  return RegExp.escape(frag);
+                })
+                .join(".*"));
+
+              console.log(expanded);
+              cause = fullText.match(expanded);
+              console.log(cause);
+            }
+            fullText = fullText
+              .split(cause)
+              .join("<span class=\"highlighted\">" + 
+                cause + "</span>"); 
+          });
+
+          return fullText
+            .split("\n")
+            .filter(function(cause) { return cause.length > 0; })
+            .join("<br><br>");
+
+          // return d.sumtext.split(search).join("<span class=\"highlighted\">" + 
+          //   d.cause + "</span>"); 
+          });
 
       var links = target.select(".sumtext").selectAll(".readmore")
               .data(function(d) { return d.url.split("; "); });
@@ -185,6 +229,102 @@
 
       answerContainers.selectAll(".answer:not(.correct):not(.incorrect)")
         .classed("faded", true);
+    }
+
+    function removeComplete () {
+      var complete = d3.select(".complete");
+
+      complete.remove();
+
+      d3.select(".quiz-status").selectAll(".score, .counter")
+        .classed("hidden", false);
+
+      next
+        .classed("hidden", false);
+    }
+
+    function resetQuiz() {
+      performance = {"attempted": 0, "correct": 0, "incorrect": 0};
+
+      removeComplete();
+
+      d3.select(".score")
+        .html("");
+
+      resetBoard();
+
+      next
+        .classed("hidden", true);
+    }
+
+    function displayComplete (total) {
+      d3.select(".quiz-status").selectAll(".score, .counter")
+        .classed("hidden", true);
+
+      var complete = d3.select(".quiz-status").append("div")
+        .attr("class", "complete")
+        .attr("id", "complete");
+
+      if ( performance.correct / performance.attempted >= 0.5 ) {
+        complete
+          .classed("correct", true)
+          .html("Congratulations! You correctly identified the causes of " + 
+            performance.correct + " of " + performance.attempted + " failures."
+            );
+      }
+      else {
+        complete
+          .classed("incorrect", true)
+          .html("Bummer! You correctly identified the causes of " + 
+            performance.correct + " of " + performance.attempted + " failures." +
+            "<br>As you have discovered, many reported causes are uninformative."
+            );
+      }
+
+      var buttonContainer = complete.append("div")
+        .attr("class", "buttons");
+
+      buttonContainer.append("a")
+        .attr("class", "button")
+        .attr("id", "continue")
+        .text("Keep Going")
+        .on("click", function() { 
+          questionsToAttempt += questionsToComplete;
+
+          if ( questionsToAttempt > totalQuestions ) {
+            questionsToAttempt = totalQuestions;
+          }
+
+          d3.select(".question-counter")
+            .text((performance.attempted) + " of " + questionsToAttempt);
+
+          removeComplete(); 
+        });
+
+      buttonContainer.append("a")
+        .attr("class", "button")
+        .attr("id", "reset")
+        .text("Reset Score & Start Over")
+        .on("click", function() { resetQuiz(); });
+
+      complete.append("text")
+        .text("Share your score and challenge your friends:");
+
+      var shareContainer = complete.append("div")
+        .attr("class", "share-buttons");
+
+      shareContainer.append("a")
+        .attr("class", "share-fb share button")
+        .style("background", "url('images/facebook.png')");
+
+      shareContainer.append("a")
+        .attr("class", "share-twtr share button")
+        .style("background", "url('images/twitter.png')");
+
+      // pymChild.sendHeight();
+
+      shareContainer.node().scrollIntoView();
+      // location.hash = "#complete";
     }
 
     function getNewAnswers (num) {
@@ -254,8 +394,11 @@
 
       answers.append("span")
         .attr("class", "cause")  
-        .text(function(d) {
-          return d.cause;
+        .html(function(d) {
+          return d.cause
+            .split("\n")
+            .filter(function(cause) { return cause.length > 0; })
+            .join("<hr>");
         });
 
       console.log(answers.enter().size());
@@ -284,7 +427,8 @@
           .classed("attemped", true);
 
         next
-          .classed("inactive", false);
+          .classed("inactive", false)
+          .classed("hidden", false);
 
         answers
           .classed("clickable", false);
@@ -332,10 +476,10 @@
           //       return "["+ (i + 1) +"]";
           //     }
           //   });
-
+          
+          questionContainer.classed("correct", true);
           displayCorrect(clicked);
-
-          questionContainer.classed("correct",true);
+          
           if( answers.filter(".incorrect").empty() ) {
             performance.correct++;
           }
@@ -362,6 +506,16 @@
         }
 
         d3.select(".score").html(score(performance.correct, performance.attempted));
+
+        // console.log(questionsToComplete % performance.attempted);
+        if( (performance.attempted >= questionsToComplete && 
+          performance.attempted % questionsToComplete) === 0 ||
+          performance.attempted === totalQuestions ) {
+          displayComplete(performance.attempted);
+
+          next
+            .classed("hidden", true);
+        }
 
         pymChild.sendHeight();
 

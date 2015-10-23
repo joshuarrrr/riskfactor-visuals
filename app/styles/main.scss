@@ -884,6 +884,7 @@ h3.timeline-section-header {
     background-size: contain!important;
     height: 30px;
     padding: 0;
+    vertical-align: top;
     width: 30px;
   }
 
@@ -1309,16 +1310,17 @@ h3.timeline-section-header {
 .quiz {
   font-family: "Theinhardt-Regular", Helvetica, Arial, sans-serif;
   font-size: 18px;
+  padding-top: 1em;
 
   .instructions {
-    float: left;
+    // float: left;
     margin-left: 0;
-    margin-right: 20px;
-    max-width: 620px;
+    // margin-right: 20px;
+    // max-width: 620px;
   }
 
   .quiz-controls {
-    float: left;
+    float: right;
     text-align: right;
     width: 300px;
   }
@@ -1330,19 +1332,39 @@ h3.timeline-section-header {
   .quiz-heading {
     font-family: "Theinhardt-Medium", Helvetica, Arial, sans-serif;
     font-size: 22px;
-    margin: 10px 0;
+    line-height: 32px;
+    margin: 0;
     text-transform: uppercase;
+  }
+
+  .quiz-status {
+    clear: both;
+    margin-top: 1em;
+  }
+
+  .score {
+    float: right;
   }
 
   .failure-hed {
     margin-bottom: .5em;
     margin-top: 0;
   }
+
+  .share-buttons {
+    line-height: 30px;
+    text-align: center;
+
+    .button {
+      margin: 0 0 0 10px;
+    }
+  }
 }
 
 .answer>.cause,
 .sumtext,
-.wrong {
+.wrong,
+.complete {
   border: 3px solid $black;
   margin: 10px 0;
   padding: 20px;
@@ -1375,7 +1397,8 @@ h3.timeline-section-header {
 }
 
 .answer>.cause,
-.sumtext {
+.sumtext,
+.complete {
   // background: $lightgray;
   display: block;
   text-align: center;
@@ -1422,9 +1445,14 @@ h3.timeline-section-header {
 }
 
 .answer.correct .sumtext, 
-.impact-summary.correct {
+.impact-summary.correct,
+.complete.correct {
   background-color: $white;
   border-color: $green;
+}
+
+.complete.incorrect {
+  border-color: $impact;
 }
 
 .highlighted {

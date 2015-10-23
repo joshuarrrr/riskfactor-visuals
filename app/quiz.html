@@ -2,7 +2,7 @@
 <html class="no-js">
   <head>
     <meta charset="utf-8">
-    <title>The Blame Game</title>
+    <title>The IT Failure Blame Game</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
     <link rel="shortcut icon" href="/favicon.ico">
@@ -36,14 +36,18 @@
           <div id="artBody"> 
             <div class="quiz">
               <div class="quiz-header">
-                <div class="instructions">When technology fails, bad things happen. See if you can match each outcome to its reported cause.</div>
-                <div class="quiz-controls">
+                <div class="instructions">Match each failure to its reported cause by clicking one of the boxes below. After answering, you can follow the links to see the excerpt in context.</div>
+                <div class="quiz-status">
                   <div class="score"></div>
-                  <a class="next-question button primary inactive">Next Question</a>
+                  <div class="counter">
+                    Viewing Question: <span class="question-counter"></span>
+                  </div>
                 </div>
               </div>
+              <div class="quiz-controls">
+                <a class="next-question button primary hidden">Next Question</a>
+              </div>
               <div class="impact">
-                <p>Viewing Question: <span class="question-counter"></span></p>
                 <h2 class="quiz-heading">Failure:</h2>
                 <div class="impact-summary"></div>
               </div>
