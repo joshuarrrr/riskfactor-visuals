@@ -1,4 +1,4 @@
-/*global d3, pym */
+/*global d3, pym, Modernizr, ga */
 (function() {
   "use strict";
 
@@ -14,42 +14,28 @@
       // return d.cause.length > 1;
     });
 
-    console.log(data.length);
+    // console.log(data.length);
 
     var next = d3.select(".next-question");
     var numberOfChoices = 4;
-    // var dataCollection = d3.select(".incidents");
-    // var data = incidentCollection.selectAll(".sumtext");
-    // var incidents = [];
     var questionContainer = d3.select(".impact-summary");
-    // var questions = d3.select(".hidden").selectAll(".effect");
     var answerContainers = d3.select(".answers");
-    // var answers = [d3.select(".hidden").selectAll(".cause")];
-    // var answersUsed = d3.select(".hidden").selectAll(".cause-used");
-    // var wrongQuestion = d3.select(".wrong");
     var performance = {"attempted": 0, "correct": 0, "incorrect": 0};
     var used = [];
     var totalQuestions = data.length;
     var questionsToComplete = 10;
     var questionsToAttempt = questionsToComplete;
 
-    console.log("answerContainers: " + answerContainers);
-    // console.log("answers: " + answers);
-    console.log(next);
-    console.log(answerContainers);
-    // console.log(answers);
+    // console.log("answerContainers: " + answerContainers);
+    // // console.log("answers: " + answers);
+    // console.log(next);
+    // console.log(answerContainers);
+    // // console.log(answers);
 
-    // data.forEach(function (datum) {
-    //   var el = d3.select(datum);
-    //   var incident = {};
-
-    //   incident.seen = false;
-    //   incident.answeredCorrect = false;
-    //   incident.cause = el.select(".cause");
-    //   incident.effect = el.select(".effect");
-    // });
-
-    // console.log(incidents);
+    var isMobile = /ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent);
+    if (isMobile && Modernizr.mq("only all and (max-width: 480px)")) {
+      d3.select("body").classed("mobile-view", true);
+    }
 
 
     function score (nCorrect, nQuestions) {
@@ -60,58 +46,14 @@
 
     next.on("click", function () {
       if ( !answerContainers.selectAll(".incorrect").empty() || !answerContainers.selectAll(".correct").empty() ) {
+        ga("send", "event", "next question", "clicked", "attempted", performance.attempted);
         resetBoard();
       }
     });
 
-    // answerContainers.selectAll(".answer").on("click", function (d,i) {
-      
-    //   console.log(i);
-    //   console.log(d);
-      
-    // //   console.log("Answer clicked");
-    // //   console.log(answerContainers);
-
-    // //   var clicked = d3.select(this); 
-    // //   // var effect = questionContainer.select(".effect");
-
-    // //   // console.log(incidents[i].effect);
-    // //   console.log(effect);
-    // //   if (d3.select(answers[0][i].parentNode).select(".effect")[0][0] !== null) {
-    // //     if (d3.select(answers[0][i].parentNode).select(".effect")[0][0].innerText == effect[0][0].innerText) {
-    // //       clicked.classed("correct", true);
-    // //       clicked.classed("selected", true);
-    // //       clicked.html("");
-    // //       clicked.append(function () {
-    // //         return answers[0][i].parentNode;
-    // //       })
-
-    // //       questionContainer.classed("correct",true);
-    // //     }
-    // //     else {
-    // //       clicked.classed("incorrect", true);
-    // //     }
-    // //   }
-    // //   else {
-    // //     clicked.classed("incorrect", true);
-    // //   }
-
-
-    // //   /*
-    // //   answerContainers.html("");
-    // //   answerContainers.append(function (d,i) {
-    // //     console.log(i);d
-    // //     console.log(answers);
-    // //     return answers[0][i].parentNode;
-    // //     //return answers[0][i];
-    // //   });
-    // // */
-
-    // });
-
     function resetBoard () {
       
-      console.log("Board reset");
+      // console.log("Board reset");
 
       answerContainers
         .classed("attempted", false);
@@ -139,14 +81,9 @@
       
       var randIndex = getRandomInt(0,data.length);
       var randQuestion = data[randIndex];
-      // console.log(d3.select(randQuestion.parentNode).select(".cause")[0][0]);
-      // console.log(answers[0].indexOf(d3.select(randQuestion.parentNode).select(".cause")[0][0]));
-      // var ansOldIndex = answers[0].indexOf(d3.select(randQuestion.parentNode).select(".cause")[0][0]);
+  
       arrayMove(data, randIndex, getRandomInt(0,numberOfChoices - 1));
-      //randQuestion.parentNode.select(".cause")
-
-      // console.log(answers[0].indexOf(d3.select(randQuestion.parentNode).select(".cause")[0][0]));
-
+      
       questionContainer.html("");
 
       questionContainer.append("h3")
@@ -166,17 +103,17 @@
       target.append("div")
         .classed("sumtext", true)
         .html(function (d) { 
-          console.log(d.cause);
-          console.log(d.sumtext);
+          // console.log(d.cause);
+          // console.log(d.sumtext);
           var search = d.cause.split("\n").filter(function(cause) { return cause.length > 0; });
           var fullText = d.sumtext;
 
-          console.log(search);
+          // console.log(search);
 
           search.forEach(function(cause) {
             var expanded = cause;
 
-            console.log(cause);
+            // console.log(cause);
             if ( cause.indexOf("...") > 0 ) {
               // console.log(cause.split("...").join(".*"));
               expanded = new RegExp(cause.split("...")
@@ -185,9 +122,9 @@
                 })
                 .join(".*"));
 
-              console.log(expanded);
+              // console.log(expanded);
               cause = fullText.match(expanded);
-              console.log(cause);
+              // console.log(cause);
             }
             fullText = fullText
               .split(cause)
@@ -200,8 +137,6 @@
             .filter(function(cause) { return cause.length > 0; })
             .join("<br><br>");
 
-          // return d.sumtext.split(search).join("<span class=\"highlighted\">" + 
-          //   d.cause + "</span>"); 
           });
 
       var links = target.select(".sumtext").selectAll(".readmore")
@@ -210,7 +145,6 @@
       target.select(".sumtext").append("br").attr("class", "sources hidden");
 
       target.select(".sumtext").append("span").attr("class", "sources hidden").text("Read More:");
-        // .style("color", "#ddd");
 
       links.enter().append("a")
         .attr("class", "readmore")
@@ -246,7 +180,18 @@
     function resetQuiz() {
       performance = {"attempted": 0, "correct": 0, "incorrect": 0};
 
+      questionsToAttempt = questionsToComplete;
+
       removeComplete();
+
+      if ( questionsToAttempt > data.length ) {
+        // console.log(data);
+        // console.log(used);
+        data = data.concat(used);
+        used = [];
+        // console.log(data);
+        // console.log(used);
+      }
 
       d3.select(".score")
         .html("");
@@ -257,7 +202,9 @@
         .classed("hidden", true);
     }
 
-    function displayComplete (total) {
+    function displayComplete () {
+      ga("send", "event", "completion", "reached", "attempted", performance.attempted);
+
       d3.select(".quiz-status").selectAll(".score, .counter")
         .classed("hidden", true);
 
@@ -281,6 +228,15 @@
             );
       }
 
+      if ( data.length === 0) {
+        complete
+          .classed("correct", true)
+          .html("Whoa! You attempted all " + performance.attempted + 
+            " failures and correctly identified " + performance.correct + 
+            " causes!<br>" 
+            );
+      }
+
       var buttonContainer = complete.append("div")
         .attr("class", "buttons");
 
@@ -289,6 +245,8 @@
         .attr("id", "continue")
         .text("Keep Going")
         .on("click", function() { 
+          ga("send", "event", "keep going", "clicked", "attempted", performance.attempted);
+
           questionsToAttempt += questionsToComplete;
 
           if ( questionsToAttempt > totalQuestions ) {
@@ -305,7 +263,33 @@
         .attr("class", "button")
         .attr("id", "reset")
         .text("Reset Score & Start Over")
-        .on("click", function() { resetQuiz(); });
+        .on("click", function() { 
+          ga("send", "event", "reset", "clicked", "attempted", performance.attempted);
+          resetQuiz(); 
+        });
+
+      buttonContainer.append("a")
+        .attr("class", "button")
+        .attr("id", "reset")
+        .text("View Links for Each Question")
+        .on("click", function() { 
+          ga("send", "event", "links view", "clicked", "links view", performance.attempted);
+          
+          var links = complete.append("ol")
+            .attr("class", "source-links")
+            .selectAll("li")
+            .data(used.slice(used.length - questionsToComplete))
+          .enter()
+            .append("li");
+
+          links.append("a")
+            .attr("class", "readmore")
+            .attr("target", "_blank")
+            .attr("href", function(d) { return d.url.split("; ")[0]; })
+            .text(function(d) { return d.title.split(" || ")[0]; });
+
+          pymChild.sendHeight();
+        });
 
       complete.append("text")
         .text("Share your score and challenge your friends:");
@@ -321,38 +305,20 @@
         .attr("class", "share-twtr share button")
         .style("background", "url('images/twitter.png')");
 
-      // pymChild.sendHeight();
-
       shareContainer.node().scrollIntoView();
 
       var sharing = new Share();
-      // location.hash = "#complete";
+
+      if ( data.length === 0) {
+        buttonContainer.remove();
+      }
+
+      // console.log(used.slice(used.length - questionsToComplete));
     }
 
     function getNewAnswers (num) {
-      console.log(num);
-
-      // console.log(data.slice(0,num));
-      // // for(var i = 0; i < num; i++) {
-      // //   for(var j = 0; j < num; j++) {
-      // //     if ( data[i].cause === data[j].cause && data[i]["Impact - Raw"] !== questionContainer.select(".effect").text() ) {
-      // //       data.push(data.splice(i,1));
-      // //       i = -1; j = -1; continue;
-      // //     }
-      // //   }
-      // // }
-      // console.log(data.slice(0,num));
-
-      // function uniqBy(a, key) {
-      //     var seen = {};
-      //     return a.filter(function(item) {
-      //         var k = key(item);
-      //         return seen.hasOwnProperty(k) ? false : (seen[k] = true);
-      //     });
-      // }
-
+      // console.log(num);
       
-      // answerContainers.html("");
       var answers = answerContainers.selectAll(".answer")
         .data(function() {
           var used = {};
@@ -360,33 +326,31 @@
 
           for(var i = 0; slice.length < num; i++) {
             if ( i === data.length ) {
-              console.log("break");
+              // console.log("break");
               break;
             }
             var match = data[i].cause.toLowerCase().replace(/(a |[^a-z])/g,"");
-            console.log(used);
-            console.log(slice);
-            console.log(used[match]);
+            // console.log(used);
+            // console.log(slice);
+            // console.log(used[match]);
             if ( used[match] === undefined ) {
               used[match] = i;
               slice.push(data[i]);
             }
             else if ( data[i]["Impact - Raw"] === questionContainer.select(".effect").text() ) {
-              console.log(slice);
+              // console.log(slice);
               slice.splice(used[match], 1);
               used[match] = i;
               slice.push(data[i]);
-              console.log(slice);
+              // console.log(slice);
             }
             else {
-              console.log("didn't add");
+              // console.log("didn't add");
             }
           }
-          console.log(used);
+          // console.log(used);
           return slice;
         }, function (d) { return d.Headline + d.formattedDate; });
-      
-      
 
       answers.enter()
         .append("li")
@@ -403,7 +367,7 @@
             .join("<hr>");
         });
 
-      console.log(answers.enter().size());
+      // console.log(answers.enter().size());
 
       answers.exit().remove();
 
@@ -411,9 +375,8 @@
         .classed("selected", false);
 
       answers.on("click", function (d,i) {
-        
-        console.log(i);
-        console.log(d);
+        // console.log(i);
+        // console.log(d);
 
         var clicked = d3.select(this);
 
@@ -435,49 +398,13 @@
         answers
           .classed("clickable", false);
 
-        // var effect = questionContainer.select(".effect");
-
         // console.log(incidents[i].effect);
         // console.log(effect);
 
         if (d["Impact - Raw"] === questionContainer.select(".effect").text()) {
           clicked.classed("selected", true);
 
-          // clicked.classed("correct", true);
-          // clicked.html("");
-          // clicked.append("div")
-          //   .classed("sumtext", true)
-          //   .text(d.sumtext);
-
-          // // questionContainer.insert("h3")
-          // //   .text(d.Headline);
-
-          // // questionContainer.append(questionContainer.select(".effect").remove());
-
           questionContainer.node().appendChild(questionContainer.select(".effect").node());
-
-          // var links = clicked.select(".sumtext").selectAll(".readmore")
-          //     .data(function(d) { return d.url.split("; "); });
-
-          // clicked.select(".sumtext").append("br").attr("class", "sources hidden");
-
-          // clicked.select(".sumtext").append("span").attr("class", "sources hidden").text("Read More:");
-          //   // .style("color", "#ddd");
-
-          // links.enter().append("a")
-          //   .attr("class", "readmore")
-          //   .attr("href", function(d) { return d; })
-          //   .attr("target", "_blank")
-          //   .html(function(d,i) {
-          //     if ( links.size() === 1 ) {
-          //       clicked.selectAll(".sources").classed("hidden", true);
-          //       return "Read&nbsp;More";
-          //     }
-          //     else {
-          //       clicked.selectAll(".sources").classed("hidden", false);
-          //       return "["+ (i + 1) +"]";
-          //     }
-          //   });
           
           questionContainer.classed("correct", true);
           displayCorrect(clicked);
@@ -486,13 +413,16 @@
             performance.correct++;
           }
 
-          used.push(data.splice(i,1));
-          console.log(used);
-          console.log(data.length);
+          ga("send", "event", "answer", "clicked correct", d.Headline, performance.correct);
+
+          used.push(data.splice(i,1)[0]);
+          // console.log(used);
+          // console.log(data.length);
         }
         else {
           clicked.classed("incorrect", true);
           performance.incorrect++;
+          ga("send", "event", "answer", "clicked incorrect", d.Headline, performance.incorrect);
 
           var correct = answers
             .filter(function(d) { return d["Impact - Raw"] === questionContainer.select(".effect").text(); });
@@ -502,9 +432,9 @@
           // console.log(correct.datum());
           // console.log(data.indexOf(correct.datum()));
 
-          used.push(data.splice(data.indexOf(correct.datum()),1));
-          console.log(used);
-          console.log(data.length);
+          used.push(data.splice(data.indexOf(correct.datum()),1)[0]);
+          // console.log(used);
+          // console.log(data.length);
         }
 
         d3.select(".score").html(score(performance.correct, performance.attempted));
@@ -512,7 +442,8 @@
         // console.log(questionsToComplete % performance.attempted);
         if( (performance.attempted >= questionsToComplete && 
           performance.attempted % questionsToComplete) === 0 ||
-          performance.attempted === totalQuestions ) {
+          performance.attempted === totalQuestions ||
+          data.length === 0 ) {
           displayComplete(performance.attempted);
 
           next
@@ -521,28 +452,8 @@
 
         pymChild.sendHeight();
 
-        /*
-        answerContainers.html("");
-        answerContainers.append(function (d,i) {
-          console.log(i);d
-          console.log(answers);
-          return answers[0][i].parentNode;
-          //return answers[0][i];
-        });
-      */
-
       });
-      /*
-      var answerArray = [];
-      for(i=0;i<num;i++) {
-        var index = getRandomInt(0,answers[0].length);
-        console.log(index);
-        var newAnswer = answers[0][index];
-        answerArray.push
-        
-        d3.select(answerContainers[0][i]).html(newAnswer.toString());
-      }
-      */
+
       return;
     }
 
@@ -632,6 +543,9 @@
             //   data.image,
             description: data.description
           };
+
+          ga("send", "event", "share", "FB clicked", data.score, performance.correct);
+
           window.FB.ui(obj, function(response) {
             track("Facebook");
           });
@@ -654,8 +568,9 @@
           var tweetUrl = "https://twitter.com/share?url=" + 
             encodeURIComponent(data.url) + "&text=" + 
             encodeURIComponent(data.score + " @IEEESpectrum " + data.title);
-          var opts = that.centerPopup(500, 300) + "scrollbars=1";
+          var opts = that.centerPopup(500, 320) + "scrollbars=1";
           track("Twitter");
+          ga("send", "event", "share", "Twtr clicked", data.score, performance.correct);
           window.parent.open(tweetUrl, "twitter", opts);
         },
         

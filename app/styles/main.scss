@@ -1359,6 +1359,10 @@ h3.timeline-section-header {
       margin: 0 0 0 10px;
     }
   }
+
+  .source-links {
+    text-align: left;
+  }
 }
 
 .answer>.cause,
@@ -1459,6 +1463,62 @@ h3.timeline-section-header {
   background: $green;
   color: $white;
   padding: 2px 4px;
+}
+
+.mobile-view .quiz {
+  font-size: 1em;
+  line-height: 1.35em;
+
+  .counter {
+    display: none;
+  }
+
+  .score {
+    float: none;
+    font-size: .9em;
+    font-style: italic;
+    margin: 5px 0;
+  }
+
+  h3 {
+    font-size: 1.1em;
+    line-height: 1.35em;
+  }
+
+  hr {
+    margin: 5px;
+  }
+
+  .share-buttons .button {
+    margin: 0 5px 0 0;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+
+  .buttons .button {
+    margin: 0 0 5px;
+
+    &:last-child {
+      margin: 0;
+    }
+  }
+
+  .quiz-controls {
+    float: right;
+    width: 150px;
+  }
+
+  .answer>.cause,
+  .sumtext,
+  .wrong,
+  .complete,
+  .impact-summary {
+    margin: 5px 0;
+    padding: 5px;
+  }
+
 }
 
 
