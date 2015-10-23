@@ -14,7 +14,7 @@
       // return d.cause.length > 1;
     });
 
-    console.log(data);
+    console.log(data.length);
 
     var next = d3.select(".next-question");
     var numberOfChoices = 4;
@@ -324,6 +324,8 @@
       // pymChild.sendHeight();
 
       shareContainer.node().scrollIntoView();
+
+      var sharing = new Share();
       // location.hash = "#complete";
     }
 
@@ -574,6 +576,94 @@
       arr.splice(fromIndex, 1);
       arr.splice(toIndex, 0, element);
     }
+
+    var Share = function() {
+      // var fbInitialized = false;
+      
+      function shareData() {
+        var data = {
+          title: "IT Failure Blame Game",
+          preTitle: "Lessons from a Decade of IT Failures:",
+          score: "I successfully identified " + 
+            performance.correct +
+            " of " +
+            performance.attempted +
+            " causes in the",
+          url: window.parent.location.protocol + "//" + 
+              window.parent.location.host +
+              window.parent.location.pathname,
+          // images: ,
+          description: "When IT projects fail, there's plenty of blame to go around." + 
+          " See how high you can score by identifying causes and excuses."
+        };
+
+        return data;
+      }
+
+      function track(label) {
+        return;
+        //MCP.share(label);
+      }
+
+      var that = {
+
+        assignButtons: function() {
+          $(".share-fb").on("click",that.postToFacebook);
+          $(".share-twtr").on("click",that.postToTwitter);
+          // $("#share-email").on("click",that.emailLink);
+          // $("#share-gpls").on("click",that.postToGooglePlus);
+          // $("#share-lin").on("click",that.postToLinkedIn);
+        },
+        
+        postToFacebook: function(event) {
+          event.preventDefault();
+          var data = shareData();
+          // data.image = $(this.parentNode).attr("data-section") !== undefined ? data.images[$(this.parentNode).attr("data-section")] : data.images.default;
+          var obj = {
+            app_id: "174248889578740",
+            method: "feed",
+            // name: data.longTitle,
+            name: data.score + data.title,
+            link: data.url,
+            caption: data.preTitle.slice(0,-1),
+            // picture: window.location.protocol + "//" + 
+            //   window.location.host +
+            //   window.location.pathname.split("/").slice(0,-1).join("/") +
+            //   data.image,
+            description: data.description
+          };
+          window.FB.ui(obj, function(response) {
+            track("Facebook");
+          });
+          // pymChild.sendMessage("shareFB", JSON.stringify(obj));
+        },
+        
+        centerPopup: function(width, height) {
+          var wLeft = window.parent.screenLeft ? window.screenLeft : window.screenX;
+          var wTop = window.parent.screenTop ? window.screenTop : window.screenY;
+          var left = wLeft + (window.parent.innerWidth / 2) - (width / 2);
+          var top = wTop + (window.parent.innerHeight / 2) - (height / 2);
+
+          // console.log(window)
+          return "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+        },
+        
+        postToTwitter: function(event) {
+          event.preventDefault();
+          var data = shareData();
+          var tweetUrl = "https://twitter.com/share?url=" + 
+            encodeURIComponent(data.url) + "&text=" + 
+            encodeURIComponent(data.score + " @IEEESpectrum " + data.title);
+          var opts = that.centerPopup(500, 300) + "scrollbars=1";
+          track("Twitter");
+          window.parent.open(tweetUrl, "twitter", opts);
+        },
+        
+      };
+
+      that.assignButtons();
+      return that;
+    };
 
     resetBoard();
 
