@@ -8,6 +8,7 @@ d3.csv("data/timeline.csv", function (data) {
   var width = container.node().parentNode.offsetWidth;
 
   var format = d3.time.format("%B 20%y");
+  var shortFormat = d3.time.format("%b 20%y");
   var formatString = d3.time.format.iso;
 
   var gaDatapointsClicked = 0;
@@ -25,6 +26,7 @@ d3.csv("data/timeline.csv", function (data) {
     d.formattedDate = formatString.parse(d.date);
     d.dateObject = new Date(d.date);
     d.date = format(d.dateObject);
+    d.shortDate = shortFormat(d.dateObject);
     d.month = d.dateObject.getMonth();
 
     //coerce to number
@@ -50,11 +52,19 @@ d3.csv("data/timeline.csv", function (data) {
   var isMobile = /ip(hone|od|ad)|android|blackberry.*applewebkit|bb1\d.*mobile/i.test(navigator.userAgent);
 
   var maxSize = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? width - 10 : 610;
-  var ttWidth = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? (width - 40 - 4 - 20) : 300; 
+  var ttWidth = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? (width - 40 - 4 - 20) : 220; 
 
   var sizer = d3.scale.sqrt()
     .range([0, maxSize])
     .domain([0,d3.max(data, function(d) { return d["Impact - USD"]; })]);
+
+  var sizerh = d3.scale.threshold()
+    .range([1,2,3,4,5])
+    .domain([1e+7,1e+8,1e+9,1e+10,1e+11]);
+
+  var sizerw = d3.scale.threshold()
+    .range([140,220])
+    .domain([1e+9]);
 
   var fontScale = d3.scale.sqrt()
     .range([0, maxSize / 5.1])
@@ -71,27 +81,61 @@ d3.csv("data/timeline.csv", function (data) {
   var projects = container.selectAll("div")
     .data(data)
   .enter().append("div")
-    .attr("class", "cancelled-project")
-    .style("margin", "5px")
-    .style("width", function(d) { return sizer(d["Impact - USD"]) + "px"; })
-    .style("height", function(d) { return sizer(d["Impact - USD"]) + "px"; })
-    // .style("background", "url(\"images/cgbug_Halloween_Rounded_Tombstone.svg\")")
+    .attr("class", function (d) {
+      return "failure-size-" + sizerh(d["Impact - USD"]) + " cancelled-project"
+    })
+    .style("margin", "0 0 20px")
+    .style("width", "140px")
+    .style("height", function(d) { return (sizerh(d["Impact - USD"]) * 90) + "px"; })
+    .style("background", function(d) { 
+      return "url(\"images/gravestone-" + sizerh(d["Impact - USD"]) + ".svg\")"; 
+    })
     // .style("background-size", "100% 100%")
     // .style("background-repeat", "no-repeat")
     // .style("background-position", "center")
     .style("text-align", "center");
 
-  projects.filter(function(d) { return d["Impact - USD"] >= 2e+7; })
+  projects
+    .append("div")
+    .attr("class", "rip")
+    .text("R.I.P.");
+
+  projects
+    .append("div")
+    .attr("class", "death-date")
+    .text(function (d) { return d.shortDate; });
+
+  projects
+    // .filter(function(d) { return d["Impact - USD"] >= 2e+7; })
     .append("h3")
-    .style("font-size", function (d) { return fontScale(d["Impact - USD"]) + "px"; })
-    .style("position", "relative")
-    .style("line-height", "1em")
-    .style("left", "5%")
-    .style("width", "70%")
-    .style("margin", ".5em auto 0")
-    // .style("margin", function (d) {
-    //   return (sizer(d["Impact - Qty"]) * 0.25) + "px 0 0 30%"; })
-    .text(function (d) { return formatMoney(d["Impact - Qty"],d["Currency Symbol"]); });
+    // .style("font-size", function (d) { return fontScale(d["Impact - USD"]) + "px"; })
+    // .style("font-size", "24px")
+    // .style("position", "relative")
+    // .style("line-height", "1em")
+    // // .style("left", "5%")
+    // .style("top", "34%")
+    // .style("width", "65%")
+    // .style("margin", ".5em auto 0")
+    // // .style("margin", function (d) {
+    // //   return (sizer(d["Impact - Qty"]) * 0.25) + "px 0 0 30%"; })
+    .html(function (d) { 
+      var cost = "<div class=\"cost\">" + formatMoney(d["Impact - Qty"],d["Currency Symbol"]) + "</div>";
+      var size = sizerh(d["Impact - USD"]);
+
+      if ( size > 2 && size < 5 ) {
+        return "Here lies" + cost + "of wasted spending";
+      }
+      else if ( size === 5 ) {
+        return "Here lies" + cost + "wasted";
+      }
+      else if ( size === 2 ) {
+        return cost + "wasted";
+      }
+      else {
+        return cost;
+      }
+      
+    });
 
 
     
@@ -101,22 +145,39 @@ d3.csv("data/timeline.csv", function (data) {
   //   layoutMode: "packery"
   // });
 
-  projects.on("click", function() {
-    var selection = d3.select(this);
-    var datum = selection.datum();
+  projects.on("click", function(d,i) {
+    updateToolTip(d, i, d3.select(this));
+  });
+
+
+  isofy();
+
+  function updateToolTip (datum, i, selection) {
+    // var selection = d3.select(selection);
+    // var datum = d;
 
     var gaEventLabel = "graveyard-" + datum.Headline;
+
+    console.log(i);
+    console.log(datum);
+    console.log(selection);
 
     ga("send", "event", "datapoint", "click", gaEventLabel, gaDatapointsClicked);
     gaDatapointsClicked++;
 
     container.select(".tooltip").remove();
 
+    projects
+      .classed("selected", false);
+
+    selection
+      .classed("selected", true);
+
     var el = container.append("div")
       .attr("class", "tooltip")
       .style("width", ttWidth + "px")
-      .style("position", "absolute")
-      .style("padding", "20px")
+      // .style("position", "absolute")
+      // .style("padding", "20px")
       // .style("top", "200px")
       // .style("left", "50%")
       // .style("transform", "translate(-50%, 0)")
@@ -126,15 +187,41 @@ d3.csv("data/timeline.csv", function (data) {
         console.log(top);
         console.log(height);
 
-        if (parseInt(height, 10) - parseInt(top, 10) < 300) {
-          console.log("move it!");
-          return (parseInt(top, 10) - 300) + "px";
+        if (parseInt(height, 10) - parseInt(top, 10) < 500) {
+          // console.log("move it!");
+          // return (parseInt(top, 10) - 300) + "px";
+          return null;
         }
         else {
           return top;
         }
+      })
+      .style("bottom", function () {
+        var top = selection.style("top");
+        var height = container.style("height");
+        console.log(top);
+        console.log(height);
+
+        if (parseInt(height, 10) - parseInt(top, 10) < 500) {
+          // console.log("move it!");
+          // return (parseInt(top, 10) - 300) + "px";
+          return 0;
+        }
+        else {
+          return null;
+        }
       }) 
-      .style("left", ((width - ttWidth - 40 - 4) / 2) + "px")
+      .style("left", function() {
+        // ((width - ttWidth - 40 - 4) / 2) + "px")
+        var gravePosition = +selection.style("left").slice(0,-2);
+        console.log(gravePosition);
+        if ( gravePosition < width / 2 ) {
+          return (gravePosition + 140) + "px";
+        }
+        else {
+          return (gravePosition - ttWidth - 40) + "px";
+        }
+      });
       // .style("left", function() { 
       //   var position = selection.style("left").replace("px","");
       //   console.log(position);
@@ -150,12 +237,29 @@ d3.csv("data/timeline.csv", function (data) {
       //   }
       //   // return position < 310 ? (position + "px" : (position - 300) + "px";
       // })
-      .style("background", "rgba(255,255,255,.8)")
-      .style("border", "2px #ddd solid");
+      // .style("background", "rgba(255,255,255,.8)")
+      // .style("border", "2px #ddd solid");
 
-    el.append("time")
+    var timeContainer = el.append("div")
+            .classed("times", true);
+
+    var prev = timeContainer.append("a")
+      .attr("class", "prev button")
+      .classed("hidden", i === 0)
+      .html("◂&nbsp;Earlier");
+
+    timeContainer.append("time")
       .attr("class", "date")
-      .text(datum.date);
+      .html(datum.date);
+
+    var next = timeContainer.append("a")
+      .attr("class", "next button")
+      .classed("hidden", i === data.length - 1 )
+      .html("Later&nbsp;▸");
+
+    // el.append("time")
+    //   .attr("class", "date")
+    //   .text(datum.date);
 
     el.append("h3")
       .append("a")
@@ -164,16 +268,23 @@ d3.csv("data/timeline.csv", function (data) {
         .text(datum.Headline);
 
     el.append("p")
-      .text(formatMoney(datum["Impact - Qty"],datum["Currency Symbol"]));
+      .text(datum["Impact - Raw"]);
+
+    // el.append("p")
+    //   .text(formatMoney(datum["Impact - Qty"],datum["Currency Symbol"]) + " spent before cancellation");
+
+    prev.on("click", function() {
+      updateToolTip(data[i-1], i-1, d3.select(projects[0][i-1]));
+    });
+
+    next.on("click", function() {
+      updateToolTip(data[i+1], i+1, d3.select(projects[0][i+1]));
+    });
 
     el.on("click", function() {  
       this.remove();
     });
-
-  });
-
-
-  isofy();
+  }
 
   function isofy () {
     // element argument can be a selector string
@@ -182,7 +293,14 @@ d3.csv("data/timeline.csv", function (data) {
       // options
       // isInitLayout: false,
       itemSelector: ".cancelled-project",
-      layoutMode: "masonry"
+      masonry: {
+        columnWidth: 60,
+        gutter: 20
+      }
+      // layoutMode: "fitRows",
+      // fitRows: {
+      //   gutter: 20
+      // }
     });
   }
 

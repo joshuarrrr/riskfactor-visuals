@@ -1,12 +1,182 @@
+$green1: rgb(28, 100, 52);
+$green1-2: rgb(33, 125, 56);
+$green2: rgb(38, 150, 59);
+$green2-3: rgb(51, 168, 59);
+$green3: rgb(63, 185, 59);
+$green4: rgb(127, 204, 39);
+
+$light-gray: rgb(221, 221, 221);
+$gray: rgb(179, 179, 179);
+
+$orange: rgb(187,97,0);
+$light-orange: rgb(255,136,8);
+
+@mixin button-gradient($base-color: $spectrumblue) {
+  $color-diff: #181818;
+  $start-color: $base-color - $color-diff;
+  background: linear-gradient(to top, $start-color 50%, $base-color);
+  background-color: $start-color;
+
+  &:hover {
+    background: linear-gradient(to top, $base-color 40%, $start-color);
+  }
+}
+
 .chart-container {
-  background: url("../images/GrassGreenTexture0003.jpg");
-  background-size: 100% 20%;
-  // margin-bottom: 300px;
+  // background: url("../images/GrassGreenTexture0003.jpg");
+  // background-size: 100% 20%;
+  // background: #00bb6a;
+  background: $green2;
+  // padding-bottom: 300px;
 }
 
 .cancelled-project {
-  background: url("../images/cgbug_Halloween_Rounded_Tombstone.svg");
+  // background: url("../images/cgbug_Halloween_Rounded_Tombstone.svg");
   background-position: center;
   background-repeat: no-repeat;
-  background-size: 100% 100%; 
+  background-size: cover; 
+
+  cursor: zoom-in;
+
+  h3 {
+    font-size: 18px;
+    line-height: 1em;
+    margin: .5em auto 0;
+    position: relative;
+    text-shadow: 0px 1px 0px rgba(255,255,255,.3), 0px -1px 0px rgba(0,0,0,.7);
+    top: 34%;
+    width: 65%;
+
+    .cost {
+      font-size: 24px;
+      line-height: 1em;
+      margin: .3em auto;
+    }
+  }
+
+  .rip, .death-date {
+    color: rgb(90, 90, 90);
+    position: absolute;
+    text-shadow: 0px 1px 0px rgba(255,255,255,.3), 0px -1px 0px rgba(0,0,0,.7);
+    top: 9%;
+    width: 100%;
+  }
+
+  &.selected {
+    .rip, .death-date, h3 {
+      color: $orange;
+      text-shadow: 0px 1px 0px rgba(255,136,8,.3), 0px -1px 0px rgba(255,57,0,.7);
+    }
+  }
+
+  .death-date {
+    margin-top: 1em;
+  }
+
+  &.failure-size-1 {
+    .rip {
+      display: none;
+    }
+    .death-date {
+      top: 0;
+    }
+    h3 {
+      top: 32%;
+    }
+  }
+
+  &.failure-size-2 {
+    .rip {
+      font-size: 1.1em;
+      top: 7%; 
+    }
+    .death-date {
+      top: 12%;
+      font-size: 1.15em;
+    }
+    h3 {
+      top: 40%;
+    }
+  }
+
+  &.failure-size-3 {
+    .rip {
+      font-size: 1.3em;
+      top: 5%; 
+    }
+    .death-date {
+      font-size: 1.4em;
+      top: 17%;
+    }
+    h3 {
+      top: 44%;
+    }
+  }
+
+  &.failure-size-4 {
+    .rip {
+      font-size: 1.15em;
+      top: 25%;
+    }
+    .death-date {
+      font-size: 1.2em;
+      top: 26%;
+    }
+    h3 {
+      top: 49%;
+    }
+  }
+
+  &.failure-size-5 {
+    .rip {
+      font-size: 1.15em;
+      top: 32%;
+    }
+    .death-date {
+      font-size: 1.5em;
+      top: 33%;
+    }
+    h3 {
+      top: 76%;
+    }
+  }
+
+  // &.failure-size-1 h3 {
+  //   top: 10%;
+  // }
 }
+
+.tooltip {
+  background: $light-gray;
+  outline: 2px $gray solid;
+  padding: 20px;
+  position: absolute;
+
+  h3 {
+    margin: .5em 0;
+
+    a {
+      text-decoration: none;
+    }
+    a:hover {
+      color: initial;
+      border-bottom: $gray 1px solid;
+    }
+  } 
+
+  .times {
+    height: 22px;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%;
+
+    a.button {
+      @include button-gradient($light-orange);
+    }
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}
+
