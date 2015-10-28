@@ -3,7 +3,7 @@
 d3.csv("data/timeline.csv", function (data) {
   "use strict";
 
-  console.log(data);
+  // console.log(data);
   var container = d3.select("#chart");
   var width = container.node().parentNode.offsetWidth;
 
@@ -19,7 +19,7 @@ d3.csv("data/timeline.csv", function (data) {
       } 
   });
 
-  console.log(data);
+  // console.log(data);
 
   var total = 0;
 
@@ -46,7 +46,7 @@ d3.csv("data/timeline.csv", function (data) {
     // d.impact_qty = (parseInt(d.impact_qty) > 0) ? parseInt(d.impact_qty) : 0;
   });
 
-  console.log(formatMoney(total,"$"));
+  // console.log(formatMoney(total,"$"));
 
   // data.sort(function(a,b) {
   //     return b["Impact - Qty"] - a["Impact - Qty"];
@@ -54,7 +54,7 @@ d3.csv("data/timeline.csv", function (data) {
 
   data.sort(function(a,b){return a.dateObject.getTime() - b.dateObject.getTime();});
 
-  console.log(data);
+  // console.log(data);
 
   // var images = [
   //   "images/gravestone-1.svg",
@@ -224,9 +224,9 @@ d3.csv("data/timeline.csv", function (data) {
 
     var gaEventLabel = "graveyard-" + datum.Headline;
 
-    console.log(i);
-    console.log(datum);
-    console.log(selection);
+    // console.log(i);
+    // console.log(datum);
+    // console.log(selection);
 
     ga("send", "event", "datapoint", "click", gaEventLabel, gaDatapointsClicked);
     gaDatapointsClicked++;
@@ -250,8 +250,8 @@ d3.csv("data/timeline.csv", function (data) {
       .style("top", function () {
         var top = selection.style("top");
         var height = container.style("height");
-        console.log(top);
-        console.log(height);
+        // console.log(top);
+        // console.log(height);
 
         
         if (parseInt(height, 10) - parseInt(top, 10) < 500) {
@@ -269,8 +269,8 @@ d3.csv("data/timeline.csv", function (data) {
       .style("bottom", function () {
         var top = selection.style("top");
         var height = container.style("height");
-        console.log(top);
-        console.log(height);
+        // console.log(top);
+        // console.log(height);
 
         if (parseInt(height, 10) - parseInt(top, 10) < 500) {
           // console.log("move it!");
@@ -284,7 +284,7 @@ d3.csv("data/timeline.csv", function (data) {
       .style("left", function() {
         // ((width - ttWidth - 40 - 4) / 2) + "px")
         var gravePosition = +selection.style("left").slice(0,-2);
-        console.log(gravePosition);
+        // console.log(gravePosition);
         if ( isMobile && Modernizr.mq("only all and (max-width: 620px)") ) {
           return ((width - ttWidth - 40) / 2) + "px";
         }
@@ -344,7 +344,7 @@ d3.csv("data/timeline.csv", function (data) {
         .attr("target", "_blank")
         .text(datum.Headline);
 
-    var summary = el.append("p")
+    el.append("p")
       .text(datum["Impact - Raw"]);
 
     // var links = summary.selectAll(".readmore")
