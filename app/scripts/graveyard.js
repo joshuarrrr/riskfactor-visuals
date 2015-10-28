@@ -42,8 +42,6 @@ d3.csv("data/timeline.csv", function (data) {
 
     total += d["Impact - USD"];
     
-
-    // d.impact_qty = (parseInt(d.impact_qty) > 0) ? parseInt(d.impact_qty) : 0;
   });
 
   // console.log(formatMoney(total,"$"));
@@ -55,14 +53,6 @@ d3.csv("data/timeline.csv", function (data) {
   data.sort(function(a,b){return a.dateObject.getTime() - b.dateObject.getTime();});
 
   // console.log(data);
-
-  // var images = [
-  //   "images/gravestone-1.svg",
-  //   "images/gravestone-2.svg",
-  //   "images/gravestone-3.svg",
-  //   "images/gravestone-4.svg",
-  //   "images/gravestone-5.svg"
-  // ];
 
   var buckets = [1e+7,1e+8,1e+9,1e+10,1e+11];
   var reverseBuckets = buckets.slice(0).reverse();
@@ -76,28 +66,15 @@ d3.csv("data/timeline.csv", function (data) {
     width = window.parent.document.body.clientWidth;
   }
 
-  // var maxSize = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? width - 10 : 610;
   var gutter = 20;
   var columnWidth = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? ((width - (2 * gutter)) / 3 ) : 60; 
   var graveWidth = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? columnWidth : (2 * columnWidth) + gutter; 
   var ttWidth = isMobile && Modernizr.mq("only all and (max-width: 480px)") ? ((columnWidth * 2) + gutter) : 220; 
 
 
-  // var sizer = d3.scale.sqrt()
-  //   .range([0, maxSize])
-  //   .domain([0,d3.max(data, function(d) { return d["Impact - USD"]; })]);
-
   var sizerh = d3.scale.threshold()
     .range([1,2,3,4,5])
     .domain(buckets);
-
-  // var sizerw = d3.scale.threshold()
-  //   .range([140,220])
-  //   .domain([1e+9]);
-
-  // var fontScale = d3.scale.sqrt()
-  //   .range([0, maxSize / 5.1])
-  //   .domain([0,d3.max(data, function(d) { return d["Impact - USD"]; })]);
 
   var legend = d3.select("#legend")
     .style("border-right", width - columnWidth - gutter < 300 ? "0" : "2px solid #ddd")
@@ -116,8 +93,6 @@ d3.csv("data/timeline.csv", function (data) {
     .classed("legend-text", true)
     .text(function (d) { return formatMoney(d / 10,"US $"); })
     .style("top", function (d) { return (((reverseBuckets.length + 0 - sizerh(d / 10)) * 22.5) + 2) + "px"; });
-      // .style("left", function (d) { return ((1-d) * 35) + "px"; });
-    // .style("height", function(d) { return (d * 90) + "px"; });
 
   legendItems.append("div")
     .classed("legend-line", true)
@@ -133,13 +108,6 @@ d3.csv("data/timeline.csv", function (data) {
 
   legend.append("h3")
     .text("before cancellation");
-  // var linFontScale = d3.scale.linear()
-  //   .range([0, 120])
-  //   .domain([0,d3.max(data, function(d) { return d["Impact - Qty"]; })]);
-
-  // container
-  //   .style("background", "url(\"images/GrassGreenTexture0003.jpg\")")
-  //   .style("background-size", "100% 20%");
 
   var projects = container.selectAll("div")
     .data(data)
@@ -147,16 +115,8 @@ d3.csv("data/timeline.csv", function (data) {
     .attr("class", function (d) {
       return "failure-size-" + sizerh(d["Impact - USD"]) + " cancelled-project";
     })
-    // .style("margin", "0 0 20px")
     .style("width", graveWidth + "px")
     .style("height", function(d) { return (sizerh(d["Impact - USD"]) * graveWidth * ( 90/140 )) + "px"; });
-    // .style("background", function(d) { 
-    //   return "url(\"" + images[sizerh(d["Impact - USD"])] + "\")"; 
-    // })
-    // .style("background-size", "100% 100%")
-    // .style("background-repeat", "no-repeat")
-    // .style("background-position", "center")
-    // .style("text-align", "center");
 
   projects
     .append("div")
@@ -169,18 +129,7 @@ d3.csv("data/timeline.csv", function (data) {
     .text(function (d) { return d.shortDate; });
 
   projects
-    // .filter(function(d) { return d["Impact - USD"] >= 2e+7; })
     .append("h3")
-    // .style("font-size", function (d) { return fontScale(d["Impact - USD"]) + "px"; })
-    // .style("font-size", "24px")
-    // .style("position", "relative")
-    // .style("line-height", "1em")
-    // // .style("left", "5%")
-    // .style("top", "34%")
-    // .style("width", "65%")
-    // .style("margin", ".5em auto 0")
-    // // .style("margin", function (d) {
-    // //   return (sizer(d["Impact - Qty"]) * 0.25) + "px 0 0 30%"; })
     .html(function (d) { 
       var cost = "<div class=\"cost\">" + formatMoney(d["Impact - Qty"],d.displayCurrency) + "</div>";
       var size = sizerh(d["Impact - USD"]);
@@ -202,14 +151,6 @@ d3.csv("data/timeline.csv", function (data) {
       }
       
     });
-
-
-    
-  // $("#chart").isotope({
-  //   // options
-  //   itemSelector: ".cancelled-project",
-  //   layoutMode: "packery"
-  // });
 
   projects.on("click", function(d,i) {
     updateToolTip(d, i, d3.select(this));
@@ -242,11 +183,6 @@ d3.csv("data/timeline.csv", function (data) {
     var el = container.append("div")
       .attr("class", "tooltip")
       .style("width", ttWidth + "px")
-      // .style("position", "absolute")
-      // .style("padding", "20px")
-      // .style("top", "200px")
-      // .style("left", "50%")
-      // .style("transform", "translate(-50%, 0)")
       .style("top", function () {
         var top = selection.style("top");
         var height = container.style("height");
@@ -295,23 +231,6 @@ d3.csv("data/timeline.csv", function (data) {
           return (gravePosition - ttWidth - 40) + "px";
         }
       });
-      // .style("left", function() { 
-      //   var position = selection.style("left").replace("px","");
-      //   console.log(position);
-      //   position = +position;
-      //   if (position < 150) {
-      //     return "0";
-      //   }
-      //   else if (150<=position<620-150) {
-      //     return (position - 150) + "px";
-      //   }
-      //   else {
-      //     return "320px";
-      //   }
-      //   // return position < 310 ? (position + "px" : (position - 300) + "px";
-      // })
-      // .style("background", "rgba(255,255,255,.8)")
-      // .style("border", "2px #ddd solid");
 
     // var timeContainer = el.append("div")
     //         .classed("times", true);
