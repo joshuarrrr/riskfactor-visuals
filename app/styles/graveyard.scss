@@ -22,21 +22,27 @@ $light-orange: rgb(255,136,8);
   }
 }
 
+.graveyard {
+  background: $green2;
+}
+
 .chart-container {
-  // background: url("../images/GrassGreenTexture0003.jpg");
+  // background: url('../../images/GrassGreenTexture0003.jpg');
   // background-size: 100% 20%;
   // background: #00bb6a;
-  background: $green2;
+  clear: both;
   // padding-bottom: 300px;
 }
 
 .cancelled-project {
-  // background: url("../images/cgbug_Halloween_Rounded_Tombstone.svg");
+  // background: url('../../images/cgbug_Halloween_Rounded_Tombstone.svg');
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover; 
-
+  background-size: contain; 
   cursor: zoom-in;
+  margin: 10px 0;
+  text-align: center;
+  // width: 140px;
 
   h3 {
     font-size: 18px;
@@ -72,78 +78,181 @@ $light-orange: rgb(255,136,8);
   .death-date {
     margin-top: 1em;
   }
+}
 
-  &.failure-size-1 {
-    .rip {
+.legend {
+  // float: right;
+  // padding: 20px;
+  // position: relative;
+  border-bottom: 2px solid $light-gray;
+  border-right: 2px solid $light-gray;
+  color: $light-gray;
+  height: 268px;
+  margin-bottom: 20px;
+  overflow: auto;
+  width: 298px;
+
+  h3 {
+    clear: both;
+    color: $light-gray;
+    margin: 10px;
+  }
+
+  .legend-graphic {
+    overflow: auto;
+    position: relative;
+  }
+
+  .legend-text {
+    position: absolute;
+    right: 10px;
+  }
+
+  .legend-line {
+    background-color: $light-gray;
+    height: 1px;
+    position: absolute;
+    right: 10px;
+    width: 100%;
+  }
+
+}
+
+.failure-size-1 {
+  background-image: url('../images/gravestone-1.svg');
+
+  .rip {
+    display: none;
+  }
+
+  .death-date {
+    top: 0;
+  }
+
+  h3 {
+    top: 32%;
+  }
+}
+
+.failure-size-2 {
+  background-image: url('../images/gravestone-2.svg');
+
+  .rip {
+    font-size: 1.1em;
+    top: 7%; 
+  }
+
+  .death-date {
+    top: 12%;
+    font-size: 1.15em;
+  }
+
+  h3 {
+    top: 40%;
+  }
+}
+
+.failure-size-3 {
+  background-image: url('../images/gravestone-3.svg');
+  
+  .rip {
+    font-size: 1.3em;
+    top: 5%; 
+  }
+
+  .death-date {
+    font-size: 1.4em;
+    top: 17%;
+  }
+
+  h3 {
+    top: 44%;
+  }
+}
+
+.failure-size-4 {
+  background-image: url('../images/gravestone-4.svg');
+  
+  .rip {
+    font-size: 1.15em;
+    top: 25%;
+  }
+
+  .death-date {
+    font-size: 1.2em;
+    top: 26%;
+  }
+
+  h3 {
+    top: 49%;
+  }
+}
+
+.failure-size-5 {
+  background-image: url('../images/gravestone-5.svg');
+  
+  .rip {
+    font-size: 1.15em;
+    top: 32%;
+  }
+
+  .death-date {
+    font-size: 1.5em;
+    top: 33%;
+  }
+
+  h3 {
+    top: 76%;
+  }
+}
+
+.mobile-view {
+  h3 {
+    font-size: 1.1em;
+  }
+
+  .legend {
+    height: 235px;
+    // max-width: 300px;
+    width: 100%;
+  }
+
+  .cancelled-project {
+    font-size: .75em;
+
+    h3 .cost {
+      font-size: 1.1em;
+    }
+  }
+
+  .failure-size-1 {
+    h3 {
+      top: 10%;
+    }
+    .death-date {
       display: none;
     }
-    .death-date {
-      top: 0;
-    }
-    h3 {
-      top: 32%;
-    }
   }
 
-  &.failure-size-2 {
-    .rip {
-      font-size: 1.1em;
-      top: 7%; 
-    }
-    .death-date {
-      top: 12%;
-      font-size: 1.15em;
-    }
-    h3 {
-      top: 40%;
-    }
+  .tooltip h3 {
+    font-size: 1.2em;
+    line-height: 1.3em;
   }
 
-  &.failure-size-3 {
-    .rip {
-      font-size: 1.3em;
-      top: 5%; 
-    }
-    .death-date {
-      font-size: 1.4em;
-      top: 17%;
-    }
-    h3 {
-      top: 44%;
-    }
+  .tooltip p {
+    font-size: 1.1em;
+    line-height: 1.2em;
   }
+}
 
-  &.failure-size-4 {
-    .rip {
-      font-size: 1.15em;
-      top: 25%;
-    }
-    .death-date {
-      font-size: 1.2em;
-      top: 26%;
-    }
-    h3 {
-      top: 49%;
-    }
-  }
-
-  &.failure-size-5 {
-    .rip {
-      font-size: 1.15em;
-      top: 32%;
-    }
-    .death-date {
-      font-size: 1.5em;
-      top: 33%;
-    }
-    h3 {
-      top: 76%;
-    }
-  }
-
-  // &.failure-size-1 h3 {
-  //   top: 10%;
-  // }
+.legend-project {
+  background-position: bottom;
+  background-repeat: no-repeat;
+  background-size: contain;
+  float: left;
+  height: 112px;  
+  margin: 20px 0 0 10px;
+  width: 35px;
 }
 
 .tooltip {
@@ -164,6 +273,25 @@ $light-orange: rgb(255,136,8);
     }
   } 
 
+  .readmore {
+    color: $light-orange !important;
+    display: inline;
+    font-size: 1em;
+    margin-left: 1em;
+    padding: 0;
+  }
+
+  .close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+
+    &:hover {
+      color: $light-orange;
+      cursor: pointer;
+    }
+  }
+
   .times {
     height: 22px;
     margin: 0 auto;
@@ -180,3 +308,29 @@ $light-orange: rgb(255,136,8);
   }
 }
 
+@media print {
+  .cancelled-project {
+    outline: 1px solid black;
+  }
+
+  .legend-project {
+    position: static !important;
+  }
+
+  .cancelled-project, 
+  .legend,
+  .rip, 
+  .death-date, 
+  .legend-text, 
+  .legend-line {
+    position: absolute !important;
+  }
+
+  .cancelled-project {
+    -webkit-print-color-adjust: exact;
+  }
+
+  .tooltip {
+    display: none;  
+  }
+}
