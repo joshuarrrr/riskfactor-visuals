@@ -276,7 +276,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: "<%= config.app %>/images",
           // src: "{,*/}*.svg",
-          src: "*.svg",
+          src: ["*.svg","!gravestone-5.svg"],
           dest: "<%= config.dist %>/images"
         }]
       }
@@ -343,7 +343,8 @@ module.exports = function (grunt) {
             "images/{,*/}*.webp",
             "{,!(notused)/}*.html",
             "styles/fonts/{,*/}*.*",
-            "data/{,*/}*.{json,csv}"
+            "data/{,*/}*.{json,csv}",
+            "images/gravestone-5.svg"
           ]
         } 
         // ,{
