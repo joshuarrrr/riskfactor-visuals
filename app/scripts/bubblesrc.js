@@ -115,7 +115,7 @@ d3.csv("data/timeline.csv", function (data) {
   var dateDisplay = d3.time.format("%B 20%y");
   // var yData = "Region";
   // var duration = 300;
-  var dateParse = d3.time.format("iso");
+  var dateParse = d3.time.format.iso;
 
   var bubbles = container
     .append("svg")
@@ -185,17 +185,25 @@ d3.csv("data/timeline.csv", function (data) {
   // console.log(barChart.config("width") + " " + barChart.config("height"));
   barChart.config({
     height: height,
-    width: width
+    width: width,
+    duration: 300
   });
   // console.log(barChart.config("width") + " " + barChart.config("height"));
+
+  barChart
+    .unlayer("bars");
+
+  barChart 
+    .unlayer("labels");
   
   barChart
     .accessor("y", (d) => d.Region)
-    .accessor("r", (d) => d[quantities[0].columnName]);
+    .accessor("r", (d) => d[quantities[0].columnName])
+    .accessor("id", (d) => d.Headline + d.formattedDate);
 
   // console.log(barChart.accessor("y"));
   barChart
-    .draw(data.filter( (d) => d.value > 1 ));
+    .draw(data);
 
   // console.log(data);
   // bubbles.rData(quantities[0].columnName);
