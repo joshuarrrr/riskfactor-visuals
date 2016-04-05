@@ -8,6 +8,8 @@ class KotoBarChart extends Koto {
     // Setup
     var chart = this;
 
+    chart.layers = {};
+
     // define configs
     this.configs = {
       height: {
@@ -41,6 +43,22 @@ class KotoBarChart extends Koto {
           // Set value
           return newValue;
         }
+      },
+      maxBubbleSize: {
+        name: "maxBubbleSize",
+        description: "The maximum bubble radius.",
+        value: 70,
+        units: "px",
+        type: "number",
+        category: "Size",
+        getter: function (){
+          // get value
+          return this.value;
+        },
+        setter: function (newValue){
+          // Set value
+          return newValue;
+        }
       }
     };
 
@@ -52,6 +70,74 @@ class KotoBarChart extends Koto {
       .domain([0, 100])
       .rangeRound([0, this.config("height")]);
 
+    // create a yScale
+    this.yScale = d3.scale.ordinal()
+      .rangeRoundBands([0, this.config("height")], 0);
+
+    // create an xScale
+    this.xScale = d3.time.scale()
+      .range([0, this.config("width")]);
+
+    // create an rScale
+    chart.rScale = d3.scale.sqrt()
+      .range([0, this.config("maxBubbleSize")]);
+
+    // console.log(chart.base);
+    // console.log(chart.base.select("g"));
+    // Layer Bases
+    chart.layers.backgroundBase = chart.base.append("rect")
+      .attr("class", "chart-background")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", chart.config("width"))
+      .attr("height", chart.config("height"))
+      .style("opacity", 0);
+
+    chart.layers.axesBase = chart.base.append("g")
+      .classed("axes", true);
+
+    chart.layers.linesBase = chart.base.append("g")
+      .classed("lines", true);
+
+    chart.layers.labelsBase = chart.base.append("g")
+      .classed("labels", true);
+
+    chart.layers.circlesBase = chart.base.append("g")
+      .classed("circles", true);
+
+    chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).select(".info-box");
+
+    chart.layers.selectorsBase = d3.select(chart.base.node().parentNode).select(".selectors");
+
+    chart.layers.statusBase = chart.layers.selectorsBase.select(".status-base");
+
+    chart.layers.legendBase = chart.layers.infoBoxBase.append("svg")
+      .classed("legend-base", true)
+      .append("g")
+        .classed("legend", true)
+      .append("g")
+        .classed("legend-inner", true);
+
+    chart.layers.legendOuter = chart.layers.infoBoxBase.select(".legend")
+      .append("g")
+        .classed("legend-outer", true);chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).select(".info-box");
+
+    chart.layers.selectorsBase = d3.select(chart.base.node().parentNode).select(".selectors");
+
+    chart.layers.statusBase = chart.layers.selectorsBase.select(".status-base");
+
+    chart.layers.legendBase = chart.layers.infoBoxBase.append("svg")
+      .classed("legend-base", true)
+      .append("g")
+        .classed("legend", true)
+      .append("g")
+        .classed("legend-inner", true);
+
+    chart.layers.legendOuter = chart.layers.infoBoxBase.select(".legend")
+      .append("g")
+        .classed("legend-outer", true);
+
+    // Layers
     // add a layer
     this.layer("bars", this.base.append("g"), {
       // destructuring ftw
@@ -122,5 +208,68 @@ class KotoBarChart extends Koto {
     this.x.range([0, this.config("width")]);
 
     this.y.rangeRound([0, this.config("height")]);
+
+    // Update yScale
+    this.yScale.rangeRoundBands([0, this.config("height")], 0);
+
+    // Update xScale
+    this.xScale.range([0, this.config("width")]);
+
+    // Update rScale
+    this.rScale.range([0, this.config("maxBubbleSize")]);
+
+    // Update background size
+    this.layers.backgroundBase
+        .attr("height", this.config("height"))
+        .attr("width", this.config("width"));
+  }
+
+  transform(data) {
+    var chart = this;
+
+    // console.log(data);
+
+    //get an array of unique values for a given key
+    chart.categories = d3.set(data
+      .filter(function (d) {
+        // filter out data that has no set value (category)
+        // console.log(chart.accessor("y")(d));
+        if (chart.accessor("y")(d) !== "") {
+          return d;
+        } 
+      })
+      .map(function(d) { return chart.accessor("y")(d); }))
+      .values().sort();
+
+    // console.log(chart.categories);
+    //update y scale domain
+    chart.yScale.domain(chart.categories);
+
+    //update x scale domain
+    chart.xScale.domain(d3.extent(data, function(d) { return d.dateObject; })).nice();
+
+    //update r scale domain
+    chart.min = d3.min(data, function(d) { 
+      if (chart.accessor("r")(d) > 0) {
+        return chart.accessor("r")(d); 
+      }
+    });
+    chart.max = d3.max(data, function(d) { return chart.accessor("r")(d); });
+
+    chart.minVisible = 0;
+
+    // console.log(chart.min);
+    // console.log(chart.max);
+
+    chart.rScale.domain([0, chart.max]);
+
+    // console.log(chart.rScale(chart.max));
+    // console.log(chart.rScale(chart.min));
+
+    chart.dateIndexMax = d3.max(data, function(d) {
+      return d.dateIndex;
+    });
+
+    return data;
   }
 }

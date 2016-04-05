@@ -182,15 +182,22 @@ d3.csv("data/timeline.csv", function (data) {
 
   // TEST: Bar Chart
   var barChart = new KotoBarChart(container.select("#chart-svg>g"));
-  console.log(barChart.config("width") + " " + barChart.config("height"));
+  // console.log(barChart.config("width") + " " + barChart.config("height"));
   barChart.config({
     height: height,
     width: width
   });
-  console.log(barChart.config("width") + " " + barChart.config("height"));
-  console.log(data);
-  barChart.draw(data.filter( (d) => d.value > 1 ));
+  // console.log(barChart.config("width") + " " + barChart.config("height"));
+  
+  barChart
+    .accessor("y", (d) => d.Region)
+    .accessor("r", (d) => d[quantities[0].columnName]);
 
+  // console.log(barChart.accessor("y"));
+  barChart
+    .draw(data.filter( (d) => d.value > 1 ));
+
+  // console.log(data);
   // bubbles.rData(quantities[0].columnName);
 
 
