@@ -105,23 +105,10 @@ class KotoBarChart extends Koto {
     chart.layers.circlesBase = chart.base.append("g")
       .classed("circles", true);
 
+    // TODO: refactor to add instead of select
     chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).select(".info-box");
 
-    chart.layers.selectorsBase = d3.select(chart.base.node().parentNode).select(".selectors");
-
-    chart.layers.statusBase = chart.layers.selectorsBase.select(".status-base");
-
-    chart.layers.legendBase = chart.layers.infoBoxBase.append("svg")
-      .classed("legend-base", true)
-      .append("g")
-        .classed("legend", true)
-      .append("g")
-        .classed("legend-inner", true);
-
-    chart.layers.legendOuter = chart.layers.infoBoxBase.select(".legend")
-      .append("g")
-        .classed("legend-outer", true);chart.layers.infoBoxBase = d3.select(chart.base.node().parentNode).select(".info-box");
-
+    // TODO: refactor to add instead of select
     chart.layers.selectorsBase = d3.select(chart.base.node().parentNode).select(".selectors");
 
     chart.layers.statusBase = chart.layers.selectorsBase.select(".status-base");
