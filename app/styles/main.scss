@@ -472,7 +472,8 @@ h3.timeline-section-header {
   font-family: "Theinhardt-Bold", sans-serif;
   font-size: 1em;
   line-height: 1.4em;
-  margin-top: 3em;
+  // margin-top: 3em;
+  margin-top: 0;
   padding: .3em 0;
   text-transform: uppercase;
 }
@@ -547,7 +548,8 @@ h3.timeline-section-header {
     // }
 
     .fail-stats {
-      display: inline-block;
+      // display: inline-block;
+      display: inline;
       // float: right;
       // height: 150px;
       // // margin-top: -42px;      // text-align: right;
@@ -561,7 +563,8 @@ h3.timeline-section-header {
 
     .fail-stat {
       color: $black;
-      display: inline;
+      // display: inline;
+      display: inline-block;
       font-family: "Theinhardt-Medium", Helvetica, Arial, sans-serif; 
       font-size: 18px;
       margin-top: 0;

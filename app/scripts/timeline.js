@@ -318,6 +318,7 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
             var activeSelection = chart.base.select(".data-point.active");
             var selectedOption = d3.select(selection[0][selector.selectedIndex]);
             var metric = selectedOption.datum();
+            var container = d3.select(chart.base.node().parentNode);
 
             // console.log(selection[0][selector.selectedIndex]);
 
@@ -397,9 +398,9 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 
             chart.rData(metric.columnName);
 
-            d3.select("#chart-svg").attr("class", metric.id);
-            d3.select("#chart .legend-base").attr("class", "legend-base");
-            d3.select("#chart .legend-base").classed(metric.id, true);
+            chart.base.attr("class", metric.id);
+            container.select(".legend-base").attr("class", "legend-base");
+            container.select(".legend-base").classed(metric.id, true);
 
             if ( activeSelection.empty() === false && (activeSelection.datum()[chart.rData()] > 0) === false ){
               activeSelection.classed("active", false).style("fill-opacity", chart.fillOpacity);
@@ -2036,13 +2037,12 @@ d3.chart("MarginChart").extend("BubbleTimeline", {
 });
 
 
-d3.csv("data/timeline.csv", function (data) {
+d3.csv("data/tax-glitches-timeline.csv", function (data) {
   // Main callback starts after CSV data is loaded
   "use strict";
 
   // Pym is used for embedding in another page as an iframe
   var pymChild = new pym.Child();
-
 
 
   // Metadata constants
@@ -2063,12 +2063,12 @@ d3.csv("data/timeline.csv", function (data) {
       "label":"Duration",
       "instructsLabel":"with measurable durations",
       "ranges": [
-        {"label":"Less than", "domain": [0,1]},
-        {"label":"Less than", "domain": [0,12]},
-        {"label":"Between", "domain": [1,24 * 30]},
+        // {"label":"Less than", "domain": [0,1]},
+        // {"label":"Less than", "domain": [0,12]},
+        {"label":"Between", "domain": [6,24 * 30]},
         // {"label":"Less than", "domain": [0,24 * 30]},
         // {"label":"more than", "domain": [24 * 30,"max"]}
-        {"label":"More than", "domain": [24 * 7,"max"]}
+        // {"label":"More than", "domain": [24 * 7,"max"]}
       ]
     },
     {
@@ -2078,9 +2078,9 @@ d3.csv("data/timeline.csv", function (data) {
       "instructsLabel":"that affected a measurable number of people",
       "ranges": [
         // {"label":"Less than", "domain": [0,10000]},
-        {"label":"Less than", "domain": [0,50000]},
-        {"label":"Between", "domain": [1000,1000000]},
-        {"label":"More than", "domain": [150000,"max"]}
+        {"label":"Less than", "domain": [0,1000000]},
+        // {"label":"Between", "domain": [1000,1000000]},
+        {"label":"More than", "domain": [10000,"max"]}
       ]
     }
   ];
@@ -2090,12 +2090,12 @@ d3.csv("data/timeline.csv", function (data) {
   // console.log(mapped);
 
   var categories = [
-    "Region",
-    "Failure type",
-    "Organization type",
-    "Government type",
-    "Government department",
-    "Industry area",
+    "Country",
+    // "Failure type",
+    // "Organization type",
+    // "Government type",
+    // "Government department",
+    // "Industry area",
     // "Companies"
   ];
 
@@ -2109,110 +2109,117 @@ d3.csv("data/timeline.csv", function (data) {
   var height = width * 1 / 3;
   var format, formatString;
 
-  // margins = {top: 50, bottom: 50, right: 20, left: 20};
-  // width = 620 - margins.left - margins.right;
-  // height = 325 - margins.top - margins.bottom;
+  // // margins = {top: 50, bottom: 50, right: 20, left: 20};
+  // // width = 620 - margins.left - margins.right;
+  // // height = 325 - margins.top - margins.bottom;
 
-  // console.log(parWidth);
+  // // console.log(parWidth);
 
-  // add non-SVG container elements
-  var infoBox = container.append("div")
-    .attr("class","info-box timeline-chart");
+  // // add non-SVG container elements
+  // var infoBox = container.append("div")
+  //   .attr("class","info-box timeline-chart");
 
-  var selectors = container.append("div")
-    .attr("class","selectors");
+  // var selectors = container.append("div")
+  //   .attr("class","selectors");
 
-  // selectors.append("div")
-  //     .classed("status-base", true);
+  // // selectors.append("div")
+  // //     .classed("status-base", true);
 
-  var sizeSelector = selectors.append("div")
-    .attr("class", "size-selection-container")
-    .html("Size by:<br>");
+  // var sizeSelector = selectors.append("div")
+  //   .attr("class", "size-selection-container")
+  //   .html("Size by:<br>");
     
-  sizeSelector.append("select")
-      .attr("class", "select-size dropdown");
+  // sizeSelector.append("select")
+  //     .attr("class", "select-size dropdown");
 
-  var rangeSelector = selectors.append("div")
-    .attr("class", "range-selection-container")
-    .html("View range:<br>");
+  // var rangeSelector = selectors.append("div")
+  //   .attr("class", "range-selection-container")
+  //   .html("View range:<br>");
 
-  rangeSelector.append("select")
-      .attr("class", "select-range dropdown");
+  // rangeSelector.append("select")
+  //     .attr("class", "select-range dropdown");
 
-  var selector = selectors.append("div")
-    .attr("class", "category-selection-container")
-    .html("Sort by:<br>");
+  // var selector = selectors.append("div")
+  //   .attr("class", "category-selection-container")
+  //   .html("Sort by:<br>");
 
-  selector.append("select")
-      .attr("class", "select-category dropdown");
+  // selector.append("select")
+  //     .attr("class", "select-category dropdown");
 
-  selectors.selectAll("div")
-    .append("div")
-      .attr("class", "limits");
+  // selectors.selectAll("div")
+  //   .append("div")
+  //     .attr("class", "limits");
 
 
-  // initialize main chart    
-  var bubbles = container
-    .append("svg")
-    .attr("class", "")
-    .attr("id", "chart-svg")
-    .chart("BubbleTimeline")
-    .width(width)
-    .height(height)
-    .margin(margins)
-    .dateParse("iso")
-    .dateDisplay("%B 20%y")
-    .yData("Region")
-    .duration(300);
+  // // initialize main chart    
+  // var bubbles = container
+  //   .append("svg")
+  //   .attr("class", "")
+  //   .attr("id", "chart-svg")
+  //   .chart("BubbleTimeline")
+  //   .width(width)
+  //   .height(height)
+  //   .margin(margins)
+  //   .dateParse("iso")
+  //   .dateDisplay("%B 20%y")
+  //   .yData("Region")
+  //   .duration(300);
 
-  bubbles.quantities = quantities;
-  bubbles.sortables = categories;
+  // bubbles.quantities = quantities;
+  // bubbles.sortables = categories;
 
-  format = bubbles.dateDisplay();
-  formatString = bubbles.dateParse();
+  // format = bubbles.dateDisplay();
+  // formatString = bubbles.dateParse();
+
+  formatString = d3.time.format.iso;
+  format = d3.time.format("%B %d, 20%y");
 
     // .margins([20,90,70,90])
 
   // console.log(bubbles.mode());
 
   
-  // Add total counters
-  quantities.forEach(function (quantity) {
-    quantity.sum = d3.sum(data, function (d) { return d[quantity.columnName]; });
-    // console.log(quantity.sum);
-  });
+  // // Add total counters
+  // quantities.forEach(function (quantity) {
+  //   quantity.sum = d3.sum(data, function (d) { return d[quantity.columnName]; });
+  //   // console.log(quantity.sum);
+  // });
 
-  var totalCounters = d3.selectAll(".total")
-    .data(quantities);
+  // var totalCounters = d3.selectAll(".total")
+  //   .data(quantities);
 
-  if ( bubbles.mode() === "mobile" ) {
-    d3.select("body").classed("mobile-view", true);
+  // if ( bubbles.mode() === "mobile" ) {
+  //   d3.select("body").classed("mobile-view", true);
 
-    totalCounters
-      .style("width", "100%")
-      .style("margin", "0 0 1em");
+  //   totalCounters
+  //     .style("width", "100%")
+  //     .style("margin", "0 0 1em");
 
-    bubbles
-      .width(container.node().parentNode.offsetWidth - 40)
-      // .height((container.node().parentNode.offsetWidth - 40) / 1.5);
-      .height((container.node().parentNode.offsetWidth - 40) * 3 / 4)
-      .margin({top: 45, bottom: 45, right: 30, left: 10});
-  }
+  //   bubbles
+  //     .width(container.node().parentNode.offsetWidth - 40)
+  //     // .height((container.node().parentNode.offsetWidth - 40) / 1.5);
+  //     .height((container.node().parentNode.offsetWidth - 40) * 3 / 4)
+  //     .margin({top: 45, bottom: 45, right: 30, left: 10});
+  // }
 
-  totalCounters.select(".number")
-    .transition()
-    .duration(1000)
-    .delay(function (d, i) { return i *1000; })
-    .tween("text", function (d) {
-      var interp = d3.interpolateRound(0, d.sum);
-      return function(t) {
-        this.textContent = readableNumbers(interp(t));
-        // console.log(this.textContent);
-      };
-    });
+  // totalCounters.select(".number")
+  //   .transition()
+  //   .duration(1000)
+  //   .delay(function (d, i) { return i *1000; })
+  //   .tween("text", function (d) {
+  //     var interp = d3.interpolateRound(0, d.sum);
+  //     return function(t) {
+  //       this.textContent = readableNumbers(interp(t));
+  //       // console.log(this.textContent);
+  //     };
+  //   });
 
   // Process Data
   data.forEach(function(d) {
+    d.Headline = d.title;
+    d.date = d.pubDate;
+    d["Impact - Raw"] = d.summary;
+
     d.dateOriginal = d.date;
     d.formattedDate = formatString.parse(d.date);
     d.dateObject = new Date(d.date);
@@ -2226,7 +2233,7 @@ d3.csv("data/timeline.csv", function (data) {
 
     quantities.forEach(function (quantity) {
       //coerce to number
-      if (d[quantity.columnName] === null) {
+      if (!d[quantity.columnName]) {
         d[quantity.columnName] = 0;
       }
       else {
@@ -2244,232 +2251,244 @@ d3.csv("data/timeline.csv", function (data) {
     d.dateIndex = i; // used for chronological step navigation
   });
 
-  // selector.selectAll("option")
-  //   .data(categories)
-  //   .enter()
-  //   .append("option")
-  //     .attr("value", function(d) { return d; })
-  //     .text(function(d) { return d.replace("Government", "Gov"); });
+  // // selector.selectAll("option")
+  // //   .data(categories)
+  // //   .enter()
+  // //   .append("option")
+  // //     .attr("value", function(d) { return d; })
+  // //     .text(function(d) { return d.replace("Government", "Gov"); });
 
-  // selector.select("[value=\"" + bubbles.yData() + "\"]")
-  //   .property("selected", true);
+  // // selector.select("[value=\"" + bubbles.yData() + "\"]")
+  // //   .property("selected", true);
 
-  // selector.on("change", function() {
-  //   var selection = this;
-  //   var toFade = bubbles.base.selectAll(".label, .straight-line");
-  //   var category = selection.value;
-  //   var activeSelection = bubbles.base.select(".data-point.active");
+  // // selector.on("change", function() {
+  // //   var selection = this;
+  // //   var toFade = bubbles.base.selectAll(".label, .straight-line");
+  // //   var category = selection.value;
+  // //   var activeSelection = bubbles.base.select(".data-point.active");
 
-  //   var gaEventLabel = bubbles.parentID + ": from " + bubbles.yData() + " to " + category;
+  // //   var gaEventLabel = bubbles.parentID + ": from " + bubbles.yData() + " to " + category;
 
-  //   console.log(activeSelection);
-  //   console.log(activeSelection.empty());
+  // //   console.log(activeSelection);
+  // //   console.log(activeSelection.empty());
 
-  //   console.log(category);
+  // //   console.log(category);
 
-  //   if (category !== bubbles.yData()) {
-  //     toFade
-  //       .transition()
-  //       .duration(bubbles.duration())
-  //       .style("opacity", 0)
-  //       .each("end", fadeIn);
+  // //   if (category !== bubbles.yData()) {
+  // //     toFade
+  // //       .transition()
+  // //       .duration(bubbles.duration())
+  // //       .style("opacity", 0)
+  // //       .each("end", fadeIn);
 
-  //     ga("send", "event", "dropdown", "change", gaEventLabel, bubbles.gaCategoriesChanged);
-  //     bubbles.gaCategoriesChanged++;
+  // //     ga("send", "event", "dropdown", "change", gaEventLabel, bubbles.gaCategoriesChanged);
+  // //     bubbles.gaCategoriesChanged++;
 
-  //   }
+  // //   }
     
-  //   function fadeIn() {
-  //     console.log(category);
-  //     bubbles.yData(category);
+  // //   function fadeIn() {
+  // //     console.log(category);
+  // //     bubbles.yData(category);
 
-  //     bubbles.draw(data);
-  //   }
+  // //     bubbles.draw(data);
+  // //   }
 
-  //   if ( activeSelection.empty() === false ){
+  // //   if ( activeSelection.empty() === false ){
 
-  //     if ( activeSelection.datum()[category] === "" ) {
-  //       // d3.select(bubbles.base.node().parentNode).select(".info-box").selectAll("div").remove();
-  //       // d3.select(bubbles.base.node().parentNode).select(".legend-ring").remove();
-  //       activeSelection.classed("active", false).style("fill-opacity", 0.2);
-  //       bubbles.layer("info-box").draw();
-  //     }
+  // //     if ( activeSelection.datum()[category] === "" ) {
+  // //       // d3.select(bubbles.base.node().parentNode).select(".info-box").selectAll("div").remove();
+  // //       // d3.select(bubbles.base.node().parentNode).select(".legend-ring").remove();
+  // //       activeSelection.classed("active", false).style("fill-opacity", 0.2);
+  // //       bubbles.layer("info-box").draw();
+  // //     }
 
-  //   }
-  // });
+  // //   }
+  // // });
 
-  // sizeSelector.selectAll("option")
-  //   .data(quantities)
-  //   .enter()
-  //   .append("option")
-  //     .attr("value", function(d) { return d.id; })
-  //     .text(function(d) { return d.label; });
+  // // sizeSelector.selectAll("option")
+  // //   .data(quantities)
+  // //   .enter()
+  // //   .append("option")
+  // //     .attr("value", function(d) { return d.id; })
+  // //     .text(function(d) { return d.label; });
 
-  // console.log(sizeSelector.select("option"));
+  // // console.log(sizeSelector.select("option"));
 
-  // sizeSelector.select("option")
-  //   .property("selected", true);
+  // // sizeSelector.select("option")
+  // //   .property("selected", true);
 
-  // sizeSelector.on("change", function() {
-  //   console.log("clicked size selector");
-  //   var selection = this;
-  //   var activeSelection = bubbles.base.select(".data-point.active");
-  //   var metric = d3.select(selection).select("[value=" + selection.value + "]").datum();
+  // // sizeSelector.on("change", function() {
+  // //   console.log("clicked size selector");
+  // //   var selection = this;
+  // //   var activeSelection = bubbles.base.select(".data-point.active");
+  // //   var metric = d3.select(selection).select("[value=" + selection.value + "]").datum();
 
-  //   console.log(selection);
+  // //   console.log(selection);
 
-  //   var gaEventLabel = bubbles.parentID + ": from " + (d3.select(".selected").empty() ? "initial" : d3.select(".selected").attr("id")) + " to " + selection.value;
-  //   console.log(gaEventLabel);
+  // //   var gaEventLabel = bubbles.parentID + ": from " + (d3.select(".selected").empty() ? "initial" : d3.select(".selected").attr("id")) + " to " + selection.value;
+  // //   console.log(gaEventLabel);
 
-  //   if (d3.select(selection).select("[value=" + selection.value + "]") !== true) {
-  //     ga("send", "event", "data metric", "change", gaEventLabel, bubbles.gaMetricChanged);
-  //     bubbles.gaMetricChanged++;
+  // //   if (d3.select(selection).select("[value=" + selection.value + "]") !== true) {
+  // //     ga("send", "event", "data metric", "change", gaEventLabel, bubbles.gaMetricChanged);
+  // //     bubbles.gaMetricChanged++;
 
-  //     var options = rangeSelector.selectAll("option")
-  //       .data(metric.ranges);
+  // //     var options = rangeSelector.selectAll("option")
+  // //       .data(metric.ranges);
 
-  //     options.enter()
-  //       .append("option");
+  // //     options.enter()
+  // //       .append("option");
           
-  //     options.attr("value", function(d) {
-  //         if ( d.label === "Less than" ) {
-  //           return d.domain[1];
-  //         }
-  //         else if ( d.label === "More than" ) {
-  //           return d.domain[0];
-  //         }
-  //       })
-  //       .attr("class", function(d) {
-  //         if ( d.label === "Less than" ) {
-  //           return "max";
-  //         }
-  //         else if ( d.label === "More than" ) {
-  //           return "min";
-  //         }
-  //       })
-  //       .text(function(d) {
-  //         var optionLabel;
-  //         if ( d.label === "Less than" ) {
-  //           optionLabel = d.domain[1];
-  //         }
-  //         else if ( d.label === "More than" ) {
-  //           optionLabel = d.domain[0];
-  //         }
-  //         if (metric.id === "time") {
-  //           if ( optionLabel === 24 ) {
-  //             optionLabel = "a day";
-  //           }
-  //           if ( optionLabel === 24 * 7 ) {
-  //             optionLabel = "a week";
-  //           }
-  //           if ( optionLabel === 24 * 30 ) {
-  //             optionLabel = "a month";
-  //           }
-  //         }
-  //         else {
-  //           optionLabel = formatNumber(optionLabel);
-  //         }
-  //         return d.label + " " + optionLabel;
-  //       });
+  // //     options.attr("value", function(d) {
+  // //         if ( d.label === "Less than" ) {
+  // //           return d.domain[1];
+  // //         }
+  // //         else if ( d.label === "More than" ) {
+  // //           return d.domain[0];
+  // //         }
+  // //       })
+  // //       .attr("class", function(d) {
+  // //         if ( d.label === "Less than" ) {
+  // //           return "max";
+  // //         }
+  // //         else if ( d.label === "More than" ) {
+  // //           return "min";
+  // //         }
+  // //       })
+  // //       .text(function(d) {
+  // //         var optionLabel;
+  // //         if ( d.label === "Less than" ) {
+  // //           optionLabel = d.domain[1];
+  // //         }
+  // //         else if ( d.label === "More than" ) {
+  // //           optionLabel = d.domain[0];
+  // //         }
+  // //         if (metric.id === "time") {
+  // //           if ( optionLabel === 24 ) {
+  // //             optionLabel = "a day";
+  // //           }
+  // //           if ( optionLabel === 24 * 7 ) {
+  // //             optionLabel = "a week";
+  // //           }
+  // //           if ( optionLabel === 24 * 30 ) {
+  // //             optionLabel = "a month";
+  // //           }
+  // //         }
+  // //         else {
+  // //           optionLabel = formatNumber(optionLabel);
+  // //         }
+  // //         return d.label + " " + optionLabel;
+  // //       });
 
-  //     options.exit().remove();
+  // //     options.exit().remove();
 
-  //     // d3.selectAll("#chart-svg").classed("hidden", false);
-  //     // // d3.select(".buttons").classed("hidden", false);
-  //     // d3.select(".category-selection-container").classed("hidden", false);
-  //     // d3.select(".info-box").classed("hidden", false);
-  //     // d3.select(".totals-intro").classed("hidden", true);
+  // //     // d3.selectAll("#chart-svg").classed("hidden", false);
+  // //     // // d3.select(".buttons").classed("hidden", false);
+  // //     // d3.select(".category-selection-container").classed("hidden", false);
+  // //     // d3.select(".info-box").classed("hidden", false);
+  // //     // d3.select(".totals-intro").classed("hidden", true);
 
-  //     bubbles.rData(metric.columnName);
+  // //     bubbles.rData(metric.columnName);
 
-  //     d3.select("#chart-svg").attr("class", metric.id);
-  //     d3.select("#chart .legend-base").attr("class", "legend-base");
-  //     d3.select("#chart .legend-base").classed(metric.id, true);
+  // //     d3.select("#chart-svg").attr("class", metric.id);
+  // //     d3.select("#chart .legend-base").attr("class", "legend-base");
+  // //     d3.select("#chart .legend-base").classed(metric.id, true);
 
-  //     if ( activeSelection.empty() === false && (activeSelection.datum()[bubbles.rData()] > 0) === false ){
-  //       activeSelection.classed("active", false);
-  //     }
+  // //     if ( activeSelection.empty() === false && (activeSelection.datum()[bubbles.rData()] > 0) === false ){
+  // //       activeSelection.classed("active", false);
+  // //     }
 
-  //     bubbles.draw(data);
+  // //     bubbles.draw(data);
+  // //     pymChild.sendHeight();
+  // //   }
+  // //   else {
+  // //     console.log("Already selected");
+  // //   }
+
+  // // });
+
+  // // totalCounters.on("click", function() {
+  // //   console.log("clicked total");
+  // //   var selection = d3.select(this);
+  // //   var activeSelection = bubbles.base.select(".data-point.active");
+  // //   // var infoBox = d3.select(bubbles.base.node().parentNode).select(".info-box");
+  // //   // var ring = d3.select(bubbles.base.node().parentNode).select(".legend-ring");
+
+  // //   var gaEventLabel = bubbles.parentID + ": from " + (d3.select(".selected").empty() ? "initial" : d3.select(".selected").attr("id")) + " to " + selection.attr("id");
+  // //   console.log(gaEventLabel);
+
+  // //   if (selection.classed("selected") !== true) {
+  // //     ga("send", "event", "data metric", "change", gaEventLabel, bubbles.gaMetricChanged);
+  // //     bubbles.gaMetricChanged++;
+
+  // //     // d3.select(".legend").selectAll(".legend-step").remove();
+
+  // //     totalCounters.classed("selected", false);
+
+  // //     selection.classed("selected", true);
+
+  // //     d3.selectAll("#chart-svg").classed("hidden", false);
+  // //     // d3.select(".buttons").classed("hidden", false);
+  // //     d3.select(".category-selection-container").classed("hidden", false);
+  // //     d3.select(".info-box").classed("hidden", false);
+  // //     d3.select(".totals-intro").classed("hidden", true);
+
+  // //     bubbles.rData(selection.datum().columnName);
+
+  // //     d3.select("#chart-svg").attr("class", selection.datum().id);
+  // //     d3.select("#chart .legend-base").attr("class", "legend-base");
+  // //     d3.select("#chart .legend-base").classed(selection.datum().id, true);
+
+  // //     if ( activeSelection.empty() === false && (activeSelection.datum()[bubbles.rData()] > 0) === false ){
+  // //       activeSelection.classed("active", false);
+  // //     }
+
+  // //     bubbles.draw(data);
+  // //     pymChild.sendHeight();
+  // //   }
+  // //   else {
+  // //     console.log("Already selected");
+  // //   }
+
+  // // });
+
+  // bubbles.on("selection change", function() {
+  //     // console.log("The element ", d, "was selected");
   //     pymChild.sendHeight();
-  //   }
-  //   else {
-  //     console.log("Already selected");
-  //   }
-
-  // });
-
-  // totalCounters.on("click", function() {
-  //   console.log("clicked total");
-  //   var selection = d3.select(this);
-  //   var activeSelection = bubbles.base.select(".data-point.active");
-  //   // var infoBox = d3.select(bubbles.base.node().parentNode).select(".info-box");
-  //   // var ring = d3.select(bubbles.base.node().parentNode).select(".legend-ring");
-
-  //   var gaEventLabel = bubbles.parentID + ": from " + (d3.select(".selected").empty() ? "initial" : d3.select(".selected").attr("id")) + " to " + selection.attr("id");
-  //   console.log(gaEventLabel);
-
-  //   if (selection.classed("selected") !== true) {
-  //     ga("send", "event", "data metric", "change", gaEventLabel, bubbles.gaMetricChanged);
-  //     bubbles.gaMetricChanged++;
-
-  //     // d3.select(".legend").selectAll(".legend-step").remove();
-
-  //     totalCounters.classed("selected", false);
-
-  //     selection.classed("selected", true);
-
-  //     d3.selectAll("#chart-svg").classed("hidden", false);
-  //     // d3.select(".buttons").classed("hidden", false);
-  //     d3.select(".category-selection-container").classed("hidden", false);
-  //     d3.select(".info-box").classed("hidden", false);
-  //     d3.select(".totals-intro").classed("hidden", true);
-
-  //     bubbles.rData(selection.datum().columnName);
-
-  //     d3.select("#chart-svg").attr("class", selection.datum().id);
-  //     d3.select("#chart .legend-base").attr("class", "legend-base");
-  //     d3.select("#chart .legend-base").classed(selection.datum().id, true);
-
-  //     if ( activeSelection.empty() === false && (activeSelection.datum()[bubbles.rData()] > 0) === false ){
-  //       activeSelection.classed("active", false);
-  //     }
-
-  //     bubbles.draw(data);
-  //     pymChild.sendHeight();
-  //   }
-  //   else {
-  //     console.log("Already selected");
-  //   }
-
-  // });
-
-  bubbles.on("selection change", function() {
-      // console.log("The element ", d, "was selected");
-      pymChild.sendHeight();
-    });
+  //   });
 
 
-  bubbles.rData(quantities[0].columnName);
-  // d3.selectAll("#chart-svg").classed("hidden", false);
-  // // d3.select(".buttons").classed("hidden", false);
-  // d3.select(".category-selection-container").classed("hidden", false);
-  // d3.select(".info-box").classed("hidden", false);
-  // d3.select(".totals-intro").classed("hidden", true);
+  // bubbles.rData(quantities[0].columnName);
+  // // d3.selectAll("#chart-svg").classed("hidden", false);
+  // // // d3.select(".buttons").classed("hidden", false);
+  // // d3.select(".category-selection-container").classed("hidden", false);
+  // // d3.select(".info-box").classed("hidden", false);
+  // // d3.select(".totals-intro").classed("hidden", true);
 
-  d3.select("#chart-svg").attr("class", quantities[0].id);
-  d3.select("#chart .legend-base").attr("class", "legend-base");
-  d3.select("#chart .legend-base").classed(quantities[0].id, true);
-  d3.select(".fallback").remove();
-  bubbles.draw(data);
+  // d3.select("#chart-svg").attr("class", quantities[0].id);
+  // d3.select("#chart .legend-base").attr("class", "legend-base");
+  // d3.select("#chart .legend-base").classed(quantities[0].id, true);
+  // d3.select(".fallback").remove();
+  // bubbles.draw(data);
 
   // console.log(data.length);
 
-  var modernization = makeThemeChart("#modernization-chart","project termination/cancellation",quantities[0]);
-  var health = makeThemeChart("#health-chart","health",quantities[0]);
-  var bank = makeThemeChart("#banks-chart","bank",quantities[2]);
-  var exchange = makeThemeChart("#exchange-chart","stock exchange",quantities[1]);
-  var air = makeThemeChart("#air-chart","airport/port/customs systems",quantities[1]);
+  var chartsToPaint = d3.selectAll(".chart-container.timeline");
+  // var allCharts;
+
+  chartsToPaint.each(function() {
+    var id = "#" + this.getAttribute("id");
+    var cat = this.getAttribute("data-category");
+    cat = cat === "all" ? "" : cat;
+    var quant = quantities[2];
+
+    this.chart = makeThemeChart(id, cat, quant);
+  });
+
+  // var modernization = makeThemeChart("#modernization-chart","project termination/cancellation",quantities[0]);
+  // var health = makeThemeChart("#health-chart","health",quantities[0]);
+  // var bank = makeThemeChart("#banks-chart","bank",quantities[2]);
+  // var exchange = makeThemeChart("#exchange-chart","stock exchange",quantities[1]);
+  // var air = makeThemeChart("#air-chart","airport/port/customs systems",quantities[1]);
 
   (function() { // force re-render of element_name to get the styling right on-print
     var beforePrint = function() {
@@ -2477,53 +2496,72 @@ d3.csv("data/timeline.csv", function (data) {
       width = parWidth - margins.left - margins.right;
       height = width * 1 / 3;
 
-      bubbles
-        .width(width)
-        .height(height);
+      chartsToPaint.each(function() {
+        var id = "#" + this.getAttribute("id");
+        var cat = this.getAttribute("data-category");
+        cat = cat === "all" ? "" : cat;
+        var quant = quantities[2];
 
-      modernization
-        .width(width)
-        .height(height / 1.5)
-        .draw(modernization.data);
+        var chart = this.chart;
 
-      health
-        .width(width)
-        .height(height / 1.5)
-        .draw(health.data);
+        chart
+          .width(width)
+          .height(height);
 
-      bank
-        .width(width)
-        .height(height / 1.5)
-        .draw(bank.data);
+        // console.log("pre-print");
+
+        chart.layer("grid-lines").draw(data);
+        chart.layer("y-axis-labels").draw(data);
+        chart.layer("bubbles").draw(data);
+      });
+
+      // bubbles
+      //   .width(width)
+      //   .height(height);
+
+      // modernization
+      //   .width(width)
+      //   .height(height / 1.5)
+      //   .draw(modernization.data);
+
+      // health
+      //   .width(width)
+      //   .height(height / 1.5)
+      //   .draw(health.data);
+
+      // bank
+      //   .width(width)
+      //   .height(height / 1.5)
+      //   .draw(bank.data);
 
 
-      exchange
-        .width(width)
-        .height(height / 1.5)
-        .draw(exchange.data);
+      // exchange
+      //   .width(width)
+      //   .height(height / 1.5)
+      //   .draw(exchange.data);
 
-      air
-        .width(width)
-        .height(height / 1.5)
-        .draw(air.data);
+      // air
+      //   .width(width)
+      //   .height(height / 1.5)
+      //   .draw(air.data);
 
-      // totalCounters
-      //   .style("width", "30%")
-      //   .style("margin", "0 20px 0 0");
+      // // totalCounters
+      // //   .style("width", "30%")
+      // //   .style("margin", "0 20px 0 0");
 
-      // d3.selectAll(".data-point.too-small, .data-point.too-big")
-      //   // .filter(function(){
-      //   //   return d3.select(this).classed("too-small") || d3.select(this).classed("too-big");
-      //   // })
-      //   .style("fill-opacity", 0);
+      // // d3.selectAll(".data-point.too-small, .data-point.too-big")
+      // //   // .filter(function(){
+      // //   //   return d3.select(this).classed("too-small") || d3.select(this).classed("too-big");
+      // //   // })
+      // //   .style("fill-opacity", 0);
 
-      // console.log(d3.selectAll(".data-point.too-small, .data-point.too-big"));
+      // // console.log(d3.selectAll(".data-point.too-small, .data-point.too-big"));
 
-      // bubbles.draw(data);
+      // // bubbles.draw(data);
 
-      bubbles.layer("grid-lines").draw(data);
-      bubbles.layer("y-axis-labels").draw(data);
-      bubbles.layer("bubbles").draw(data);
+      // bubbles.layer("grid-lines").draw(data);
+      // bubbles.layer("y-axis-labels").draw(data);
+      // bubbles.layer("bubbles").draw(data);
 
       pymChild.sendHeight();
     };
@@ -2533,42 +2571,59 @@ d3.csv("data/timeline.csv", function (data) {
       width = parWidth - margins.left - margins.right;
       height = width * 1 / 3;
 
-      bubbles
-        .width(width)
-        .height(height);
+      chartsToPaint.each(function() {
+        var id = "#" + this.getAttribute("id");
+        var cat = this.getAttribute("data-category");
+        cat = cat === "all" ? "" : cat;
+        var quant = quantities[2];
 
-      modernization
-        .width(width)
-        .height(height / 3)
-        .draw(modernization.data);
+        var chart = this.chart
+          .width(width)
+          .height(height);
 
-      health
-        .width(width)
-        .height(height / 3)
-        .draw(health.data);
+        // console.log("post-print");
 
-      bank
-        .width(width)
-        .height(height / 3)
-        .draw(bank.data);
+        chart.layer("grid-lines").draw(data);
+        chart.layer("y-axis-labels").draw(data);
+        chart.layer("bubbles").draw(data);
+      });
+
+      // bubbles
+      //   .width(width)
+      //   .height(height);
+
+      // modernization
+      //   .width(width)
+      //   .height(height / 3)
+      //   .draw(modernization.data);
+
+      // health
+      //   .width(width)
+      //   .height(height / 3)
+      //   .draw(health.data);
+
+      // bank
+      //   .width(width)
+      //   .height(height / 3)
+      //   .draw(bank.data);
 
 
-      exchange
-        .width(width)
-        .height(height / 3)
-        .draw(exchange.data);
+      // exchange
+      //   .width(width)
+      //   .height(height / 3)
+      //   .draw(exchange.data);
 
-      air
-        .width(width)
-        .height(height / 3)
-        .draw(air.data);
+      // air
+      //   .width(width)
+      //   .height(height / 3)
+      //   .draw(air.data);
 
-      totalCounters
-        .attr("style", null);
+      // totalCounters
+      //   .attr("style", null);
 
-      bubbles.layer("grid-lines").draw(data);
-      bubbles.layer("y-axis-labels").draw(data);
-      bubbles.layer("bubbles").draw(data);
+      // bubbles.layer("grid-lines").draw(data);
+      // bubbles.layer("y-axis-labels").draw(data);
+      // bubbles.layer("bubbles").draw(data);
 
       pymChild.sendHeight();
     };
@@ -2597,6 +2652,31 @@ d3.csv("data/timeline.csv", function (data) {
     var selectors = d3.select(id).append("div")
       .attr("class","selectors");
 
+    var sizeSelector = selectors.append("div")
+      .attr("class", "size-selection-container")
+      .html("Size by:<br>");
+      
+    sizeSelector.append("select")
+        .attr("class", "select-size dropdown");
+
+    var rangeSelector = selectors.append("div")
+      .attr("class", "range-selection-container")
+      .html("View range:<br>");
+
+    rangeSelector.append("select")
+        .attr("class", "select-range dropdown");
+
+    // var selector = selectors.append("div")
+    //   .attr("class", "category-selection-container")
+    //   .html("Sort by:<br>");
+
+    // selector.append("select")
+    //     .attr("class", "select-category dropdown");
+
+    selectors.selectAll("div")
+      .append("div")
+        .attr("class", "limits");
+
     var selector = selectors.append("div")
       .attr("class", "category-selection-container")
       .html("Sort by:<br>")
@@ -2608,11 +2688,11 @@ d3.csv("data/timeline.csv", function (data) {
       .attr("class", impact.id)
       .chart("BubbleTimeline")
       .width(width)
-      .height(height / 3)
+      .height(height)
       .margin({top: 60, bottom: 65, right: 20, left: 20})
       .dateParse("iso")
       .dateDisplay("%B 20%y")
-      .yData("Region")
+      .yData("Country")
       .rData(impact.columnName)
       .duration(300);
 
@@ -2629,6 +2709,8 @@ d3.csv("data/timeline.csv", function (data) {
         .text(impact.instructsLabel);
 
     if ( theme.mode() === "mobile" ) {
+      d3.select("body").classed("mobile-view", true);
+
       theme
         .width(container.node().parentNode.offsetWidth - 40)
         .height(((container.node().parentNode.offsetWidth - 40) / 1.5) / 2);
@@ -2641,12 +2723,18 @@ d3.csv("data/timeline.csv", function (data) {
     selector.select("[value=" + theme.yData() + "]")
       .property("selected", true);
 
-    var themeData = data.filter(function (d) {
-      // filter out data that has no set value (category)
-      if (d.Theme.indexOf(filter) !== -1 && d[impact.columnName] !== 0) {
-        return d;
-      } 
-    });
+    // var themeData = data.filter(function (d) {
+    //   // filter out data that has no set value (category)
+    //   console.log(filter);
+    //   if (filter === "") {
+    //     return d[impact.columnName] !== 0;
+    //   }
+    //   else if (d.Theme.indexOf(filter) !== -1 && d[impact.columnName] !== 0) {
+    //     return d;
+    //   } 
+    // });
+
+    var themeData = data;
 
     theme.sortables = categories.filter(function (cat) {
         return themeData.some(function (d) {
@@ -2677,7 +2765,7 @@ d3.csv("data/timeline.csv", function (data) {
     //   .attr("value", function(d) { return d; })
     //   .text(function(d) { return d.replace("Government", "Gov"); });
 
-    theme.preSelected = 0;
+    // theme.preSelected = 0;
 
     theme.draw(themeData);
 

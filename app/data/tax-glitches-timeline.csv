@@ -1,0 +1,502 @@
+﻿id,title,text,url,summary,pubDate,modDate,thumbImg,Impact - USD,Impact - duration,Impact - duration unit,Impact - hours,Impact - customers affected,Impact - Qty,Currency Symbol,Impact - Currency,Country,tags
+,AMT Patch Delays Tax Refunds as Expected,"The IRS announced last week that because of the Congressional delay in the passage of the Alternative Minimum Tax (AMT) patch, it will take at least until the 13th of February before the AMT tax forms can be properly processed. According to Federal Computer Weekly, 13.5 million taxpayers who will use any of the five forms related to the AMT legislation will need to wait until then to begin submitting their returns, said Acting IRS Commissioner Linda Stiff.
+
+Taxpayers affected are those using: Form 8863, Education Credits; Form 5695, Residential Energy Credits; Form 1040A's Schedule 2, Child and Dependent Care Expenses for Form 1040A Filers; Form 8396, Mortgage Interest Credit; and Form 8859, District of Columbia First-Time Homebuyer Credit. Once the tax forms are processed, refunds if any will take another 10 to 14 days to be sent out.",http://spectrum.ieee.org/riskfactor/computing/it/amtfix_delays_tax_refunds_as_e,"Delayed legislation meant that tax forms could not be properly processed, and the start of the tax filing season was delayed for a month.",2008-01-07T05:59:00Z,2008-01-06T07:00:00Z,,,1,month,720,1.35E7,,,,US,"in-timeline,IRS,tax-1"
+,"Dutch Tax Office Erases 730,000 Tax Returns","The Dutch tax office admitted that 730,000 digital tax returns submitted by early filers to the tax office for some reason erased by their computer system and need to be resent.
+
+Tax office officials assume that those who have had their records lost have their returns on their computer and will be able to easily resend them. They have until 1 April to do so.
+
+According to Radio Netherlands, earlier in February, ""another problem with the tax office computers meant that clients were unable to identify themselves properly. For a whole week, nobody was able to submit a tax declaration electronically.""
+
+Last June, tax office software that did not function correctly forced over 400,000 companies to resubmit payroll information.
+
+The continuing problems at the Dutch tax office has forced the Finance Minister Jan Kees de Jager into reorganizing the office, but admits it will take years to fix.",http://spectrum.ieee.org/riskfactor/computing/it/dutch_tax_office_loses_730000,Early filers were required to resend their returns.,2008-03-15T00:21:00Z,2008-03-14T07:00:00Z,,,,,,730000,,,,Netherlands,"in-timeline,Netherlands,tax-1"
+,Extent of UK PAYE Tax System Fiasco Becomes Clearer,"The UK's Her Majesty's Revenue and Customs Pay-As-You-Earn (PAYE) computerized tax system fiasco just keeps getting wider and weirder.
+
+As you may recall, in June, it came to light that at least 100,000 UK taxpayers would likely be paying too much tax in the last tax year for numerous reasons including being placed in an incorrect tax bracket because of errors in the new HMRC computer system database.
+
+That disclosure caused a great gnashing of teeth, since the new HMRC computer system was designed to eliminate these types of problems. It also caused a lot of ""I told you so"" comments, since tax experts (and some Revenue and Custom employees themselves) had been warning for some time that the new computer system would be causing these issues.
+
+Well, now it appears that after a review of tax returns by Revenue and Customs, some 4.3 million UK taxpayers have indeed paid too much in taxes between 2008 and April of this year. The average sum owed, the London Telegraph reported in an article published over the weekend, is about £400.
+
+Furthermore, another 1.5 million UK taxpayers are soon going to receive a letter from HM Revenue and Customs telling them that they owe on average £1,428 in taxes from the same period.
+
+This new disclosure has cause more than a bit of a political firestorm.
+
+To add more fuel to the fire, this other Telegraph story reports that another 6 million UK taxpayers are likely owed tax refunds from years prior to 2008; possibly another 1.7 million will owe taxes as well. However, it may be four years before those owed a refund see their money.
+
+London papers such as the Telegraph and Daily Mail among others have published stories today quoting tax experts about how taxpayers receiving Revenue and Custom letters can fight back using various ""loopholes"" to avoid paying back the money they are said to owe.
+
+Some are even calling this the beginning of the ""Great Tax Revolt,"" which could gather momentum if one of the ideas to solve the PAYE automation problem is put into place.
+
+What is being suggested is that UK employers pay a worker's salary to HM Revenue and Customs, which would make the tax deductions required, and then send the worker whatever his or her salary that was left.
+
+I know that idea wouldn't last a nanosecond in the US.
+
+To be fair, it is not really surprising that HM Revenue and Customs automated tax system is having a hard time sorting things out properly. According to this Telegraph blog post, ""... the size of Tolley’s Tax Guide - the authoritative users’ manual for our [UK] fiscal statutes - more than doubled from 4,998 pages to 11,520 pages"" since 1997.
+
+That's a lot of IT system requirements changes to deal with.
+
+A HM Treasury official was quoted in a Telegraph article as saying, ""A decade of meddling and intervening made the tax affairs of millions of families and businesses across the UK extremely complicated.""
+
+No doubt. The Treasury official should look at the US, however, if he wants to see complicated.
+
+As a comparison, the Standard Federal Tax Reporter, which explains the US tax code to accountants, now takes a total of over 71,000 pages to explain it. No wonder that the US Internal Revenue Service's Business Systems Modernization has been on the US General Accountability Office (GAO) High Risk List since 1995 (when the Tax Reporter needed ""merely"" 40,500 pages to explain the US tax code).",http://spectrum.ieee.org/riskfactor/computing/it/extent-of-uk-paye-tax-system-fiasco-becomes-clearer,Some 4.3 million UK taxpayers have indeed paid too much in taxes between 2008 and April 2010. The average sum owed is about £400.,2010-09-07T22:57:00Z,2010-09-07T07:00:00Z,,5923567270,,,,5800000.0,3.862E9,£,GBP,UK,"in-timeline,UK,tax-1"
+,"Georgia Tax Refund: Now You Have It, Now You Don't","Last week, on the 20th of January, some 30,000 taxpayers of the state of Georgia were a bit happier after receiving $12 million in tax refunds via direct deposit from the Georgia Department of Revenue.
+
+Not long afterwards, however, those same taxpayers were complaining that the refunds had mysteriously vanished from their bank accounts, and no one seemed to be able to tell them why.
+
+On the 25th of January, the Department of Revenue finally issued a statement that it:
+
+""... became aware of a computer system error in the calculation of refunds. To ensure that correct payments were made to taxpayers, the Department issued a 'stop payment' on those refunds. Due to the computer error, any funds deposited with a taxpayer were rescinded and returned to the Department.""
+
+The Department said in another statement it would begin reissuing refunds with the correct amounts by the 27th of January and this process would take seven days to complete.
+
+However, between the initial issuance of the tax refunds and the rescinding of said refunds, many Georgians had already spent part or all of their refund checks. When the stop payment order hit, these folks found that they were being assessed bank over-draft charges for having insufficient funds in their accounts, this story in the Atlanta Journal-Constitution reported.
+
+To say that the affected taxpayers were angry is to understate the situation by a wide mark, especially since the Department of Revenue didn't let anyone know what it was doing. In fact, the Department issued the stop-payment order days before it issued any public notice of what it had done, and only after the press demanded answers about what the heck was going on.
+
+Revenue Commissioner Douglas J. MacGinnitie, who was only appointed on the 18th of January, was quoted in the AJC article as saying:
+
+""Clearly, we need to work to make the Department of Revenue more customer-focused.""
+
+Commissioner MacGinnitie went on to apologized for the fiasco.
+
+The AJC story says that the total amount of the over-payment error was $640,000 (one wonders if the state would have moved as quickly if it had discovered an under-payment of $640 K).
+
+The Department of Revenue also did not indicate how many of the 30,000 or so tax refund checks were wrong - was it a couple hundred, a couple of thousand, or were all off by twenty-dollars or so? And why is it taking seven days to re-issue the refunds if it was a simple programming calculation error? And did the error affect paper refund checks as well?
+
+The AJC story goes on to state that the Department of Revenue workers didn't know that the electronically deposited tax refunds had actually reached taxpayer bank accounts before they issued the stop payment order three hours later.
+
+I am very curious about how the tax refund programming error was detected. What seems clear is that the programming error was found mere minutes after the tax refunds were sent out. What indicated that the refund amounts were wrong, and why wasn't it detected before the refunds were approved to be sent out?
+
+What is also interesting in that the AJC in this story and other news stories reported that many Georgians had access to their (incorrect) refunds for several days, before the refunds simply vanished out of their accounts. Given that the Department of Revenue's stop payment order came only three hours after the refunds were electronically sent out, maybe someone can explain why it took so long for the banks to process the Department's stop payment order.
+
+Anyway, the Department of Revenue says that folks who were assessed overdraft charges by their financial institution can get the charges reimbursed. However, to do so - you guessed it - they and their financial institution have to fill out a government form (see PDF here) by the 14th of February.
+
+The Department of Revenue didn't say how long it would take to get the overdraft charges paid nor how much the fiasco is likely going to cost the state, either.",http://spectrum.ieee.org/riskfactor/computing/it/georgia-tax-refund-now-you-have-it-now-you-dont,"30,000 taxpayers received refunds (totaling $12 million) via direct deposit, but the transfers were quickly reversed without warning when the state realized it had sent incorrect amounts (a total underpayment of $640,000). It took two more weeks to reissue refunds.",2011-01-29T01:54:00Z,2011-01-28T07:00:00Z,,1.2E7,14,days,336.0,30000,1.2E7,$,USD,US,"Georgia,in-timeline,tax-1"
+,How a Misplaced Decimal Point Led to €188 Million in Unintended Gov't Largesse,"Last week was an unusually busy week across the global landscape of IT-related snafus, snarls and peculiar system interruptions. For instance, last Wednesday, quick-drying cement from a nearby construction site accidentally flowed into the London Underground’s Victoria line signal control room, significantly disrupting Central London Tube service for the day. Then, on Thursday, a human error during system maintenance caused a power outage that took out the automated train signaling system for three of New York City’s Metro-North lines, stranding thousands of the city’s train commuters for a good part of the evening. In light of these two events, I decided to start this week’s IT Hiccups with a software-cum-human error that occurred late last year, but only lately has been explained.
+
+In mid-December, the Amsterdam Herald reported that Amsterdam’s tax office was trying to figure out how €188 million was mistakenly paid out in annual government rent subsidies to some 10 000 people instead of the expected €2 million or so. In some cases, people received as much as €34 000 in housing subsidies.
+
+What made the error more disconcerting was that no one in Amsterdam’s tax office seemed to have noticed. The Amsterdam Herald quoted City alderman Pieter Hilhorst as saying, “How can it be that no alarms went off? ... It seems we’re able to pay out €188 million without realizing it.”
+
+The investigation into the error ordered by Hilhorst recently disclosed that the software used by the Amsterdam government “calculates payments in cents rather than euros” and no one in the finance office seemed to have noticed the slight discrepancy. A story at Dutch News states that “all but €2.4m of the €188m in wrongful payments” has been recovered (while half of the remaining amount probably will never be paid back). Furthermore, says the Dutch News story, the city spent some €300 000 trying to understand and fix the situation. Other news reports state that the Amsterdam city council is putting more controls over its finance office to keep such an error from happening again.
+
+It could have been worse: Amsterdam could have been launching a $125 million Mars Climate Orbiter and lost it because of a failure to convert from English to metric units.
+
+China Suffers Web Outage It Blames on Hackers; Others Say it Was Self-inflicted
+
+Last Tuesday, the New York Times and others reported that up to two-thirds of Internet traffic in China—text, audio, and video sent by hundreds of millions of people—was disrupted by what the Chinese government said was the work of hackers associated with the Falun Gong movement. The Times stated that, “The China Internet Network Information Center wrote on its official Weibo account that the outage was caused by a glitch in the Domain Name System servers that convert alphabetical website addresses into the numerical addresses of computers on the Internet. Instead of matching the names of popular Chinese sites with their proper addresses, the DNS servers instead redirected users to an address associated with the homepage of United States-based Dynamic Internet Technology.”
+
+DIT, the Times states, “is best known for a software tool called Freegate that helps Internet users in China circumvent the government’s pervasive system of online censorship and filters.”
+
+DIT denied any involvement in the outage, and said that it was more likely caused by a “misconfiguration” in China’s own Great Firewall Internet censorship program. DIT's contention was supported by Greatfire.org, which collects information pertaining to Internet censorship in China.
+
+As of now, China is still claiming to be a hacking victim, although the government apparently is softening its accusations by saying it isn’t sure who is responsible.
+
+Gmail and other Services Experience Outage
+
+On Friday, Gmail and many other Google online applications including Calendar, Talk, Drive, Docs, Sites, Groups, Voice and Google+ Hangouts went down at about 1410 EST and didn’t return until 1520 EST, Computerworld reported. Google, says Computerworld, stated that for about 25 minutes, “most” users of its online services were unable to access them, thereby potentially affecting hundreds of millions of users around the world.
+
+Google apologized for the outage, saying that “an internal system that generates configurations—essentially, information that tells other systems how to behave—encountered a software bug and generated an incorrect configuration. The incorrect configuration was sent to live services over the next 15 minutes, caused users’ requests for their data to be ignored, and those services, in turn, generated errors.”
+
+On the same day, a different and pretty bizarre Google-related hiccup caused David S. Peck of Fresno, California, to receive thousands of no-subject, blank e-mails. According to this story at Time, “users who searched [in Google search on Friday for] ‘Gmail’ were led to a results page with a link that said ‘Email.’ Clicking that link created a new email with Peck’s address—dsp559@hotmail.com—already filled in.”
+
+Tech Crunch, which first reported the story, has some interesting screenshots and other background information on the weird error.
+
+Google, which fixed the problem by late Friday night, has apologized to Peck “for any inconvenience caused.”
+
+Amsterdam Pays Out 100 Times More in Rent Subsidies Than Planned
+
+Amsterdam Investigates Error that Causes €188 Million Benefits Overpayment
+
+Software and Staff Blamed for Amsterdam Benefit Error
+
+Amsterdam Error Caused by Software and Poor Staff Oversight
+
+Two-Thirds of China's Internet Disrupted
+
+China Blames Hackers for Internet Problems
+
+China Internet Outage May be From Censorship Changes
+
+Unclear What Caused China Internet Outage
+
+Gmail, Other Google Services Experience Outage
+
+Gmail and Other Services Go Down for Over an Hour
+
+Google Apologizes and Explains Reasons for the Outage
+
+Bizarre Google Bug Sends Unwanted E-mails to Hotmail Account
+
+Google Glitch Sends Thousands of E-mails to One Man’s Hotmail Account
+
+Of Other Interest …
+
+Commuter Chaos as Quick-Drying Cement Fills Victoria Station Control Room
+
+Human Error Blamed for Metro-North Train Delays
+
+Auto Credit Cars Inadvertently Disabled by Software Problems
+
+Telecommunications Services of Trinidad and Tobago Paychecks Delayed by Technical Error
+
+Arkansas State Workers Receive Paychecks Early Due to Software Error
+
+Russia’s Avia Center Refunds 800 Customers for Plane Ticket Glitch
+
+Lloyds Banking Group Technical Issues Affect ATMs and Debit Cards Across UK
+
+Apple Will Fix iOS 7 Random Reboot Issue
+
+UK Screwfix.com Screw-up Gives Scrooge-Approved Bargains
+
+Millions in Switzerland Charged Twice for Debit/Credit Card Purchases
+
+Tech Problem Duplicates Visa Debit Payments at Bank of Ireland
+
+Maine’s Unemployment System Payment Glitch Fixed
+
+Software Issue Shuts Down Melbourne's Docklands Observation Wheel
+
+Taiwan Demonstrators Protest Persistent Problems with eTag System
+
+Illustration: Bjarn Kindler/Getty Images",http://spectrum.ieee.org/riskfactor/computing/it/misplaced-decimal-point-led-amsterdam-to-pay-out-188-million-instead-of-188-million-in-housing-aid,"An investigation revealed that the software used by the Amsterdam government “calculates payments in cents rather than euros” and no one in the finance office seemed to have noticed the slight discrepancy. While “all but €2.4m of the €188m in wrongful payments” has been recovered, the city spend an additional €300 000 trying to understand and fix the situation.",2014-01-28T01:45:00Z,2014-01-27T07:00:00Z,,257065894,,,,10000,1.88E8,€,EUR,Netherlands,"in-timeline,Netherlands,tax-1"
+,"Indiana’s Bureau of Motor Vehicles Overcharged 180,000 Customers for 10 years","Put aside, for a moment, the record theft of credit card accounts from Home Depot. I'll tell you all about that in a later post. Instead let me pick another interesting IT Hiccup from last week's hodgepodge of IT problems, snarls, and screw-ups: The Indiana’s Bureau of Motor Vehicles (BMV) plans to refund some US $29 million plus interest to 180,000 customers for charging them an incorrectly calculated excise tax when they registered their vehicles. The BMV claimed the problem began during the initial changeover in 2004 to its then new $32 million System Tracking and Record Support (STARS) computer system.
+
+According to the BMV’s press release [pdf], when a car is registered with the agency, state law requires that the vehicle be placed in a specific tax classification category based on its value. The value is calculated “using the price of the vehicle and applying an adjustment factor based upon Consumer Price Index [CPI] data related to increases in new automobile price.” The result of the value calculation is then entered into STARS which in turn uses it to automatically determine the excise tax that needs to be paid by the vehicle’s owner. For reasons that the BMV did not disclose, the STARS programming seems to have failed to take into account the adjustment factor for 180,000 out of over 60 million vehicles registered using the software system, resulting in that small subset of registrations being overcharged.
+
+The BMV says it will be mailing out letters to those customers affected within the next month or so. However, those overcharged customers will still need to fill out the form enclosed in the letter and send it back to the state if they want to receive their refunds.
+
+The miscalculation of the excise tax doesn’t just affect BMV customers, either. A percentage of the excise tax collected by the BMV is transferred to Indiana’s local and county governments, which are now going to have to repay an estimated $6 million back to the state. The BMV press release states that to help reduce the financial impact on local and county government budgets, the state will pay back the overcharged BMV customers and the interest they are owed. The local and county governments will then see their excise tax distributions reduced over the next two years to make up for the previous incorrect tax payments they received.
+
+Like most of these types of incidents, this one has an interesting back story: According to the Post-Tribune, the excise tax error was only recently discovered when the latest Consumer Product Index data was being entered into STARS. Someone apparently started asking how the excise tax was being calculated, and this led to the discovery of the tax overcharges going starting in 2004.
+
+In addition, the BMV press release states that Indiana Governor Mike Pence has authorized the BMV to appoint of an independent consulting company to audit the agency to ensure there are no more fee miscalculations. The reason, BMV Commissioner Don Snemis told the Associated Press, was that, “I don't want to discover any more errors after the damage has been done.” Snemis might have added that what he really didn’t want were any more errors disclosed as a result of yet another lawsuit against the BMV.
+
+You see, the BMV settled a $30 million class action lawsuit last year for also overcharging the fees paid to it by some 4.5 million BMV customers when they obtained or renewed their driver's licenses between 7 March 2007 and 27 June 2013. The BMV was publicly embarrassed by the suit, and agreed to credit customer accounts for what it called the “inadvertent” overcharges. The lawyers suing the BMV, however, said the fees were actually imposed on Indiana drivers on purpose, something the BMV strongly denied.
+
+Then in September of last year, the BMV was even more embarrassed when it had to admit that it had also discovered that it been overcharging customers on some 30 other fees. The BMV said that it would immediately be crediting customer accounts for any charges imposed going back six years, which was the statute of limitations. The BMV blamed “the errors on misapplying complex state laws governing more than 300 fees for various BMV services,” the Indianapolis Star reported.
+
+Soon after the BMV admission, the same law firm of Cohen and Malad LLP that forced the earlier settlement (and earned $6 million off of it) brought a second class-action lawsuit against the BMV in October of last year asking the courts to force BMV to not merely issue credits, but instead issue full refunds. The lawsuit also demanded that there be a full accounting of all BMV overcharges, including when the overcharges were first discovered by BMV management. The law firm contended that BMV knew about the 30 plus fee overcharges for some time, and did nothing about them until the first lawsuit was filed. The BMV once more denied the charge, and countered that BMV customers were already made whole by the issuing of the credits to their accounts. Snemis also accused the law firm of Cohen and Malad of bringing the lawsuit as just a way of “seeking a very big fee.”
+
+However, the Indianapolis Star reported in June that a video tape deposition given by a former BMV Deputy Director in fact indicated that the BMV has known about the overcharging for quite a while, but “secretly kept doing it for at least two years to avoid budget troubles.” The Journal Gazette further reported that the BMV is now trying to keep secret other depositions taken in the latest lawsuit against it, supposedly because the BMV claims that allowing them to become public would discourage others from testifying in the lawsuit, an excuse no one seems to be buying.
+
+Another wrinkle to this story is that the STARS system itself has a long, controversial history of its own. The STARS system, as was mentioned, was initially introduced into the BMV in early 2004. However, continuing problems with it meant that the system it was supposed to replace, called BOSS, had to be used concurrently with STARS until July 2006, when BMV Commissioner Joel Silverman decided that the agency was to going to use STARS exclusively. It may have been during this cross-over period when the latest fee fiasco occurred.
+
+Silverman’s decision did not turn out well. Angry BMV customers quickly found themselves waiting in long lines as many routine transactions were unable to be completed; online and self-service were also unavailable. Indiana state police also were said to be worried that they might arrest drivers without just cause or have to let drivers who should be arrested go free because the information being sent to them from the BMV appeared to be inaccurate.
+
+It wasn’t until late August that BMV operations started resembling anything approaching normal. By then, however, former Gov. Mitch Daniels was forced to apologize for the on-going BMV problems in attempt to cool the ensuing political firestorm raised by the debacle.
+
+By early September, Silverman decided that perhaps it was in everyone’s—and especially the governor’s—best interest to resign. No doubt helping Silverman’s decision along was his loud and forceful declaration within a week of STARS going live that the system was fixed when it obviously was not, as well as admitting (pdf) that none of the extensive system testing that was supposedly done showed any indication of problems later encountered. Obviously, all that extensive testing missed the current excise tax problem as well.
+
+It took over a year for STARS to finally start to operate satisfactorily.
+
+In Other News….
+
+Software Failure Crashes Rice University Network
+
+Fat Finger Trade Hits BP Shares
+
+Canadian Geography Vexes Apple IPhone 6
+
+Johannesburg Stock Exchange Experiences Network Issues
+
+Canadian Hospital Computer Snafu Delays 2,700 Test Results
+
+Australian Dept. of Human Services Fixing Aged Care Processing Glitch
+
+Technology Errors with New Parking System Hit Train Commuters in Perth Australia
+
+New Smart Parking Meters in Walnut Creek California Dole Out Fines Even for Fully Paid Up Parking
+
+Microsoft Pulls OneDrive for Business Patch
+
+Computer and Human Errors Allow Passenger to Board Plane with Wrong Boarding Pass
+
+Flawed Federal Health Insurance Calculator Allows Large Employers to Offer Substandard Health Plans
+
+US Labor Department Releases Important CPI Data Early Due to Unknown ""Technical Issues""",http://spectrum.ieee.org/riskfactor/computing/it/indianas-bureau-of-motor-vehicles-overcharged-180000-customers-excise-tax-for-10-years,The BMV claimed the problem in miscalculating vehicle excise taxes began during the 2004 changeover to its new $32 million System Tracking and Record Support (STARS) computer system.,2014-09-22T11:58:00Z,2014-09-22T07:00:00Z,,2.9E7,10,years,87600,180000,2.9E7,$,USD,US,"Indiana,to-split,in-timeline,tax-1"
+,IT Hiccups of the Week: Hundreds of Thousands Hit By U.S. Tax Filing Glitches,"We had another interesting mixture of IT-related glitches, snarls, and snafus to choose from last week. We start off with U.S. taxpayers who will be waiting for their tax refund checks a bit longer than expected because of problems with some companies’ tax software products.
+
+H&R Block and Other Tax Software Product Problems Delay Tax Refunds for Over 600 000
+
+According to several news reports, H&R Block, one of the world's largest tax services providers, which files about 1 in 7 U.S. tax returns, announced on its blog that there was “a disconnect in the transmission of form 8863 from our delivery system to the IRS [Internal Revenue Service] E-file system”. That disconnect caused a delay in its customers getting their tax refunds. Federal Form 8863 (American Opportunity and Lifetime Learning Credits) is used to claim two higher education credits. Over 600 000 H&R Block customers who had their forms filed between 14 February 22 February are said to be affected, a story at the Washington Post reports.
+
+Part of the problem lay with the IRS – or more specifically actions by the U.S. Congress – which delayed this year’s filing period and required changes to Form 8863. Both actions apparently caught H&R Block and “a limited number of software company” product developers off-guard, the IRS said. The tax software problems have reportedly been fixed, but refunds might be delayed by up to 8 weeks in some cases.
+
+In another problem, about 10 days ago, Minnesota tax officials said that anyone using Intuit’s TurboTax software to file their state tax returns could be filing erroneous tax returns. At first, Intuit downplayed the errors claiming that they affected only non-obligatory tax issues such as donating $5 to a political party, but state officials countered last Monday by saying that there were about a dozen problems with the TurboTax software, most affecting tax computations, Minnesota Public Radio (MPR) reported.
+
+Within a few days of the state's announcement, Intuit claimed that its tax software was fixed and said that only 10 000 filers were affected. However, state tax officials told MPR that as of Friday, “it still isn't sure flaws in Intuit's TurboTax tax preparation software have been fixed.” The state is still telling residents not to use TurboTax until it has fully tested out the software. It also said that some14 000 tax returns using the software have been found to contain software-related errors.
+
+Intuit says that it “will issue refunds to affected Minnesota state TurboTax customers for the full amount of their tax preparation fees.” Somehow, I don't think that will appease many filers who will now need to file amended returns.
+
+Billing Problem Affect 145 000 Customers of EnergyAustralia
+
+The Australian reported last week that problems with the introduction of EnergyAustralia's new IBM developed billing system has meant that some 145 000 customers have not been billed for their electricity or gas usage on time, including 21 000 that have not been billed at all. The Australian says errors in the new billing system are apparently higher than anyone expected.
+
+The Australian quotes a source as saying, “The backlog is caused by IBM middleware (software) unable to handle sales files sent by third parties such as distributors. Due to inadequate validity checking, errors are created and the IBM team in India is woefully undermanned to handle the workload. These errors have to be manually fixed, which has resulted in a growth in the backlog.”
+
+EnergyAustralia acknowledges the system is undergoing “teething problems” and that IBM has doubled its support staff to handle the problems. The energy company also insists, however, that it’s only a “small number of customers who haven’t had the best experience.”
+
+EnergyAustralia has about 1.25 million residential and business customers.
+
+Montreal Métro System Shuts Down
+
+Last Wednesday, as feared, all four lines of Montreal’s Métro System shut down completely over the lunch hour because of known software problem in a critical main computer system server. According to a story in the Montreal Gazette, a series of Métro System shut-downs early last summer revealed that a there was an “unstable server” which is “part of the main computer system used to operate the métro.” The server is used to send and receive information from “most of the systems in the métro,” Montreal’s transit agency officials stated.
+
+A software patch was installed last July, but métro engineers determined in October that a “more complex patch” was required. The patch has been under-development since then and is scheduled to be installed late this month or early in April.
+
+However, on Wednesday morning, engineers noticed that the server’s software was becoming unstable again and was passing “bad data” to the main computer system. The engineers planned a controlled shutdown of the métro a little after noon for about 10 minutes in order to go to the back-up system. Unfortunately, the métro’s main computer system shut itself down before the engineers did as the “server gave bad data to the system and saturated the memory” of the computer. This uncontrolled shutdown complicated things, transit agency officials said.
+
+It took over an hour to restore finally service.
+
+Montreal’s transit agency officials apologized once again to métro riders, who have suffered outages in January and February as well. Agency officials promise the system will be better once the new software patch is put into place.
+
+Yet Another Tesco Pricing Glitch
+
+Given their regularity, it almost seems that U.K. retailer Tesco is deliberately creating pricing glitches to attract customers to its stores. As reported by the Telegraph, the latest pricing glitch “allowed shoppers to buy one product and get three free on 500g packs of I Can't Believe It's Not Butter (ICBNB) and multipacks of Danone Onykos yogurts.” According to the Telegraph, the pricing error worked both in the store and on-line. One shopper claimed to have paid just £9 for yogurt worth £133.
+
+A Tesco spokesperson said that it was supposed to “be a simple buy one get one free offer” but an “IT error” was responsible for the unintended “unbeatable value.”
+
+Last month, another Tesco pricing error showed up on in-store ads in relation to Thorton’s Premium Collection Chocolates. Here, however, the error turned a 50 percent off a £7 box deal instead into a final price of £7.35 a box.
+
+You win some, you lose some.
+
+Woman Arrested After Spending Money Due to Pay Error
+
+There was a story from radio station WTAQ Wisconsin about a woman in Wisconsin being arrested for spending some $10 000 paid to her by mistake by her former employer.
+
+According to WTAQ, the woman worked for the Stein Garden Center in the City of Oconomowoc and normally earned $8.25 an hour for her labors. However, a computer error changed it to $88.25 an hour. Apparently, on receiving a windfall of $10 000, she decided to quit her job rather than tell her employer of the error.
+
+About a month after she quit, her employer found the error and wanted the money back. The woman allegedly told the company she didn’t know anything about an error in her pay. When a police detective was called in to investigate, she then told him that she “thought the money had come from her aunt and she had already spent it on a new roof for her home.”
+
+She later acknowledged receiving the money in error, but that “she had no intention of repaying it” since “it was the company’s mistake – not hers.”
+
+The woman was charged, I assume with felony theft, and faces six years in prison if convicted, WTAQ reported.
+
+Connectivity Problems Shut Down Newly Opened NHS Trust Surgery
+
+In a bit of an oddball story, the UK press last week reported on a brand new £300 000 National Helath Service (NHS) Trust doctors' surgery in Westbury-on-Severn, Gloucestershire that was shut down four hours after it opened 14 January because of “serious computer connectivity problems.” The problem remains unsolved as of today. According to the BBC, an NHS Gloucestershire spokesperson said, “Both the practice and NHS Gloucestershire have been making every effort to resolve the situation as quickly as possible, and the PCT's IT team has been working with to establish the cause of the problems. We are now very close to resolving the connectivity issues and the [Primary Care Trust] will be meeting with the surgery next week to finalise the options.”
+
+What wasn’t explained in any of the press stories is how such a “connectivity problem” was somehow overlooked before the surgery was opened.
+
+Glitches for Sale
+
+Art based on digital glitches has been around for a while. Now, you can buy a storage unit that looks like it is suffering from a really big glitch. Created by designer Ferruccio Laviani and sold by Italian furniture supplier Fratelli Boff, the “good vibrations” storage unit is said to reflect “a balance between the past and the future, blending the harmony and magniloquence of the classical with the charm and allure of the contemporary” as well as to exemplify “the harmonious juxtaposition of the languages and cultures it is based upon.”
+
+“Echoes of faraway places and Oriental elements are glimpsed in the ‘disorienting’ design of this storage unit, which seems to have been ‘deformed’ by a strong jolt or by swaying movements. Although it appears to depart from the aesthetics of the past, in fact it draws upon ancient knowledge in the use of carving and fine wood workmanship. The appeal of this extraordinary piece of furniture lies in its ability to overturn and question classical stylistic principles such as purity, cleanness and symmetry, while evoking a comforting feeling of deja-vù and a sort of primitiveness, matched by unquestionable craftsmanship.”
+
+Okay, then… to each their own (although I must admit that I harbored some thoughts about this just being an elaborate publicity stunt).
+
+If glitch furniture doesn’t appeal, you can always buy some limited edition US $350 Glitch Textile blankets. The blankets’ patterns, the company says, “are generated using images taken with short circuited cameras and other unorthodox digital techniques.”
+
+These I find much more appealing.
+
+Photo: Scott Eelis/Bloomberg/Getty Images",http://spectrum.ieee.org/riskfactor/computing/it/it-hiccups-of-the-week-hundreds-of-thousands-hit-by-us-tax-filing-glitches,A disconnect in transmitting a particular form to the IRS delayed refunds for up to 8 weeks in some cases. They later sought to prevent lawsuits by offering customers $25 gift cards.,2013-03-19T01:20:00Z,2013-03-18T07:00:00Z,,,8,weeks,1344,,,,,US,"to-split,in-timeline,tax-prep,tax-1"
+,"600,000 Erroneous Courthouse Summons Demanded Tax Payment","Aside from the billion or so 17-year brood cicadas which all seem to be singing directly outside my office window, it was very quiet last week in regard to IT-related snafus, problems and outages. We start off this week with the Royal Bank of Scotland, which can always be counted on to liven up a slow week.
+
+This Time, RBS Mobile Banking App Fails
+
+Two million customers of the UK government nationalized Royal Bank of Scotland and its subsidiaries, NatWest and the Bank of Ulster, were frustrated yet again by an IT problem. According to the BBC, customers were unable to log into their accounts through their mobile phone app for about two and half hours last Friday just before the long bank holiday started. RBS customers reported that the problems began around 7:15 a.m. London time. When they tried to access their bank accounts through the app, they received various error messages telling them that the app couldn't find an Internet connection even though other apps were working fine. The problem was fully cleared up by 1:00 p.m., the BBC stated.
+
+This was the second IT failure for RBS in two months, and follows the disastrous bank IT system meltdown of last year which the banking group is still trying hard to put behind it. Just two weeks ago, RBS announced that it was going to spend an extra £450 million to fix its problem-plagued IT systems. The Financial Times quoted bank chairman Sir Phillip Hampton as saying that, “As the IT incidents over the past year have shown, building and maintaining a top-class infrastructure is fundamental. Our customers deserve banking services that work 100 per cent of the time.”
+
+Friday's failure was embarrassing not only because of Sir Phillip’s comments, but because about a week ago RBS announced that it was eliminating another 1400 jobs in its retail banking sector as part of its move to encourage its 17 million customers to move to online and mobile banking. The latest gaffe may instead encourage RBS customers to decide to move to a rival's online and mobile banking app.
+
+RBS offered up an apology to its customers, who probably aren't listening anymore.
+
+Everyone Into the South Lake Tahoe Jury Pool
+
+A few weeks ago, my Risk Factor colleague Will Jones wrote about how a software system upgrade/update error effectively excused 23 000 residents of Polk County, Florida from jury duty, which has led defense lawyers to claim that unrepresentative juries were being selected.
+
+Well, not having a representative jury pool wasn’t a problem last week in South Lake Tahoe, California, which is east of Sacramento. According to the Tahoe Daily Tribune, a “computer glitch” caused an extra 300 people above the normal 100 typically called to show up for jury duty for a murder trial at the El Dorado Superior Court.
+
+The Tribune reported that, “The [jury duty] system, which is designed to shut down and reboot nightly, failed to restart,” but no one at the Superior Court noticed until all the potential jurors started to showed up. Apparently, the first 100 potential jurors waiting in line were selected to be part of the jury pool. There's a lesson about being the early bird somewhere in there.
+
+In a related case of erroneously being called to court, the BBC reported that 6 000 Stoke-on-Trent residents received letters instructing them to appear in court for failing to fully pay their council tax. While the residents were indeed behind in their payments, they were “not yet facing legal action,” the BBC said.
+
+Council officials blamed the erroneous letters on a “technical error,” but apparently aren't falling over themselves to apologize for the mistake. According to the BBC, council officials said the error actually had a “beneficial impact” since some of the residents with unpaid bills hurried to pay them or made payment arrangements after receiving the letters, “which is good news for the council and the individual because they have avoided costs.”
+
+Makes one wonder whether there will be another ""technical error"" the next time council taxes come due.
+
+Multiple Failures Defeated Spokane County’s 911 System
+
+Last November 26, the Spokane County, Washington, 911 emergency call center experienced an outage that lasted some 38 minutes. The emergency center handles calls requesting police or fire help within Spokane County, including within the cities of Spokane and Spokane Valley, the Spokane Spokesman-Review stated. At the time, it was unclear what caused the outage, which required operators to physically relocate to the emergency center’s backup location, which is 14 kilometers away, to resume taking 911 calls. No one was seriously affected by the outage.
+
+A Spokesman-Review recently ran a story on the outage that caught my eye. According to the paper, the system that handled 911 emergency calls shut down, but the equipment that “that was supposed to automatically switch the calls to a backup system didn’t work. A second link also failed to transfer calls to the backup system. Emergency communications workers then tried to activate another backup system, but that effort also failed.” Once that happened, the emergency operators drove to the backup center where 911 service was quickly restored.
+
+I’ve heard of a couple of back-up systems failing, but three? What’s the probability of that happening?
+
+Emergency center operators had to work out of the backup center for 58 hours before service was restored in the county’s main emergency center and they could return.
+
+Montreal’s Métro System Shuts Down for the Seventh Time Since Last July
+
+And finally, riders of Montreal’s Métro System were frustrated again last Tuesday as the entire Métro system shut down during afternoon rush hour for 40 minutes, once more apparently from a computer problem, the Montreal Gazette reported. So far, this latest problem marks the fourth time that the Métro has suffered a system-wide outage this year, and brings the total to seven since last July. A software patch planned for installation last month in the main computer system to fix a known problem was supposed to keep such outages from happening, but it apparently hasn’t worked.
+
+Also of interest…
+
+Maryland Lottery System Fixed
+
+Fairfax County Has Online SOL Test Problems
+
+Alabama Incorrectly Issues 15 000 Car Titles
+
+Photo: iStockphoto",http://spectrum.ieee.org/riskfactor/computing/it/it-hiccups-of-the-week-rbs-antagonizes-two-million-more-customers,"According to the BBC, council officials said the error actually had a “beneficial impact” since some of the residents with unpaid bills hurried to pay them or made payment arrangements after receiving the letters, “which is good news for the council and the individual because they have avoided costs.”",2013-05-29T00:06:00Z,2013-05-28T07:00:00Z,,,,,,600000,,,,UK,"in-timeline,UK,tax-1"
+,"Massachusetts Tax Authorities Say Sorry, Bad Computer Code","Flooding caused by heavy Spring rains resulted in seven Massachusetts counties - Bristol, Essex, Middlesex, Norfolk, Plymouth, Suffolk and Worcester - being declared a federal disaster area. Due to the timing, the state and federal governments allowed qualified taxpayers in those counties to postpone filing their taxes, i.e., from April 15 to May 11.
+
+In addition, a qualified taxpayer would be allowed to apply for a 6-month extension for filing his or her taxes from April 15 to May 11 as well. Completed taxes forms would still be due on 15 October 2010, per usual, however.
+
+As the notice at the Massachusetts Department of Revenue states:
+
+""During the time of this extension, no interest or penalties will accrue. However, a taxpayer that does not meet the extended May 11, 2010 due date will owe interest and penalties dating back to the original tax return or tax payment due date, which in most cases will be April 15, 2010.""
+
+Fair enough, and according to a story in today's Boston Globe, 520 taxpayers apparently took advantage of the tax filing extensions offered by the state.
+
+Their reward for doing so was a recent letter from the Department of Revenue informing them that they were, in fact, delinquent in filing their taxes and that they would have to pay 2 percent per month of the tax owed (I presume back to April 15th of this year).
+
+Ouch.
+
+Needless to say, this angered the affected taxpayers who called the Department of Revenue and demanded to know what the heck was going on.
+
+The Department of Revenue said, oops, it was all a big mistake, and nothing is owed after all. It also apologized ""for any inconvenience this may have caused.""
+
+The Globe says that the Department of Revenue blamed a ""software glitch"" for the notice. The Globe quotes a Department of Revenue spokesperson as saying:
+
+""The problem was unique to the fact that we had to stretch our system... We don't have a terribly flexible computer system.""
+
+Stretch the tax system?
+
+I may be overly suspicious of the Massachusetts Department of Revenue (it comes naturally from growing up in the state nicknamed ""Taxachusetts""), but I wonder how much effort was truly expended by the department to re-code a part of its tax system to account for this one-off tax filing extension.
+
+So far, no one is complaining that the IRS got it wrong, too.",http://spectrum.ieee.org/riskfactor/computing/it/massachusetts-tax-authorities-say-sorry-bad-computer-code,,2010-11-10T23:08:00Z,2010-11-10T07:00:00Z,,,,,,520,,,,US,"Massachusetts,not-in-timeline,in-timeline,tax-1"
+,New UK Tax System Causing Anger and Confusion,"News reports from the UK are indicating problems with the new Her Majesty's Revenue and Customs (HMRC) computer systems.
+
+According to this story in the Yorkshire Post, 186,115 veterans and war widows received letters from HMRC saying that they will be now taxed on their war pensions.
+
+The letters were in error, but to avoid being hit with a 20 percent tax, each veteran and war widow is going to have to contact HMRC to correct the error. The HMRC is not going to fix it otherwise, it says.
+
+In a similar vein, a story in Computing.co.uk says that an unknown number of UK taxpayers will likely be paying too much tax because of another issue with the HMRC computers. For unexplained reasons, the story says that ""... the HMRC database appears to have lost information it holds about people leaving jobs and as a result is combining taxpayers’ current employment records with old data. It is concluding that they have two jobs, thus putting them in a higher tax bracket ...""
+
+Again, it will be up to individual UK taxpayers to inform the HMRC that they have a problem and then hope that the HMRC eventually corrects it.
+
+Even that may be hard to do. A story in FinancialAdvice.co.uk says that some taxpayers have received up to three different tax codes from the HMRC, all of which are wrong.
+
+In the Yorkshire Post story, an HMRC spokesperson said that the new HMRC computer process ""would significantly reduce both over- and underpayments"" - by whom, he didn't say - while in the Computing.co.uk story, an HMRC spokesperson ""insisted the IT behind the new system is working as it should.""
+
+That's a scary thought.",http://spectrum.ieee.org/riskfactor/computing/it/new-uk-tax-system-causing-anger-and-confusion,"186,115 veterans and war widows received letters from HMRC erroneously indicating that they would be taxed on their war pensions.",2010-01-27T14:00:00Z,2010-01-27T07:00:00Z,,,,,,186115,,,,UK,"in-timeline,UK,tax-1"
+,Jamaican System Mistakenly Mails Payment Reminders,"The newspaper Jamaica Gleaner reported that a computer problem with Jamaica's new integrated tax administrative system caused 28,818 tax payment reminders to be mailed out in error. Tax officials want those receiving the notices to call so that their accounts can be reconciled.
+
+Yet another example of the pain of a computer error to be borne by the customer.",http://spectrum.ieee.org/riskfactor/computing/it/small_tax_problem,"A computer problem with Jamaica's new integrated tax administrative system caused 28,818 tax payment reminders to be mailed out in error.",2007-09-30T22:37:00Z,2007-09-30T07:00:00Z,,,,,,28818,,,,Jamaica,"in-timeline,tax-1,Jamaica"
+,"Small Typo, Big Problems in Carver County, Minnesota","You may have seen the small typo problem in Georgia where Joe Martins recently closed his account at Wachovia Bank, paid off an outstanding check, and then got a letter about the account closure and his final balance -- a minus $211,010,028,257,303.00. Wachovia apologized to Martins, and promptly blamed the letter and the erroneous amount on a word processing error - the number supposedly owed actually matched the gentleman's bank account number.
+
+A similar computer typo problem, but with real side-effects happened last week in Carver County, Minnesota. Eric Mattson received a real estate assessment notice stating that his 4,400 square foot vacant lot was being assessed at a market value of $189,000,000 (or $42,955 per square foot) and would he please fork over the $2.5 million in property tax he owed. Since is about 10 times the value of prime property in London, which is the most expensive property in the world ($4,585 per square foot), Mattson had a good laugh and called the assessor's office about the obvious error.
+
+The assessor's office wasn't laughing. It was indeed an error, but the County had already budgeted and spent the money.
+
+According to the story in the Minnesota Star Tribune, there was change in the property's status which required a change in its tax status. In August, a ""clerk filled in the $18,900 proposed valuation, but then mistakenly hit the key to exit the program. The computer added four zeros to fill out the nine numerical spaces required by the software, thus indicating the value was $189,000,000.""
+
+Several officials questioned the windfall, but the tax office assured everyone that it was true; that is, until Mattson complained.
+
+Now the County is trying to figure out how to make up for the shortfall, like cutting back on services to raising taxes. The issue will be debated at a meeting on Tuesday.
+
+The tax folks say they have instituted new procedures to ensure this problem never happens again. Of course.",http://spectrum.ieee.org/riskfactor/computing/it/small_typo_big_problem,"Eric Mattson received a real estate assessment notice stating that his 4,400 square foot vacant lot was being assessed at a market value of $189,000,000, so he needed to fork over $2.5 million in property tax. It was a mistake, but the county had already budgeted and spent the money.",2007-12-09T22:22:00Z,2007-12-09T07:00:00Z,,2500000.0,,,,,2500000.0,$,USD,US,"Minnesota,in-timeline,background,tax-1"
+,Taxes and Software Don't Mix,"In a story reminiscent of another I wrote about a few months back, a software error caused a $250,000 shortfall in tax revenue collected last year from property owners in Kootenai County, Idaho.
+
+According to the press report, the problem occurred after properties were assessed but before tax bills were issued. This meant that the tax bills reflected a tax value lower than the assessments, which had been updated, should have reflected.
+
+County officials say they hope to make amends to cities and schools; however there is no legal option for asking taxpayers to make up the difference.",http://spectrum.ieee.org/riskfactor/computing/it/taxes_and_software_dont_mix,"A software error caused a $250,000 shortfall in tax revenue collected last year from property owners in Kootenai County, Idaho.",2008-02-27T01:10:00Z,2008-02-26T07:00:00Z,,250000,,,,,250000,$,USD,US,"Idaho,in-timeline,tax-1"
+,UK Revenue and Customs Computer Errors Take £238M in Excess Tax,"The UK's Her Majesty's Revenue and Customs computer problem saga continues.
+
+Last June, I blogged about how at least 100,000 UK taxpayers would likely be paying too much tax in 2010 for a whole host of reasons including being placed in an incorrect tax bracket because of errors in the new HMRC computer system database.
+
+The Revenue and Customs folks had been warned about this for quite some time, but blithely said that the new system was working as it should and was much more accurate than the previous tax system.
+
+Well, a report in London Telegraph last week indicated that - as predicted - a whole lot of excess taxes were indeed paid: some £238 million worth in 2010. This was an increase from £96 million in 2009.
+
+In addition, the Telegraph reported that £132 million in owed taxes were missed.
+
+Nevertheless, a spokesperson for HM Revenue and Customs was quoted by the Telegraph as saying:
+
+""The new system raises the bar in terms of data quality and will in the medium term significantly improve overall accuracy reducing both under and overpayments.""
+
+The exact height of the data quality bar was not given; nor what was meant by ""medium term.""
+
+Given that the HMRC admits that it still has to reconcile some 18 million taxpayer cases, I don't think it means ""soon.""",http://spectrum.ieee.org/riskfactor/computing/it/uk-revenue-and-customs-computer-errors-take-238m-in-excess-tax,"The Revenue and Customs folks had been warned about this for quite some time, but blithely said that the new system was working as it should and was much more accurate than the previous tax system. In addition, £132 million in owed taxes were missed.",2010-08-16T22:32:00Z,2010-08-16T07:00:00Z,,372306643,,,,,2.38E8,£,GBP,UK,"in-timeline,UK,tax-1"
+,"UK Revenue and Customs Computer Errors Whack 100,000 Taxpayers","In January, I blogged about complaints involving the new Her Majesty's Revenue and Customs (HMRC) computer systems that combines information on National Insurance contributions and Pay As you Earn (PAYE) for the first time. At the time, several news reports were warning that many UK taxpayers would likely be paying too much tax this year for a whole host of reasons such as being placed in an incorrect tax bracket because of errors in the HMRC database.
+
+At the time, the HMRC downplayed the complaints and warnings and ""insisted the IT behind the new system is working as it should.""
+
+Well, now the HMRC is admitting that at least 100,000 taxpayers have erroneously paid too much tax because of errors in - surprise, surprise - its computer systems.
+
+According to this story in the London Telegraph, the HMRC also says that pensioners are the hardest group hit since they have the most complicated tax codes.
+
+The Telegraph story goes on to say that,
+
+""Examples of errors include people having their personal tax allowances removed, being placed on higher tax codes or even having a '1' inserted in front of their salary, erroneously inflating up their taxable income by £100,000.""
+
+In other words, problems the HMRC was warned about in January along with some new ones.
+
+In addition, the Telegraph reports that taxpayers are having a hard time getting through to HMRC help lines, and are sometimes being cut-off before they can report their problems.
+
+An HMRC spokesperson was quoted in the Telegraph story as saying that the HMRC apologized for the problems, and that, ""Unfortunately with a project of this scale things will occasionally go wrong...""
+
+I guess what that means is that HMRC IT systems ""occasionally"" going wrong implies that they are working exactly as they should.",http://spectrum.ieee.org/riskfactor/computing/it/uk-revenue-and-customs-computer-errors-whack-100000-taxpayers,"Examples of errors include people having their personal tax allowances removed, being placed on higher tax codes or even having a '1' inserted in front of their salary, erroneously inflating up their taxable income by £100,000.",2010-06-01T21:17:00Z,2010-06-01T07:00:00Z,,,,,,100000,,,,UK,"in-timeline,UK,tax-1"
+,Virginia's Continuing IT Outage Creates Political Fireworks,"Last Friday, I blogged about a Virginia Information Technologies Agency (VITA) server problem that occurred two days before which was still affecting 24 Virginia state agencies. Some agencies were knocked off-line, including VITA itself. VITA stated that how badly a state agency was affected was dependent upon where its information was stored on the state's servers.
+
+Virginia's Department of Motor Vehicles (DMV) was the most visibly affected, with no in-person license renewals possible at its 74 locations across the state.
+
+I also mentioned in my blog post that I thought the incident would likely raise questions once more about whether Virginia was getting value from its contentious IT outsourcing contract with Northrop Grumman. Those questions have gotten significant louder since Friday, with Virginia's governor now asking for a probe into the (still on-going) incident.
+
+One reason this incident has turned into a political hot potato is that on Friday afternoon, VITA basically promised that everything would be working normally by yesterday morning (Monday). An article in Saturday morning's Richmond Times-Dispatch reported that:
+
+""Samuel A. Nixon Jr., head of the Virginia Information Technologies Agency, said VITA and contractor Northrop Grumman 'absolutely' expect affected agencies will be operating by 8 a.m. Monday.""
+
+The Times-Dispatch story also noted that 25 (not 24) agencies and the governor's office were hit by the outage. By Saturday morning, a dozen state agencies were still being affected, the Times-Dispatch said.
+
+However, by Monday morning, three state agencies were still having major problems: the Department of Motor Vehicles, the Department of Taxation and the State Board of Elections. The Department of Taxation's website says that:
+
+""We are currently experiencing technical problems that prevent taxpayers from being able to file tax returns and make payments. If you need to file your withholding return and/or make your withholding payment, please be assured that we are working quickly to resolve the problem. In addition, if your withholding filing is late because of this problem, you will not be assessed penalty and interest.""
+
+With the state hurting for revenue, not being able to collect taxes in a timely fashion doesn't go over well in the governor's office.
+
+Other agencies also are still experiencing ""minor issues,"" VITA acknowledges.
+
+While few Virginia residents are likely to get too worked up over the Department of Taxation having problems, the DMV is another matter. VITA said Monday morning that the DMV would be working by Tuesday, but by Monday evening had to backtrack. The current VITA timeline for the problems to be resolved is tomorrow morning (Wednesday) - maybe.
+
+And if things are fixed tomorrow as promised, the DMV says to expect very long lines.
+
+Late yesterday, VITA finally gave out a bit more detailed information about what happened:
+
+""On Wednesday, August 25, at approximately 3 p.m., the Commonwealth of Virginia experienced an information technology (IT) infrastructure outage that affected 27 of the Commonwealth’s 89 agencies and caused 13 percent of the Commonwealth’s file servers to fail. The failure was in the equipment used for data storage, commonly known as a storage area network (SAN). Specifically, the SAN that failed was an EMC DMX-3."" ""According to the manufacturer of the storage system, the events that led to the outage appear to be unprecedented. The manufacturer reports that the system and its underlying technology have an exemplary history of reliability, industry-leading data availability of more than 99.999 percent and no similar failure has occurred in more than one billion hours of run time. A root cause analysis of the failure is currently being conducted.""
+
+VITA indicated late Friday that Northrop Grumman would be paying a financial penalty of ""at least $100,000"" for the outage. I think the financial figure associated with the term ""at least"" has gotten much bigger since then.
+
+Yesterday afternoon, the Virginia's Governor Bob McDonnell stated that he now wants an ""independent third party"" investigation of what happened and why. The Times-Dispatch in this story quotes the governor as saying,
+
+""I am not pleased that our employees and citizens have experienced this disruption in service.""
+
+I expect others in the state legislature who haven't been happy with the VITA contract to Northrop Grumman will be calling for their own investigation and or hearings soon as well.
+
+How many state residents have been affected is not known, and hopefully the governor's investigation can come up with a good estimate. A Washington Post story today says that, ""About 5,000 Virginians who cannot renew their licenses or state-issued identification cards online have had them expire since the meltdown ...""
+
+Of course, that number doesn't include the thousands of others who want to get their licenses for the first time but can't.
+
+In addition, ""The Virginia Association of Chiefs of Police asked local and state law-enforcement agencies Monday to stop issuing tickets for those who have been unable to renew their licenses"" between August 25 and August 31.
+
+However, the Post noted, if you were received a ticket for an expiring license before the stop ticketing request came into force, then you will have to ""go through the court system"" to get the ticket resolved.
+
+And also sit in long DMV lines to boot.
+
+That should be punishment enough for anyone.",http://spectrum.ieee.org/riskfactor/computing/it/virginias-continuing-it-outage-creates-political-fireworks,"A server problem at the Virginia Information Technologies Agency (VITA) took 24 state agencies offline, including the Department of Taxation",2010-08-31T21:47:00Z,2010-08-31T07:00:00Z,,,6,days,144.0,,,,,US,"Virginia,in-timeline,tax-1"
+,Washington DC Tax Department Software Glitches Cause Anger,"Washington D. C.'s Office of Tax and Revenue (OTR) sent out letters to some 3,000 residents last week telling them that they had underpaid their taxes, and that the taxes were due 20 June - along with penalties and interest. The only problem was that the letters were wrong.
+
+According to the Washington Post, a software error in a third-party program used by both the District's tax collectors and taxpayers online apparently only credited the affected taxpayers with 10% of the District taxes that were actually withheld.
+
+Making matters worse, the District's tax customer service call center which taxpayers were directed to call was down due to another computer error soon after the incorrect bills were sent out, adding to the anger and frustration of those receiving the letters.
+
+Of course, some other District residents who received similar letters may really owe taxes, but given the glitch, they may think that they too received incorrect tax bills.
+
+As the Post pointed out in its story, the DC OTR has had a myriad of problems with its computers, including a major tax scam a couple of years ago.",http://spectrum.ieee.org/riskfactor/computing/it/washington-dc-tax-department-software-glitches-cause-anger,A software error in a third-party program used by both the District's tax collectors and online taxpayers apparently only credited the affected accounts with 10% of the District taxes that were actually withheld. The customer service phone lines were also unavailable due to an unrelated computer glitch.,2010-06-14T14:31:00Z,2010-06-14T07:00:00Z,,,,,,3000,,,,US,"Washington D.C.,in-timeline,tax-1"
