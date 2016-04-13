@@ -367,19 +367,27 @@ module.exports = function (grunt) {
             "styles/fonts/{,*/}*.*",
             "scripts/{,*/}*.*",
             "data/{,*/}*.{json,csv}",
-            "../bower_components/pym.js/dist/pym.min.js"
+            "/../bower_components/pym.js/dist/pym.min.js"
           ]
         },
         {
-          dest: "<%= config.spectrum %>/pym/pym.min.js",
+          expand: true,
+          dot: true,
+          cwd: "",
+          flatten: true,
+          dest: "<%= config.spectrum %>",
           src: [
             "bower_components/pym.js/dist/pym.min.js"
           ]
         },
         {
-          dest: "<%= config.spectrum %>/README.md",
+          expand: true,
+          dot: true,
+          flatten: true,
+          cwd: "<%= config.app %>",
+          dest: "<%= config.spectrum %>",
           src: [
-            "<%= config.app %>/README.md"
+            "README.md"
           ]
         }
         ]

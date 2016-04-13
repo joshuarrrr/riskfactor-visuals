@@ -2826,20 +2826,15 @@ d3.csv("data/tax-glitches-timeline.csv", function (data) {
         // url: $("meta[property='og:url']").attr('content'),
         // image: $("meta[property='og:image']").attr('content'),
         // description: $("meta[property='og:description']").attr('content')
-        title: "A Timeline of Costs",
-        preTitle: "Lessons from a Decade of IT Failures:",
+        title: "Remembering the Technology Glitches and Failures of Tax Years Past",
+        preTitle: "",
         url: window.parent.location.protocol + "//" + 
             window.parent.location.host +
             window.parent.location.pathname,
         images: {
-          "default":"/images/main-timeline-fb.png",
-          "modernization": "/images/modernization-timeline-fb.png",
-          "health": "/images/health-timeline-fb.png",
-          "banks": "/images/banks-timeline-fb.png",
-          "exchange": "/images/exchanges-timeline-fb.png",
-          "air": "/images/air-timeline-fb.png"
+          "taxes":"/images/taxes.png",
         },
-        description: "Explore the many ways in which IT failures have squandered money, wasted time, and generally disrupted people’s lives"
+        description: "Explore some of the notable tax glithces of the last decade."
       };
 
       // pymChild.onMessage("share", function (title) {
@@ -2868,15 +2863,15 @@ d3.csv("data/tax-glitches-timeline.csv", function (data) {
       postToFacebook: function(event) {
         event.preventDefault();
         var data = shareData();
-        data.title = $(this.parentNode).attr("data-section") !== undefined ? $("#" + $(this.parentNode).attr("data-section")).text() : data.title;
-        data.image = $(this.parentNode).attr("data-section") !== undefined ? data.images[$(this.parentNode).attr("data-section")] : data.images.default;
+        data.title = data.title;
+        data.image = data.images.taxes;
         var obj = {
           app_id: "174248889578740",
           method: "feed",
           // name: data.longTitle,
           name: data.title,
           link: data.url,
-          caption: data.preTitle.slice(0,-1),
+          caption: data.title,
           picture: window.location.protocol + "//" + 
             window.location.host +
             window.location.pathname.split("/").slice(0,-1).join("/") +
